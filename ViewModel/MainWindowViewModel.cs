@@ -104,7 +104,7 @@ namespace ChatApp.ViewModel
 
         public void sendMessage()
         {
-            NetworkManager.sendChar(MyText);
+            NetworkManager.SendChar(MyText);
         }
 
         public void showGameBoard()

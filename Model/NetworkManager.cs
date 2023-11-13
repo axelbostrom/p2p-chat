@@ -10,8 +10,8 @@ namespace ChatApp.Model;
 
 internal class NetworkManager : INotifyPropertyChanged
 {
-
     private NetworkStream _stream;
+    private TcpHandler _tcpHandler;
     public event PropertyChangedEventHandler PropertyChanged;
 
     private void OnPropertyChanged(string propertyName = null)
@@ -35,17 +35,14 @@ internal class NetworkManager : INotifyPropertyChanged
         Task.Factory.StartNew(() =>
         {
             bool secondTry = false;
-            var ipEndPoint = new IPEndPoint(IPAddress.Loopback, 13000);
-            TcpListener server = new TcpListener(ipEndPoint);
-            TcpClient endPoint = null;
+            _tcpHandler = new TcpHandler();
 
             try
             {
-                server.Start();
-                System.Diagnostics.Debug.WriteLine("Start Listening...");
-                endPoint = server.AcceptTcpClient();
+                System.Diagnostics.Debug.WriteLine("Connecting to the server...");
+                TcpClient endPoint = _tcpHandler.AcceptConnection();
                 System.Diagnostics.Debug.WriteLine("Connection established!");
-                handleConnection(endPoint);
+                HandleConnection(endPoint);
             }
             catch
             {
@@ -54,25 +51,17 @@ internal class NetworkManager : INotifyPropertyChanged
 
             if (secondTry)
             {
-                endPoint = new TcpClient();
-                try
-                {
-                    System.Diagnostics.Debug.WriteLine("Connecting to the server...");
-                    endPoint.Connect(ipEndPoint);
-                    System.Diagnostics.Debug.WriteLine("Connection established!");
-                    handleConnection(endPoint);
-                }
-                finally
-                {
-                    endPoint.Close();
-
-                }
+                System.Diagnostics.Debug.WriteLine("Connecting to the server...");
+                TcpClient endPoint = _tcpHandler.AcceptConnection();
+                System.Diagnostics.Debug.WriteLine("Connection established!");
+                HandleConnection(endPoint);
             }
         });
+
         return true;
     }
 
-    private void handleConnection(TcpClient endPoint)
+    private void HandleConnection(TcpClient endPoint)
     {
         _stream = endPoint.GetStream();
         while (true)
@@ -81,11 +70,10 @@ internal class NetworkManager : INotifyPropertyChanged
             int received = _stream.Read(buffer, 0, 1024);
             var message = Encoding.UTF8.GetString(buffer, 0, received);
             this.Message = message;
-
         }
-
     }
-    public void sendChar(string str)
+
+    public void SendChar(string str)
     {
         Task.Factory.StartNew(() =>
         {
