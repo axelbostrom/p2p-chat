@@ -11,7 +11,8 @@ namespace ChatApp.Model;
 internal class NetworkManager : INotifyPropertyChanged
 {
     private NetworkStream _stream;
-    private TcpHandler _tcpHandler;
+    private TcpClient _tcpClient;
+    private Server _server;
     public event PropertyChangedEventHandler PropertyChanged;
 
     private void OnPropertyChanged(string propertyName = null)
@@ -22,43 +23,38 @@ internal class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    private string message;
+    private string _message;
 
     public string Message
     {
-        get { return message; }
-        set { message = value; OnPropertyChanged("Message"); }
+        get { return _message; }
+        set { _message = value; OnPropertyChanged("Message"); }
     }
 
     public bool StartConnection()
     {
-        Task.Factory.StartNew(() =>
+        try
         {
-            bool secondTry = false;
-            _tcpHandler = new TcpHandler();
-
-            try
+            Task.Factory.StartNew(() =>
             {
-                System.Diagnostics.Debug.WriteLine("Connecting to the server...");
-                TcpClient endPoint = _tcpHandler.AcceptConnection();
-                System.Diagnostics.Debug.WriteLine("Connection established!");
-                HandleConnection(endPoint);
-            }
-            catch
-            {
-                secondTry = true;
-            }
+                _server = new Server();
+                _server.StartListening();
+            });
 
-            if (secondTry)
-            {
-                System.Diagnostics.Debug.WriteLine("Connecting to the server...");
-                TcpClient endPoint = _tcpHandler.AcceptConnection();
-                System.Diagnostics.Debug.WriteLine("Connection established!");
-                HandleConnection(endPoint);
-            }
-        });
+            _tcpClient = new TcpClient();
 
-        return true;
+            // Replace "127.0.0.1" and 13000 with your server's address and port
+            _tcpClient.Connect("127.0.0.1", 13000);
+
+            Task.Factory.StartNew(() => HandleConnection(_tcpClient));
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error starting server and client: {ex.Message}");
+            return false;
+        }
     }
 
     private void HandleConnection(TcpClient endPoint)
@@ -78,7 +74,7 @@ internal class NetworkManager : INotifyPropertyChanged
         Task.Factory.StartNew(() =>
         {
             var buffer = Encoding.UTF8.GetBytes(str);
-            _stream.Write(buffer, 0, str.Length);
+            _stream.Write(buffer, 0, buffer.Length);
         });
     }
 }
