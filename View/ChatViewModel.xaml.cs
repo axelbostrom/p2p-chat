@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ChatApp.View
+namespace ChatApp.ViewModels
 {
     /// <summary>
-    /// Interaction logic for GameBoard.xaml
+    /// Interaction logic for ChatViewModel.xaml
     /// </summary>
-    public partial class GameBoard : Window
+    public partial class ChatViewModel : Window
     {
-        public GameBoard()
+        public ChatViewModel()
         {
             InitializeComponent();
         }

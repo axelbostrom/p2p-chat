@@ -25,18 +25,18 @@ namespace ChatApp.Model
             try
             {
                 _tcpListener.Start();
-                Console.WriteLine("Server is listening...");
+                System.Diagnostics.Debug.WriteLine("Server is listening...");
 
                 while (true)
                 {
                     TcpClient client = _tcpListener.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
+                    System.Diagnostics.Debug.WriteLine("Connected!");
                     Task.Factory.StartNew(() => HandleClient(client));
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
             }
             finally
             {
@@ -62,13 +62,13 @@ namespace ChatApp.Model
                 while (bytesRead > 0)
                 {
                     responseData = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    Console.WriteLine($"Received from client: {responseData}");
+                    System.Diagnostics.Debug.WriteLine($"Received from client: {responseData}");
 
                     // Process the data as needed
 
                     // Echo the data back to the client
                     stream.Write(data, 0, bytesRead);
-                    Console.WriteLine($"Sent to client: {responseData}");
+                    System.Diagnostics.Debug.WriteLine($"Sent to client: {responseData}");
 
                     bytesRead = stream.Read(data, 0, data.Length);
                 }
@@ -78,7 +78,7 @@ namespace ChatApp.Model
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error handling client: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
             }
         }
     }

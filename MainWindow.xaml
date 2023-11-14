@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Start" HorizontalAlignment="Center" Height="45" Margin="0,172,0,0" VerticalAlignment="Top" Command="{Binding Path=StartGame}" Width="180"/>
+        <Button Content="Start" HorizontalAlignment="Center" Height="45" Margin="0,286,0,0" VerticalAlignment="Top" Command="{Binding Path=StartChat}" Width="180"/>
+        <TextBox x:Name="TextBox_Name2" HorizontalAlignment="Center" Height="27" Margin="0,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" TextChanged="TextBox_Name"/>
+        <TextBox HorizontalAlignment="Center" Height="27" Margin="0,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" TextChanged="TextBox_Port"/>
+        <TextBox HorizontalAlignment="Center" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" TextChanged="TextBox_Ip" Margin="0,217,0,0"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your name:" Margin="229,82,229,335"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your port number:" Margin="229,143,229,274"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your IP-address:" Margin="229,200,229,216"/>
     </Grid>
 </Window>

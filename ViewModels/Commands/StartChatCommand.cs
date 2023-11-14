@@ -7,13 +7,13 @@ using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class StartGameCommand : ICommand
+    internal class StartChatCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
         private MainWindowViewModel parent = null;
 
 
-        public StartGameCommand(MainWindowViewModel parent)
+        public StartChatCommand(MainWindowViewModel parent)
         {
             this.parent = parent;
 
@@ -26,7 +26,7 @@ namespace ChatApp.ViewModel.Command
         public void Execute(object parameter)
         {
 
-            parent.startGameBoard();
+            parent.startChatViewModel();
         }
     }
 }

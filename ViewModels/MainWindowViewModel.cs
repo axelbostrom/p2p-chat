@@ -1,20 +1,25 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using ChatApp.Model;
-using ChatApp.View;
 using ChatApp.ViewModel.Command;
+using ChatApp.ViewModels;
 
 namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private NetworkManager NetworkManager { get; set; }
-        private ICommand startGame;
+        private ICommand startChat;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private string name;
+        private int port;
+        private IPAddress address;
 
         public string MyText
         {
@@ -50,17 +55,17 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public ICommand StartGame
+        public ICommand StartChat
         {
             get
             {
-                if (startGame == null)
-                    startGame = new StartGameCommand(this);
-                return startGame;
+                if (startChat == null)
+                    startChat = new StartChatCommand(this);
+                return startChat;
             }
             set
             {
-                startGame = value;
+                startChat = value;
             }
         }
 
@@ -69,14 +74,14 @@ namespace ChatApp.ViewModel
             return NetworkManager.StartConnection();
         }
 
-        public void startGameBoard()
+        public void startChatViewModel()
         {
 
             if (startConnection())
             {
-                GameBoard board = new GameBoard();
-                board.DataContext = this;
-                board.ShowDialog();
+                ChatViewModel chat = new ChatViewModel();
+                chat.DataContext = this;
+                chat.ShowDialog();
             }
             else
             {
@@ -107,11 +112,11 @@ namespace ChatApp.ViewModel
             NetworkManager.SendChar(MyText);
         }
 
-        public void showGameBoard()
+        public void showChatViewModel()
         {
-            GameBoard gameBoard = new GameBoard();
-            gameBoard.DataContext = this;
-            gameBoard.ShowDialog();
+            ChatViewModel chatViewModel = new ChatViewModel();
+            chatViewModel.DataContext = this;
+            chatViewModel.ShowDialog();
         }
     }
 }
