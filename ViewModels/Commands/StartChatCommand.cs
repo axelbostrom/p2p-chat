@@ -25,7 +25,6 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-
             parent.startChatViewModel();
         }
     }

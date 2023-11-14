@@ -41,9 +41,11 @@ internal class NetworkManager : INotifyPropertyChanged
                 _server.StartListening();
             });
 
+
+            // TODO: Client is started always, need to make this happen when the "Start Client" button is pressed.
             _tcpClient = new TcpClient();
 
-            // Replace "127.0.0.1" and 13000 with your server's address and port
+            // Replace "127.0.0.1" and 13000 with your data from input
             _tcpClient.Connect("127.0.0.1", 13000);
 
             Task.Factory.StartNew(() => HandleConnection(_tcpClient));

@@ -25,14 +25,11 @@ namespace ChatApp.Model
             try
             {
                 _tcpListener.Start();
-                System.Diagnostics.Debug.WriteLine("Server is listening...");
+                System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
-                while (true)
-                {
-                    TcpClient client = _tcpListener.AcceptTcpClient();
-                    System.Diagnostics.Debug.WriteLine("Connected!");
-                    Task.Factory.StartNew(() => HandleClient(client));
-                }
+                TcpClient client = _tcpListener.AcceptTcpClient();
+                System.Diagnostics.Debug.WriteLine("Connected!");
+                Task.Factory.StartNew(() => HandleClient(client));
             }
             catch (Exception ex)
             {

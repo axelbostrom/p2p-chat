@@ -7,6 +7,7 @@ using System.Windows.Input;
 using ChatApp.Model;
 using ChatApp.ViewModel.Command;
 using ChatApp.ViewModels;
+using ChatApp.ViewModels.Command;
 
 namespace ChatApp.ViewModel
 {
@@ -14,12 +15,11 @@ namespace ChatApp.ViewModel
     {
         private NetworkManager NetworkManager { get; set; }
         private ICommand startChat;
+        private ICommand startConnection;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private string name;
-        private int port;
-        private IPAddress address;
+        private User currentUser;
 
         public string MyText
         {
@@ -69,24 +69,49 @@ namespace ChatApp.ViewModel
             }
         }
 
-        private bool startConnection()
+        public ICommand StartConnection
         {
-            return NetworkManager.StartConnection();
+            get
+            {
+                if (startConnection == null)
+                {
+                    startConnection = new RelayCommand(param => StartConnectionAction(param));
+                }
+                return startConnection;
+            }
+            set
+            {
+                startConnection = value;
+            }
         }
 
+        public void StartConnectionAction(object param)
+        {
+            string userType = param as string;
+
+            System.Diagnostics.Debug.WriteLine(userType);
+
+
+            if (userType != null)
+            {
+                // TODO: ADD USER need to get input first...
+                currentUser = new User();
+            }
+        }
+
+        // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void startChatViewModel()
         {
-
-            if (startConnection())
-            {
-                ChatViewModel chat = new ChatViewModel();
-                chat.DataContext = this;
-                chat.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("Cannot start connection!");
-            }
+            //if (startConnection())
+            //{
+            //    ChatViewModel chat = new ChatViewModel();
+            //    chat.DataContext = this;
+            //    chat.ShowDialog();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Cannot start connection!");
+            //}
         }
 
         private ICommand enterCommand;
