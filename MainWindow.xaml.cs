@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml.Linq;
 using ChatApp.Model;
 using ChatApp.ViewModel;
 
@@ -23,6 +12,7 @@ namespace ChatApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NetworkManager networkManager;
         private IPAddress ip;
         private int port;
         private string name;
@@ -30,39 +20,49 @@ namespace ChatApp
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel(new NetworkManager());
+            networkManager = new NetworkManager();
+            this.DataContext = new MainWindowViewModel(networkManager);
         }
 
-        private void TextBox_Name(object sender, TextChangedEventArgs e)
-        { 
-            if (sender is TextBox textBox)
-            {
-                name = textBox.Text;
-            }
-        }
-
-        private void TextBox_Port(object sender, TextChangedEventArgs e)
+        private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox textBox)
+            // Call the StartConnection method in NetworkManager for the server
+            if (ParseInputs())
             {
-                if (int.TryParse(textBox.Text, out int parsedPort))
-                {
-                    port = parsedPort;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("Not a valid port number!");
-                }
+                User user = new User(name, ip, port, "server");
+                System.Diagnostics.Debug.WriteLine(user);
+                networkManager.StartConnection(user);
             }
-            
         }
 
-        private void TextBox_Ip(object sender, TextChangedEventArgs e)
+        private void StartClient_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox textBox)
+            // Call the StartConnection method in NetworkManager for the client
+            if (ParseInputs())
             {
-                //ip = textBox.Text;
+                networkManager.StartConnection(new User(name, ip, port, "client"));
             }
+        }
+
+        private bool ParseInputs()
+        {
+            if (!int.TryParse(TextBox_Port.Text, out int parsedPort))
+            {
+                MessageBox.Show("Invalid port number!");
+                return false;
+            }
+
+            if (!IPAddress.TryParse(TextBox_Ip.Text, out IPAddress parsedIp))
+            {
+                MessageBox.Show("Invalid IP address!");
+                return false;
+            }
+
+            port = parsedPort;
+            ip = parsedIp;
+            name = TextBox_Name.Text;
+
+            return true;
         }
     }
 }

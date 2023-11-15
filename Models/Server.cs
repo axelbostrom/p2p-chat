@@ -14,11 +14,16 @@ namespace ChatApp.Model
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private TcpListener _tcpListener;
+        private IPAddress _ipAddress;
+        private int _port;
 
-        public Server()
+        public Server(IPAddress ipAddress, int port)
         {
-            _tcpListener = new TcpListener(IPAddress.Loopback, 13000);
+            _ipAddress = ipAddress;
+            _port = port;
+            _tcpListener = new TcpListener(_ipAddress, _port);
         }
+
 
         public void StartListening()
         {

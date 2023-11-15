@@ -95,7 +95,7 @@ namespace ChatApp.ViewModel
             if (userType != null)
             {
                 // TODO: ADD USER need to get input first...
-                currentUser = new User();
+                //currentUser = new User();
             }
         }
 

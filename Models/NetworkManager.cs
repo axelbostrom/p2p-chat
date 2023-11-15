@@ -31,14 +31,15 @@ internal class NetworkManager : INotifyPropertyChanged
         set { _message = value; OnPropertyChanged("Message"); }
     }
 
-    public bool StartConnection()
+    public bool StartConnection(User user)
     {
         try
         {
             Task.Factory.StartNew(() =>
             {
                 System.Diagnostics.Debug.WriteLine("TEST");
-                _server = new Server();
+                // TODO: try and catch clause to reassure address or port are correct/not NULL
+                _server = new Server(user.Address, user.Port);
                 _server.StartListening();
             });
 
