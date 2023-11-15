@@ -52,18 +52,18 @@ namespace ChatApp.Model
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = _stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                System.Diagnostics.Debug.WriteLine("Received: {0}", responseData);
             }
             catch (ArgumentNullException e)
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
+                System.Diagnostics.Debug.WriteLine("ArgumentNullException: {0}", e);
             }
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException: {0}", e);
+                System.Diagnostics.Debug.WriteLine("SocketException: {0}", e);
             }
 
-            Console.WriteLine("\n Press Enter to continue...");
+            System.Diagnostics.Debug.WriteLine("\n Press Enter to continue...");
             Console.Read();
         }
     }

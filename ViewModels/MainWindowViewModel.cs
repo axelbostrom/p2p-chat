@@ -1,20 +1,25 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using ChatApp.Model;
-using ChatApp.View;
 using ChatApp.ViewModel.Command;
+using ChatApp.ViewModels;
+using ChatApp.ViewModels.Command;
 
 namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private NetworkManager NetworkManager { get; set; }
-        private ICommand startGame;
+        private ICommand startChat;
+        private ICommand startConnection;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private User currentUser;
 
         public string MyText
         {
@@ -50,38 +55,63 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public ICommand StartGame
+        public ICommand StartChat
         {
             get
             {
-                if (startGame == null)
-                    startGame = new StartGameCommand(this);
-                return startGame;
+                if (startChat == null)
+                    startChat = new StartChatCommand(this);
+                return startChat;
             }
             set
             {
-                startGame = value;
+                startChat = value;
             }
         }
 
-        private bool startConnection()
+        public ICommand StartConnection
         {
-            return NetworkManager.StartConnection();
+            get
+            {
+                if (startConnection == null)
+                {
+                    startConnection = new RelayCommand(param => StartConnectionAction(param));
+                }
+                return startConnection;
+            }
+            set
+            {
+                startConnection = value;
+            }
         }
 
-        public void startGameBoard()
+        public void StartConnectionAction(object param)
         {
+            string userType = param as string;
 
-            if (startConnection())
+            System.Diagnostics.Debug.WriteLine(userType);
+
+
+            if (userType != null)
             {
-                GameBoard board = new GameBoard();
-                board.DataContext = this;
-                board.ShowDialog();
+                // TODO: ADD USER need to get input first...
+                currentUser = new User();
             }
-            else
-            {
-                MessageBox.Show("Cannot start connection!");
-            }
+        }
+
+        // TODO: When server and client have entered correct info and pressed respective button => start chat for both
+        public void startChatViewModel()
+        {
+            //if (startConnection())
+            //{
+            //    ChatViewModel chat = new ChatViewModel();
+            //    chat.DataContext = this;
+            //    chat.ShowDialog();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Cannot start connection!");
+            //}
         }
 
         private ICommand enterCommand;
@@ -107,11 +137,11 @@ namespace ChatApp.ViewModel
             NetworkManager.SendChar(MyText);
         }
 
-        public void showGameBoard()
+        public void showChatViewModel()
         {
-            GameBoard gameBoard = new GameBoard();
-            gameBoard.DataContext = this;
-            gameBoard.ShowDialog();
+            ChatViewModel chatViewModel = new ChatViewModel();
+            chatViewModel.DataContext = this;
+            chatViewModel.ShowDialog();
         }
     }
 }
