@@ -37,6 +37,7 @@ internal class NetworkManager : INotifyPropertyChanged
         {
             Task.Factory.StartNew(() =>
             {
+                System.Diagnostics.Debug.WriteLine("TEST");
                 _server = new Server();
                 _server.StartListening();
             });
@@ -66,6 +67,7 @@ internal class NetworkManager : INotifyPropertyChanged
             int received = _stream.Read(buffer, 0, 1024);
             var message = Encoding.UTF8.GetString(buffer, 0, received);
             this.Message = message;
+            System.Diagnostics.Debug.WriteLine(message);
         }
     }
 
