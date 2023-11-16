@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ChatApp.Model
 {
@@ -16,12 +17,18 @@ namespace ChatApp.Model
         private TcpClient _tcpClient;
         private NetworkStream _stream;
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler<string> EventOccured;
 
 
         public Client(IPAddress ipAddress, int port) 
         {
             _ipAddress = ipAddress;
             _port = port;
+        }
+
+        private void OnEventOccurred(string errorMessage)
+        {
+            EventOccured?.Invoke(this, errorMessage);
         }
 
         public void Connect()
@@ -65,7 +72,8 @@ namespace ChatApp.Model
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error connecting to server: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error connecting to server: {ex.Message}");
+                OnEventOccurred(ex.Message);
             }
         }
 

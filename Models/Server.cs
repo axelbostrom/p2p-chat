@@ -16,6 +16,7 @@ namespace ChatApp.Model
         private TcpListener _tcpListener;
         private IPAddress _ipAddress;
         private int _port;
+        public event EventHandler<string> EventOccured;
 
         public Server(IPAddress ipAddress, int port)
         {
@@ -23,6 +24,10 @@ namespace ChatApp.Model
             _port = port;
         }
 
+        private void OnErrorOccurred(string errorMessage)
+        {
+            EventOccured?.Invoke(this, errorMessage);
+        }
 
         public void StartListening()
         {
@@ -38,7 +43,8 @@ namespace ChatApp.Model
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error connecting to client: {ex.Message}");
+                OnErrorOccurred(ex.Message);
             }
             finally
             {
@@ -81,6 +87,7 @@ namespace ChatApp.Model
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
+                OnErrorOccurred(ex.Message);
             }
         }
     }

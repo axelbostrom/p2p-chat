@@ -15,6 +15,9 @@ internal class NetworkManager : INotifyPropertyChanged
     private Client _client;
     private Server _server;
     public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<string> EventOccured;
+
+    private string _message;
 
     private void OnPropertyChanged(string propertyName = null)
     {
@@ -24,7 +27,10 @@ internal class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    private string _message;
+    private void OnEventOccurred(string errorMessage)
+    {
+        EventOccured?.Invoke(this, errorMessage);
+    }
 
     public string Message
     {
@@ -32,12 +38,14 @@ internal class NetworkManager : INotifyPropertyChanged
         set { _message = value; OnPropertyChanged("Message"); }
     }
 
+    // TODO: Remove nestled try/catch?
     public async Task<bool> StartServer(User user)
     {
         try
         {
-            // TODO: try and catch clause to reassure address or port are correct/not NULL
+            // TODO: add checks of address and port before calling server or check in server?
             _server = new Server(user.Address, user.Port);
+            _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             await Task.Run(() => _server.StartListening());
 
             return true;
@@ -49,11 +57,14 @@ internal class NetworkManager : INotifyPropertyChanged
         }
     }
 
+    // TODO: Remove nestled try/catch?
     public async Task<bool> StartClient(User user) 
     {
         try
         {
+            // TODO: add checks of address and port before calling client or check in client?
             _client = new Client(user.Address, user.Port);
+            _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             await Task.Run(() => _client.Connect());
 
             return true;
