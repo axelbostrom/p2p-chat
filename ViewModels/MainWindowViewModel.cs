@@ -19,8 +19,6 @@ namespace ChatApp.ViewModel
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private User currentUser;
-
         public string MyText
         {
             get { return text; }

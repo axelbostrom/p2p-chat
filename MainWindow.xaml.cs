@@ -27,22 +27,21 @@ namespace ChatApp
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            // Call the StartConnection method in NetworkManager for the server
+            // Call the StartServer method in NetworkManager
             if (ParseInputs())
             {
                 user = new User(name, ip, port, "server");
-                System.Diagnostics.Debug.WriteLine(user);
                 networkManager.StartServer(user);
             }
         }
 
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
-            // Call the StartConnection method in NetworkManager for the client
+            // Call the StartClient method in NetworkManager
             if (ParseInputs())
             {
                 user = new User(name, ip, port, "client");
-                networkManager.StartClient(user));
+                networkManager.StartClient(user);
             }
         }
 
