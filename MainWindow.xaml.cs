@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Linq;
@@ -62,6 +63,12 @@ namespace ChatApp
             port = parsedPort;
             ip = parsedIp;
             name = TextBox_Name.Text;
+
+            if (String.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Please enter a name!");
+                return false;
+            }
 
             return true;
         }

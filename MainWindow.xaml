@@ -6,14 +6,16 @@
         xmlns:local="clr-namespace:ChatApp" xmlns:viewmodel="clr-namespace:ChatApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBox x:Name="TextBox_Name" HorizontalAlignment="Center" Height="27" Margin="0,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="342"/>
-        <TextBox x:Name="TextBox_Port" HorizontalAlignment="Center" Height="27" Margin="0,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="342"/>
-        <TextBox x:Name="TextBox_Ip" HorizontalAlignment="Center" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Margin="0,217,0,0"/>
-        <TextBlock TextWrapping="Wrap" Text="Enter your name:" Margin="229,82,229,335"/>
-        <TextBlock TextWrapping="Wrap" Text="Enter your port number:" Margin="229,143,229,274"/>
-        <TextBlock TextWrapping="Wrap" Text="Enter your IP-address:" Margin="229,200,229,216"/>
-        <Button Content="Start Server" HorizontalAlignment="Left" Height="45" Margin="229,285,0,0" VerticalAlignment="Top" Click="StartServer_Click" Width="161"/>
-        <Button Content="Start Client" HorizontalAlignment="Left" Height="45" Margin="410,285,0,0" VerticalAlignment="Top" Click="StartClient_Click" Width="161"/>
-    </Grid>
+    <Canvas Background="Bisque">
+        <TextBlock TextWrapping="Wrap" Text="Zlatan chat" FontFamily="Comic Sans MS" FontSize="30" Canvas.Left="320" Canvas.Top="22" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your name:" Margin="229,82,229,335" FontFamily="Comic Sans MS"/>
+        <TextBox x:Name="TextBox_Name" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="103" Text="Zlatan"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your port number:" Margin="229,143,229,274" FontFamily="Comic Sans MS"/>
+        <TextBox x:Name="TextBox_Port" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="164" Text="3000"/>
+        <TextBlock TextWrapping="Wrap" Text="Enter your IP-address:" Margin="229,200,229,216" FontFamily="Comic Sans MS"/>
+        <TextBox x:Name="TextBox_Ip" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="221" Text="127.0.0.1"/>
+
+        <Button Content="Start Server" HorizontalAlignment="Left" Height="45" Margin="229,285,0,0" VerticalAlignment="Top" Click="StartServer_Click" Width="161" FontFamily="Comic Sans MS"/>
+        <Button Content="Start Client" HorizontalAlignment="Left" Height="45" Margin="410,285,0,0" VerticalAlignment="Top" Click="StartClient_Click" Width="161" FontFamily="Comic Sans MS"/>
+    </Canvas>
 </Window>
