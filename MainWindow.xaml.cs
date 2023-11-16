@@ -16,6 +16,7 @@ namespace ChatApp
         private IPAddress ip;
         private int port;
         private string name;
+        User user;
 
         public MainWindow()
         {
@@ -29,9 +30,9 @@ namespace ChatApp
             // Call the StartConnection method in NetworkManager for the server
             if (ParseInputs())
             {
-                User user = new User(name, ip, port, "server");
+                user = new User(name, ip, port, "server");
                 System.Diagnostics.Debug.WriteLine(user);
-                networkManager.StartConnection(user);
+                networkManager.StartServer(user);
             }
         }
 
@@ -40,7 +41,8 @@ namespace ChatApp
             // Call the StartConnection method in NetworkManager for the client
             if (ParseInputs())
             {
-                networkManager.StartConnection(new User(name, ip, port, "client"));
+                user = new User(name, ip, port, "client");
+                networkManager.StartClient(user));
             }
         }
 

@@ -21,7 +21,6 @@ namespace ChatApp.Model
         {
             _ipAddress = ipAddress;
             _port = port;
-            _tcpListener = new TcpListener(_ipAddress, _port);
         }
 
 
@@ -29,6 +28,7 @@ namespace ChatApp.Model
         {
             try
             {
+                _tcpListener = new TcpListener(_ipAddress, _port);
                 _tcpListener.Start();
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 

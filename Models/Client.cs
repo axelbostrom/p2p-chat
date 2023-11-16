@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,14 +11,20 @@ namespace ChatApp.Model
 {
     internal class Client : INotifyPropertyChanged
     {
+        private IPAddress _ipAddress;
+        private int _port;
         private TcpClient _tcpClient;
         private NetworkStream _stream;
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
-        public Client() { }
+        public Client(IPAddress ipAddress, int port) 
+        {
+            _ipAddress = ipAddress;
+            _port = port;
+        }
 
-        public void Connect(string server, int port, string message)
+        public void Connect()
         {
             try
             {
@@ -28,43 +35,40 @@ namespace ChatApp.Model
                 // combination.
 
                 // Prefer a using declaration to ensure the instance is Disposed later.
-                _tcpClient = new TcpClient(server, port);
+                System.Diagnostics.Debug.WriteLine("Client is starting...");
+
+                _tcpClient = new TcpClient(_ipAddress.ToString(), _port);
 
                 // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                // Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
                 // Get a client stream for reading and writing.
                 _stream = _tcpClient.GetStream();
 
                 // Send the message to the connected TcpServer.
-                _stream.Write(data, 0, data.Length);
+                // _stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sent: {0}", message);
+                // Console.WriteLine("Sent: {0}", message);
 
                 // Receive the server response.
 
                 // Buffer to store the response bytes.
-                data = new Byte[256];
+                // data = new Byte[256];
 
                 // String to store the response ASCII representation.
-                String responseData = String.Empty;
+                // String responseData = String.Empty;
 
                 // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = _stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                System.Diagnostics.Debug.WriteLine("Received: {0}", responseData);
+                // Int32 bytes = _stream.Read(data, 0, data.Length);
+                // responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                // System.Diagnostics.Debug.WriteLine("Received: {0}", responseData);
             }
-            catch (ArgumentNullException e)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("ArgumentNullException: {0}", e);
+                Console.WriteLine($"Error connecting to server: {ex.Message}");
             }
-            catch (SocketException e)
-            {
-                System.Diagnostics.Debug.WriteLine("SocketException: {0}", e);
-            }
-
-            System.Diagnostics.Debug.WriteLine("\n Press Enter to continue...");
-            Console.Read();
         }
+
+        public TcpClient GetTcpClient() { return _tcpClient; }
     }
 }

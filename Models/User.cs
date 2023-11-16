@@ -42,6 +42,7 @@ namespace ChatApp.Model
             set { _address = value; }
         }
 
+        // TODO: Remove type from User
         public string Type
         {
             get { return _type; }
