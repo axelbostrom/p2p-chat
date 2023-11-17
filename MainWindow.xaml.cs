@@ -39,6 +39,8 @@ namespace ChatApp
 
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
+            // call Command/StartClientCommand.cs
+            
             // Call the StartClient method in NetworkManager
             if (ParseInputs())
             {

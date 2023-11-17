@@ -47,7 +47,6 @@ internal class NetworkManager : INotifyPropertyChanged
             _server = new Server(user.Address, user.Port);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             await Task.Run(() => _server.StartListening());
-
             return true;
         }
         catch (Exception ex)

@@ -100,16 +100,10 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void startChatViewModel()
         {
-            //if (startConnection())
-            //{
-            //    ChatViewModel chat = new ChatViewModel();
-            //    chat.DataContext = this;
-            //    chat.ShowDialog();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Cannot start connection!");
-            //}
+            
+            ChatViewModel chat = new ChatViewModel();
+            chat.DataContext = this;
+            chat.ShowDialog();
         }
 
         private ICommand enterCommand;
