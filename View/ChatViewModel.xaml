@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatApp.ViewModels"
         mc:Ignorable="d"
-        Title="ChatViewModel" Height="450" Width="800">
+        Title="ChatViewModel" Height="500" Width="850">
     <Canvas Background="Lavender">
         <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
         <ListBox x:Name="ChatListBox" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
