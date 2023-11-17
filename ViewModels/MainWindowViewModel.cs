@@ -53,14 +53,14 @@ namespace ChatApp.ViewModel
         public void StartServer(User user)
         {
             
-            _ = _networkManager.StartServer(user);
+            _networkManager.StartServer(user);
             startChatViewModel();
         }
 
         public void StartClient(User user)
         {
 
-            _ = _networkManager.StartClient(user);
+            _networkManager.StartClient(user);
             startChatViewModel();
         }
 

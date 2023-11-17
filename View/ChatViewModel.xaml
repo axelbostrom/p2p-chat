@@ -6,12 +6,9 @@
         xmlns:local="clr-namespace:ChatApp.ViewModels"
         mc:Ignorable="d"
         Title="ChatViewModel" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="191*"/>
-            <RowDefinition Height="243*"/>
-        </Grid.RowDefinitions>
-        <ListBox x:Name="ChatListBox" HorizontalAlignment="Left" Height="282" Margin="206,82,0,0" VerticalAlignment="Top" Width="584" Grid.RowSpan="2">
+    <Canvas Background="Lavender">
+        <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="206" Canvas.Top="60" FontFamily="Comic Sans MS"/>
+        <ListBox x:Name="ChatListBox" Canvas.Left="205" Canvas.Top="82" Width="585" Height="282" HorizontalAlignment="Center" VerticalAlignment="Center">
             <!-- ItemTemplate for each message in the chat -->
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -23,8 +20,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBox HorizontalAlignment="Left" Height="55" Margin="206,178,0,0" TextWrapping="Wrap" Text="Message" VerticalAlignment="Top" Width="487" TextChanged="TextBox_TextChanged" Grid.Row="1"/>
-        <Button Content="Send" HorizontalAlignment="Left" Height="55" Margin="697,178,0,0" VerticalAlignment="Top" Width="93" Grid.Row="1"/>
-        <TextBlock TextWrapping="Wrap" Text="You are chatting with Zlatan" Margin="206,60,252,114" FontFamily="Comic Sans MS"/>
-    </Grid>
+        <TextBox x:Name="MessageTextBox" Canvas.Left="205" Canvas.Top="364" Width="492" Height="55" TextWrapping="Wrap" Text="Message" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button Content="Send" Canvas.Left="697" Canvas.Top="364" Width="93" Height="55" HorizontalAlignment="Center" VerticalAlignment="Top" Click="SendMessage_Click"/>
+    </Canvas>
 </Window>
