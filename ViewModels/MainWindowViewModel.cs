@@ -1,9 +1,9 @@
 ﻿using ChatApp.Model;
-using ChatApp.ViewModel.Command;
 using ChatApp.ViewModels;
 using ChatApp.ViewModels.Command;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel
@@ -38,10 +38,11 @@ namespace ChatApp.ViewModel
         public MainWindowViewModel(NetworkManager networkManager)
         {
             _networkManager = networkManager;
-            networkManager.PropertyChanged += myModel_PropertyChanged;
+            networkManager.PropertyChanged += MyModel_PropertyChanged;
+            networkManager.EventOccured += NetworkManager_EventOccurred;
         }
 
-        private void myModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void MyModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Message")
             {
@@ -50,18 +51,32 @@ namespace ChatApp.ViewModel
             }
         }
 
+        private void NetworkManager_EventOccurred(object? sender, string e)
+        {
+            // TODO: Add messagebox shown depending on error that occured
+
+            if (e == "Connected!")
+            {
+                startChatViewModel();
+            }
+            else if (e == "Error connecting to server!")
+            {
+                MessageBox.Show("Server not started!");
+            }
+
+        }
+
         public void StartServer(User user)
         {
-            
+
             _networkManager.StartServer(user);
-            startChatViewModel();
         }
 
         public void StartClient(User user)
         {
 
             _networkManager.StartClient(user);
-            startChatViewModel();
+
         }
 
         public ICommand StartConnection
@@ -97,7 +112,7 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void startChatViewModel()
         {
-            
+
             ChatViewModel chat = new ChatViewModel();
             chat.DataContext = this;
             chat.ShowDialog();
@@ -132,5 +147,6 @@ namespace ChatApp.ViewModel
             chatViewModel.DataContext = this;
             chatViewModel.ShowDialog();
         }
+
     }
 }
