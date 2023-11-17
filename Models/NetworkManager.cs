@@ -1,8 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,14 +55,18 @@ internal class NetworkManager : INotifyPropertyChanged
     }
 
     // TODO: Remove nestled try/catch?
-    public async Task<bool> StartClient(User user) 
+    public async Task<bool> StartClient(User user)
     {
         try
         {
             // TODO: add checks of address and port before calling client or check in client?
             _client = new Client(user.Address, user.Port);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
-            await Task.Run(() => _client.Connect());
+            await Task.Run(() =>
+            {
+                _client.Connect();
+                HandleConnection(_client.GetTcpClient());
+            });
 
             return true;
         }
@@ -78,7 +79,8 @@ internal class NetworkManager : INotifyPropertyChanged
 
     private void HandleConnection(TcpClient endPoint)
     {
-        try {
+        try
+        {
             _stream = endPoint.GetStream();
 
             while (true)
@@ -94,7 +96,6 @@ internal class NetworkManager : INotifyPropertyChanged
         {
             Console.WriteLine($"Error handling connection: {ex.Message}");
         }
-
     }
 
     public void SendChar(string str)

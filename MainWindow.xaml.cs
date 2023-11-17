@@ -1,10 +1,8 @@
-﻿using System;
+﻿using ChatApp.Model;
+using ChatApp.ViewModel;
+using System;
 using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Xml.Linq;
-using ChatApp.Model;
-using ChatApp.ViewModel;
 
 namespace ChatApp
 {
