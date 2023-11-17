@@ -35,6 +35,7 @@ namespace ChatApp
                 {
                     var user = new User(name, ip, port, "server");
                     viewModel.StartServer(user);
+                    // close
                 }
             }
         }
@@ -50,6 +51,7 @@ namespace ChatApp
                 {
                     var user = new User(name, ip, port, "server");
                     viewModel.StartClient(user);
+                    // close 
                 }
             }
         }
