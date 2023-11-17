@@ -10,7 +10,7 @@ namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
-        private NetworkManager NetworkManager { get; set; }
+        private NetworkManager _networkManager;
         private ICommand startChat;
         private ICommand startConnection;
         private string text;
@@ -37,7 +37,7 @@ namespace ChatApp.ViewModel
 
         public MainWindowViewModel(NetworkManager networkManager)
         {
-            NetworkManager = networkManager;
+            _networkManager = networkManager;
             networkManager.PropertyChanged += myModel_PropertyChanged;
         }
 
@@ -45,23 +45,16 @@ namespace ChatApp.ViewModel
         {
             if (e.PropertyName == "Message")
             {
-                var message = NetworkManager.Message;
+                var message = _networkManager.Message;
                 this.MyText = message;
             }
         }
 
-        public ICommand StartChat
+        public void StartServer(User user)
         {
-            get
-            {
-                if (startChat == null)
-                    startChat = new StartChatCommand(this);
-                return startChat;
-            }
-            set
-            {
-                startChat = value;
-            }
+            
+            _ = _networkManager.StartServer(user);
+            startChatViewModel();
         }
 
         public ICommand StartConnection
@@ -123,7 +116,7 @@ namespace ChatApp.ViewModel
 
         public void sendMessage()
         {
-            NetworkManager.SendChar(MyText);
+            _networkManager.SendChar(MyText);
         }
 
         public void showChatViewModel()

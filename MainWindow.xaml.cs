@@ -28,10 +28,14 @@ namespace ChatApp
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             // Call the StartServer method in NetworkManager
-            if (ParseInputs())
+
+            if (DataContext is MainWindowViewModel viewModel)
             {
-                user = new User(name, ip, port, "server");
-                networkManager.StartServer(user);
+                if (ParseInputs())
+                {
+                    var user = new User(name, ip, port, "server");
+                    viewModel.StartServer(user);
+                }
             }
         }
 
@@ -42,8 +46,9 @@ namespace ChatApp
             // Call the StartClient method in NetworkManager
             if (ParseInputs())
             {
-                user = new User(name, ip, port, "client");
-                networkManager.StartClient(user);
+                //user = new User(name, ip, port, "client");
+                //networkManager.StartClient(user);
+                // open view
             }
         }
 
