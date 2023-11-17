@@ -42,13 +42,15 @@ namespace ChatApp
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
             // call Command/StartClientCommand.cs
-            
+
             // Call the StartClient method in NetworkManager
-            if (ParseInputs())
+            if (DataContext is MainWindowViewModel viewModel)
             {
-                //user = new User(name, ip, port, "client");
-                //networkManager.StartClient(user);
-                // open view
+                if (ParseInputs())
+                {
+                    var user = new User(name, ip, port, "server");
+                    viewModel.StartClient(user);
+                }
             }
         }
 

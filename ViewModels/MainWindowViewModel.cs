@@ -57,6 +57,13 @@ namespace ChatApp.ViewModel
             startChatViewModel();
         }
 
+        public void StartClient(User user)
+        {
+
+            _ = _networkManager.StartClient(user);
+            startChatViewModel();
+        }
+
         public ICommand StartConnection
         {
             get
