@@ -1,13 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using System.Net;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-using ChatApp.Model;
+﻿using ChatApp.Model;
 using ChatApp.ViewModel.Command;
 using ChatApp.ViewModels;
 using ChatApp.ViewModels.Command;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace ChatApp.ViewModel
 {

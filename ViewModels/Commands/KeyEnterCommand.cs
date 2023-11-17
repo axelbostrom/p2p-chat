@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
@@ -13,19 +8,19 @@ namespace ChatApp.ViewModel.Command
         public event EventHandler CanExecuteChanged;
         private MainWindowViewModel parent;
 
-        public KeyEnterCommand(MainWindowViewModel parent) 
+        public KeyEnterCommand(MainWindowViewModel parent)
         {
             this.parent = parent;
         }
 
-        public bool CanExecute(object parameter) 
+        public bool CanExecute(object parameter)
         {
             return true;
         }
 
-        public void Execute(object parameter) 
-        { 
-            parent.sendMessage(); 
+        public void Execute(object parameter)
+        {
+            parent.sendMessage();
         }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ChatApp.Model
 {
@@ -20,7 +15,7 @@ namespace ChatApp.Model
         public event EventHandler<string> EventOccured;
 
 
-        public Client(IPAddress ipAddress, int port) 
+        public Client(IPAddress ipAddress, int port)
         {
             _ipAddress = ipAddress;
             _port = port;
