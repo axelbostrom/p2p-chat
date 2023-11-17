@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="ChatViewModel" Height="500" Width="850">
     <Canvas Background="Lavender">
-        <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="206" Canvas.Top="60" FontFamily="Comic Sans MS"/>
-        <ListBox x:Name="ChatListBox" Canvas.Left="205" Canvas.Top="82" Width="585" Height="282" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
+        <ListBox x:Name="ChatListBox" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
             <!-- ItemTemplate for each message in the chat -->
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -20,7 +20,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBox x:Name="MessageTextBox" Canvas.Left="205" Canvas.Top="364" Width="492" Height="55" TextWrapping="Wrap" Text="Message" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button Content="Send" Canvas.Left="697" Canvas.Top="364" Width="93" Height="55" HorizontalAlignment="Center" VerticalAlignment="Top" Click="SendMessage_Click"/>
+        <TextBox x:Name="MessageTextBox" Canvas.Left="175" Canvas.Top="344" Width="492" Height="55" TextWrapping="Wrap" Text="Message" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Click="SendMessage_Click"/>
     </Canvas>
 </Window>

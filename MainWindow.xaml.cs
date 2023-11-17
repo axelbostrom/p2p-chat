@@ -22,7 +22,6 @@ namespace ChatApp
             InitializeComponent();
             networkManager = new NetworkManager();
             this.DataContext = new MainWindowViewModel(networkManager);
-            networkManager.EventOccured += NetworkManager_EventOccurred;
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
@@ -83,11 +82,6 @@ namespace ChatApp
             }
 
             return true;
-        }
-        private void NetworkManager_EventOccurred(object? sender, string e)
-        {
-            // TODO: Add messagebox shown depending on error that occured
-            MessageBox.Show("Server not started!");
         }
     }
 }

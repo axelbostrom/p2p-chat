@@ -64,7 +64,7 @@ internal class NetworkManager : INotifyPropertyChanged
             await Task.Run(() =>
             {
                 _client.Connect();
-                HandleConnection(_client.GetTcpClient());
+                // HandleConnection(_client.GetTcpClient());
             });
 
             return true;

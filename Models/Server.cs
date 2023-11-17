@@ -21,7 +21,7 @@ namespace ChatApp.Model
             _port = port;
         }
 
-        private void OnErrorOccurred(string errorMessage)
+        private void OnEventOccurred(string errorMessage)
         {
             EventOccured?.Invoke(this, errorMessage);
         }
@@ -35,13 +35,14 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
                 TcpClient client = _tcpListener.AcceptTcpClient();
-                System.Diagnostics.Debug.WriteLine("Connected!");
+                System.Diagnostics.Debug.WriteLine("Server connected!");
+                OnEventOccurred("Connected!");
                 Task.Factory.StartNew(() => HandleClient(client));
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error connecting to client: {ex.Message}");
-                OnErrorOccurred(ex.Message);
+                OnEventOccurred("Error connecting to client!");
             }
             finally
             {
@@ -84,7 +85,7 @@ namespace ChatApp.Model
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
-                OnErrorOccurred(ex.Message);
+                OnEventOccurred("Error handling client.");
             }
         }
     }

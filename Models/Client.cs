@@ -21,9 +21,9 @@ namespace ChatApp.Model
             _port = port;
         }
 
-        private void OnEventOccurred(string errorMessage)
+        private void OnEventOccurred(string eventMessage)
         {
-            EventOccured?.Invoke(this, errorMessage);
+            EventOccured?.Invoke(this, eventMessage);
         }
 
         public void Connect()
@@ -37,7 +37,7 @@ namespace ChatApp.Model
                 // combination.
 
                 // Prefer a using declaration to ensure the instance is Disposed later.
-                System.Diagnostics.Debug.WriteLine("Client is starting...");
+                System.Diagnostics.Debug.WriteLine("Client is looking for server to connect to...");
 
                 _tcpClient = new TcpClient(_ipAddress.ToString(), _port);
 
@@ -46,6 +46,10 @@ namespace ChatApp.Model
 
                 // Get a client stream for reading and writing.
                 _stream = _tcpClient.GetStream();
+
+                // Notify subscribers that the connection is successful
+                System.Diagnostics.Debug.WriteLine("Client connected!");
+                OnEventOccurred("Connected!");
 
                 // Send the message to the connected TcpServer.
                 // _stream.Write(data, 0, data.Length);
@@ -67,8 +71,9 @@ namespace ChatApp.Model
             }
             catch (Exception ex)
             {
+
                 System.Diagnostics.Debug.WriteLine($"Error connecting to server: {ex.Message}");
-                OnEventOccurred(ex.Message);
+                OnEventOccurred("Error connecting to server!");
             }
         }
 
