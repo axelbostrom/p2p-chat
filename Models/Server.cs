@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ChatApp.Model
 {
@@ -21,9 +22,12 @@ namespace ChatApp.Model
             _port = port;
         }
 
-        private void OnEventOccurred(string errorMessage)
+        private void OnEventOccurred(string eventMessage)
         {
-            EventOccured?.Invoke(this, errorMessage);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                EventOccured?.Invoke(this, eventMessage);
+            });
         }
 
         public void StartListening()
@@ -35,9 +39,9 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
                 TcpClient client = _tcpListener.AcceptTcpClient();
+                Task.Factory.StartNew(() => HandleClient(client));
                 System.Diagnostics.Debug.WriteLine("Server connected!");
                 OnEventOccurred("Connected!");
-                Task.Factory.StartNew(() => HandleClient(client));
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
+using System.Windows;
 
 namespace ChatApp.Model
 {
@@ -23,7 +24,10 @@ namespace ChatApp.Model
 
         private void OnEventOccurred(string eventMessage)
         {
-            EventOccured?.Invoke(this, eventMessage);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                EventOccured?.Invoke(this, eventMessage);
+            });
         }
 
         public void Connect()
