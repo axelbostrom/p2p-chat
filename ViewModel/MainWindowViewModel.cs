@@ -11,6 +11,7 @@ namespace ChatApp.ViewModel
         public string _name = "Zlatan";
         private string _ip = "127.0.0.1";
         private string _port = "3000";
+
         private NetworkManager _networkManager;
         private ChatViewModel chat;
 
@@ -19,16 +20,7 @@ namespace ChatApp.ViewModel
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string MyText
-        {
-            get { return text; }
-            set
-            {
-                text = value;
-                OnPropertyChanged("MyText");
-            }
-
-        }
+        public NetworkManager NetworkManager { get { return _networkManager; } }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -61,43 +53,19 @@ namespace ChatApp.ViewModel
         {
             // TODO: Add messagebox shown depending on error that occured
 
-            if (e == "Connected!")
+            if (e == "Server started succesfully!")
             {
                 StartChatViewModel();
+            }
+            else if (e == "Connected!")
+            {
+                //StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
                 MessageBox.Show("Server not started!");
             }
 
-        }
-
-        public void StartServer(User user)
-        {
-
-            _networkManager.StartServer(user);
-        }
-
-        public void StartClient(User user)
-        {
-
-            _networkManager.StartClient(user);
-
-        }
-
-        //TODO: REMOVE/MOVE/FIX LOGIC
-        public void StartConnectionAction(object param)
-        {
-            string userType = param as string;
-
-            System.Diagnostics.Debug.WriteLine(userType);
-
-
-            if (userType != null)
-            {
-                // TODO: ADD USER need to get input first...
-                //currentUser = new User();
-            }
         }
 
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both

@@ -12,10 +12,6 @@ namespace ChatApp
     public partial class MainWindow : Window
     {
         private NetworkManager networkManager;
-        private IPAddress ip;
-        private int port;
-        private string name;
-        User user;
 
         public MainWindow()
         {
