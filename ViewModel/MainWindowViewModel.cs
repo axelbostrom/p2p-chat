@@ -1,4 +1,10 @@
-﻿namespace ChatApp.ViewModel
+﻿using ChatApp.Model;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
+
+namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
@@ -16,15 +22,6 @@
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
         private User _currentUser;
-
-        public string MyText
-        {
-            get { return text; }
-            set
-            {
-                text = value;
-                OnPropertyChanged("MyText");
-            }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -72,18 +69,8 @@
 
         }
 
-        public void StartServer(User user)
-        {
-            _currentUser = user;
-            _networkManager.StartServer(_currentUser);
-        }
-
-        public void StartClient(User user)
-        {
-            _currentUser = user;
-            _networkManager.StartClient(_currentUser);
-
-        }
+        public ICommand StartServerCommand { get { return new Command.StartServerCommand(this); } }
+        public ICommand StartClientCommand { get { return new Command.StartClientCommand(this); } }
 
         //TODO: REMOVE/MOVE/FIX LOGIC
         public void StartConnectionAction(object param)
@@ -105,24 +92,6 @@
         {
             chat = new ChatViewModel();
             chat.ShowDialog();
-        }
-
-        public ICommand StartServerCommand
-        {
-            get
-            {
-                return new Command.StartServerCommand(this);
-            }
-            set { }
-        }
-
-        public ICommand StartClientCommand
-        {
-            get
-            {
-                return new Command.StartClientCommand(this);
-            }
-            set { }
         }
 
         public string Name
