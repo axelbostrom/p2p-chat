@@ -1,7 +1,6 @@
-﻿using ChatApp.Model;
-using ChatApp.ViewModel;
+﻿using ChatApp.Models;
+using System.Collections.ObjectModel;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace ChatApp.ViewModels
 {
@@ -10,6 +9,8 @@ namespace ChatApp.ViewModels
     /// </summary>
     public partial class ChatViewModel : Window
     {
+        private ObservableCollection<Message> Messages = new ObservableCollection<Message>();
+
         public ChatViewModel()
         {
             InitializeComponent();

@@ -118,24 +118,6 @@ namespace ChatApp.ViewModel
             chat.ShowDialog();
         }
 
-        private ICommand enterCommand;
-        public ICommand EnterCommand
-        {
-            get
-            {
-                if (enterCommand == null)
-                {
-                    return new Command.KeyEnterCommand(this);
-                }
-                else
-                {
-                    return enterCommand;
-
-                }
-            }
-            set { enterCommand = value; }
-        }
-
         public void sendMessage()
         {
             _networkManager.SendChar(MyText);
