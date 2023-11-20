@@ -9,10 +9,10 @@ namespace ChatApp.View
     /// </summary>
     public partial class ChatWindow : Window
     {
-        public ChatWindow(NetworkManager networkManager)
+        public ChatWindow(NetworkManager networkManager, User user)
         {
             InitializeComponent();
-            ChatViewModel viewModel = new ChatViewModel(networkManager);
+            ChatViewModel viewModel = new ChatViewModel(networkManager, user);
             this.DataContext = viewModel;
         }
     }

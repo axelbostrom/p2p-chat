@@ -12,6 +12,7 @@ namespace ChatApp.ViewModel
         public string _name = "Zlatan";
         private string _ip = "127.0.0.1";
         private string _port = "3000";
+        private User _user;
 
         private NetworkManager _networkManager;
         private ChatWindow _chatWindow;
@@ -91,7 +92,7 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
-            _chatWindow = new ChatWindow(_networkManager);
+            _chatWindow = new ChatWindow(_networkManager, _user);
             _chatWindow.Show();
         }
 
@@ -123,6 +124,12 @@ namespace ChatApp.ViewModel
                 _port = value;
                 OnPropertyChanged(nameof(Port));
             }
+        }
+
+        public User User
+        {
+            get { return _user; }
+            set { _user = value; }
         }
     }
 

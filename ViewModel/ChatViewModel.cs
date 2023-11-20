@@ -12,10 +12,12 @@ namespace ChatApp.ViewModel
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _message;
         private NetworkManager _networkManager;
+        private User _user;
 
-        public ChatViewModel(NetworkManager networkManager)
+        public ChatViewModel(NetworkManager networkManager, User user)
         {
             _networkManager = networkManager;
+            _user = user;
         }
 
         public NetworkManager NetworkManager { get { return _networkManager; }}
