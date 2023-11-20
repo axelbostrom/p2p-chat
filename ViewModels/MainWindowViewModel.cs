@@ -1,11 +1,4 @@
-﻿using ChatApp.Model;
-using ChatApp.ViewModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-
-namespace ChatApp.ViewModel
+﻿namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
@@ -114,8 +107,15 @@ namespace ChatApp.ViewModel
             {
                 return new Command.StartServerCommand(this);
             }
-            set {}
+            set { }
         }
+
+        public ICommand SendCommand
+        {
+            get { return _sendCommand; }
+            set { _sendCommand = value; }
+        }
+
 
         public string Name
         {

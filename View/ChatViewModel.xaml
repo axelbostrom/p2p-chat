@@ -15,12 +15,12 @@
                     <StackPanel>
                         <TextBlock FontWeight="Bold" Text="{Binding Sender}" />
                         <TextBlock FontStyle="Italic" Text="{Binding Timestamp}" />
-                        <TextBlock Text="{Binding Message}" />
+                        <TextBlock Text="{Binding Messages}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <TextBox x:Name="MessageTextBox" Canvas.Left="175" Canvas.Top="344" Width="492" Height="55" TextWrapping="Wrap" Text="Message" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Click="SendMessage_Click"/>
+        <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendCommand}"/>
     </Canvas>
 </Window>
