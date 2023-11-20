@@ -34,7 +34,8 @@ namespace ChatApp
                 {
                     var user = new User(name, ip, port, "server");
                     viewModel.StartServer(user);
-
+                    this.Show();
+                    
                 }
             }
         }

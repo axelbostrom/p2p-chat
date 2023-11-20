@@ -1,20 +1,9 @@
-﻿using ChatApp.Model;
-using ChatApp.ViewModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-
-namespace ChatApp.ViewModel
+﻿namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private NetworkManager _networkManager;
-
-        private ICommand startChat;
-        private ICommand startConnection;
-        private ICommand _sendCommand;
-
+        private ICommand _startServerCommand;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -109,11 +98,13 @@ namespace ChatApp.ViewModel
             _networkManager.SendChar(MyText);
         }
 
-        public void showChatViewModel()
+        public ICommand StartServerCommand
         {
-            ChatViewModel chatViewModel = new ChatViewModel();
-            chatViewModel.DataContext = this;
-            chatViewModel.ShowDialog();
+            get
+            {
+                return new Command.StartServerCommand(this);
+            }
+            set { }
         }
 
         public ICommand SendCommand
