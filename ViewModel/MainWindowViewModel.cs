@@ -19,7 +19,7 @@ namespace ChatApp.ViewModel
 
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
-        private string text;
+        private MainWindow _mainWindow;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
@@ -33,8 +33,9 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(MainWindow mainWindow)
         {
+            _mainWindow = mainWindow;
             _networkManager = new NetworkManager();
             _networkManager.PropertyChanged += MyModel_PropertyChanged;
             _networkManager.EventOccured += NetworkManager_EventOccurred;
@@ -56,13 +57,14 @@ namespace ChatApp.ViewModel
         {
             // TODO: Add messagebox shown depending on error that occured
 
-            if (e == "Server started succesfully!")
+            if (e == "Booted up succesfully!")
             {
+                _mainWindow.Hide();
                 StartChatViewModel();
             }
             else if (e == "Connected!")
             {
-                StartChatViewModel();
+                //StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {

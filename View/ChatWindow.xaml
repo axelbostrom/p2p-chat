@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:viewmodel="clr-namespace:ChatApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ChatViewModel}"
         mc:Ignorable="d"
         Title="Zlatan Chat" Height="500" Width="850">
     <Canvas Background="Lavender">
-        <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
+        <TextBlock x:Name="ChatTitle" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
         <ListBox x:Name="ChatListBox" ItemsSource="{Binding Messages}" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
             <!-- ItemTemplate for each message in the chat -->
             <ListBox.ItemTemplate>
@@ -21,5 +21,25 @@
         </ListBox>
         <TextBox x:Name="MessageTextBox" Canvas.Left="175" Canvas.Top="344" Width="492" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}"/>
+
+        <Grid Canvas.Left="404" Canvas.Top="420" Visibility="{Binding GridVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Adjusts width based on content -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Adjusts width based on content -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Adjusts width based on content -->
+            </Grid.ColumnDefinitions>
+
+            <!-- TextBlock -->
+            <TextBlock TextWrapping="Wrap" Width="250" FontFamily="Comic Sans MS" VerticalAlignment="Center" Text="User wants to chat with you"/>
+
+            <!-- Accept Button -->
+            <Button Content="Accept" Width="50" Height="28" Command="{Binding AcceptConnectionCommand}" Background="#00FF00" Grid.Column="1" Margin="5"/>
+
+            <!-- Deny Button -->
+            <Button Content="Deny" Width="50" Height="28" Command="{Binding AcceptConnectionCommand}" Background="#FF3232" Grid.Column="2" Margin="5"/>
+        </Grid>
     </Canvas>
 </Window>

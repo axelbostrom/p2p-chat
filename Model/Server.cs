@@ -38,7 +38,7 @@ namespace ChatApp.Model
                 _tcpListener.Start();
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
-                // OnEventOccurred("Server started succesfully!");
+                OnEventOccurred("Booted up succesfully!");
 
                 TcpClient client = _tcpListener.AcceptTcpClient();
                 Task.Factory.StartNew(() => HandleClient(client));

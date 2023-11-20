@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel
@@ -16,6 +17,20 @@ namespace ChatApp.ViewModel
         private NetworkManager _networkManager;
         private User _user;
 
+        private Visibility _gridVisibility;
+        public Visibility GridVisibility
+        {
+            get => _gridVisibility;
+            set
+            {
+                if (_gridVisibility != value)
+                {
+                    _gridVisibility = value;
+                    OnPropertyChanged(nameof(GridVisibility));
+                }
+            }
+        }
+
         public ObservableCollection<Message> _messages;
 
         public ObservableCollection<Message> Messages
@@ -24,7 +39,7 @@ namespace ChatApp.ViewModel
             set
             {
                 _messages = value;
-                OnPropertyChanged(nameof(Messages));
+                OnPropertyChanged(nameof(Messages)); GridVisibility = Visibility.Hidden;
             }
         }
 
@@ -37,13 +52,9 @@ namespace ChatApp.ViewModel
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
 
-        public ICommand SendMessageCommand
-        {
-            get
-            {
-                return new Command.SendMessageCommand(this);
-            }
-        }
+        public ICommand SendMessageCommand { get { return new Command.SendMessageCommand(this); }}
+        public ICommand AcceptConnectionCommand { get { return new Command.AcceptConnectionCommand(this); } }
+        public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
