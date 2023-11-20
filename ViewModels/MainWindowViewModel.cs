@@ -1,8 +1,17 @@
-﻿namespace ChatApp.ViewModel
+﻿using ChatApp.Model;
+using ChatApp.ViewModels;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
+
+namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private NetworkManager _networkManager;
+
+        private ICommand _sendCommand;
         private ICommand _startServerCommand;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
