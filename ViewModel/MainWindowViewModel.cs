@@ -18,6 +18,8 @@ namespace ChatApp.ViewModel
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private User _currentUser;
+
         public string MyText
         {
             get { return text; }
@@ -52,7 +54,7 @@ namespace ChatApp.ViewModel
 
 
 
-                chat.AddMessage(sender.ToString(), message);
+                //chat.AddMessage(sender.ToString(), message);
             }
         }
 
@@ -73,14 +75,14 @@ namespace ChatApp.ViewModel
 
         public void StartServer(User user)
         {
-
-            _networkManager.StartServer(user);
+            _currentUser = user;
+            _networkManager.StartServer(_currentUser);
         }
 
         public void StartClient(User user)
         {
-
-            _networkManager.StartClient(user);
+            _currentUser = user;
+            _networkManager.StartClient(_currentUser);
 
         }
 

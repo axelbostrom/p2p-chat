@@ -1,6 +1,6 @@
 ﻿using ChatApp.Model;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel
@@ -8,15 +8,15 @@ namespace ChatApp.ViewModel
     /// <summary>
     /// Interaction logic for ChatViewModel.xaml
     /// </summary>
-    public partial class ChatViewModel : Window
+    public partial class ChatViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<Message> Messages { get; set; } = new ObservableCollection<Message>();
-        private ICommand _sendMessageCommand;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ChatViewModel()
         {
             InitializeComponent();
-            DataContext = this;
         }
 
         public ICommand SendMessageCommand
@@ -25,7 +25,6 @@ namespace ChatApp.ViewModel
             {
                 return new Command.SendMessageCommand(this);
             }
-            set { }
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -45,7 +44,7 @@ namespace ChatApp.ViewModel
             MessageTextBox.Text = string.Empty;
         }
 
-        internal void AddMessage(string sender, string message)
+        internal void AddMessage(string message)
         {
             System.Diagnostics.Debug.WriteLine("Add Message " + message);
             // Messages.Add(new Message { Sender = sender, Timestamp = DateTime.Now, Content = message });
