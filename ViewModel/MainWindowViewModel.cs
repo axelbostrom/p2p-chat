@@ -43,8 +43,6 @@ namespace ChatApp.ViewModel
             {
                 var message = _networkManager.Message;
 
-
-
                 chat.AddMessage(sender.ToString(), message);
             }
         }
@@ -68,30 +66,15 @@ namespace ChatApp.ViewModel
 
         }
 
-        // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
             chat = new ChatViewModel();
             chat.ShowDialog();
         }
 
-        public ICommand StartServerCommand
-        {
-            get
-            {
-                return new Command.StartServerCommand(this);
-            }
-            set { }
-        }
+        public ICommand StartServerCommand { get { return new Command.StartServerCommand(this); }}
 
-        public ICommand StartClientCommand
-        {
-            get
-            {
-                return new Command.StartClientCommand(this);
-            }
-            set { }
-        }
+        public ICommand StartClientCommand { get { return new Command.StartClientCommand(this); }}
 
         public string Name
         {
@@ -100,7 +83,6 @@ namespace ChatApp.ViewModel
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-                System.Diagnostics.Debug.WriteLine(_name);
             }
         }
 
@@ -111,7 +93,6 @@ namespace ChatApp.ViewModel
             {
                 _ip = value;
                 OnPropertyChanged(nameof(Ip));
-                System.Diagnostics.Debug.WriteLine(_ip);
             }
         }
 
@@ -122,7 +103,6 @@ namespace ChatApp.ViewModel
             {
                 _port = value;
                 OnPropertyChanged(nameof(Port));
-                System.Diagnostics.Debug.WriteLine(_port);
             }
         }
 
