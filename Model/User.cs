@@ -3,7 +3,7 @@ using System.Net;
 
 namespace ChatApp.Model
 {
-    internal class User : INotifyPropertyChanged
+    public class User : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _name;

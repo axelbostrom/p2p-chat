@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace ChatApp.Model
 {
-    internal class Client : INotifyPropertyChanged
+    public class Client : INotifyPropertyChanged
     {
         private IPAddress _ipAddress;
         private int _port;

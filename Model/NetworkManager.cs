@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Model;
 
-internal class NetworkManager : INotifyPropertyChanged
+public class NetworkManager : INotifyPropertyChanged
 {
     private NetworkStream _stream;
     private Client _client;

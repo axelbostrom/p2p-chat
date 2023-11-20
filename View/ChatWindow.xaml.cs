@@ -1,4 +1,5 @@
-﻿using ChatApp.ViewModel;
+﻿using ChatApp.Model;
+using ChatApp.ViewModel;
 using System.Windows;
 
 namespace ChatApp.View
@@ -8,10 +9,10 @@ namespace ChatApp.View
     /// </summary>
     public partial class ChatWindow : Window
     {
-        public ChatWindow()
+        public ChatWindow(NetworkManager networkManager)
         {
             InitializeComponent();
-            ChatViewModel viewModel = new ChatViewModel();
+            ChatViewModel viewModel = new ChatViewModel(networkManager);
             this.DataContext = viewModel;
         }
     }
