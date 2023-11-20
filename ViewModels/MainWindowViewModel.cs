@@ -9,6 +9,9 @@ namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
+        public string _name = "Zlatan";
+        private string _ip = "127.0.0.1";
+        private string _port = "3000";
         private NetworkManager _networkManager;
         private ICommand _startServerCommand;
         private string text;
@@ -112,6 +115,39 @@ namespace ChatApp.ViewModel
                 return new Command.StartServerCommand(this);
             }
             set {}
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+                System.Diagnostics.Debug.WriteLine(_name);
+            }
+        }
+
+        public string Ip
+        {
+            get { return _ip; }
+            set
+            {
+                _ip = value;
+                OnPropertyChanged(nameof(Ip));
+                System.Diagnostics.Debug.WriteLine(_ip);
+            }
+        }
+
+        public string Port
+        {
+            get { return _port; }
+            set
+            {
+                _port = value;
+                OnPropertyChanged(nameof(Port));
+                System.Diagnostics.Debug.WriteLine(_port);
+            }
         }
 
     }

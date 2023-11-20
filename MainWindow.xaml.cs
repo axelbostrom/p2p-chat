@@ -24,22 +24,6 @@ namespace ChatApp
             this.DataContext = new MainWindowViewModel(networkManager);
         }
 
-        private void StartServer_Click(object sender, RoutedEventArgs e)
-        {
-            // Call the StartServer method in NetworkManager
-
-            if (DataContext is MainWindowViewModel viewModel)
-            {
-                if (ParseInputs())
-                {
-                    var user = new User(name, ip, port, "server");
-                    viewModel.StartServer(user);
-                    this.Show();
-                    
-                }
-            }
-        }
-
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
             // call Command/StartClientCommand.cs
