@@ -88,7 +88,7 @@ namespace ChatApp.ViewModel
             }
         }
 
-        // TODO: When server and client have entered correct info and pressed respective button => start chat for both
+        // TODO: When server and client have entered correct info and pressed respective button => start chat for both AND Change name
         public void StartChatViewModel()
         {
             _chatWindow = new ChatWindow();
