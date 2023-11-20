@@ -32,11 +32,8 @@ namespace ChatApp
             {
                 if (ParseInputs())
                 {
-                    this.Hide();
                     var user = new User(name, ip, port, "server");
                     viewModel.StartServer(user);
-                    this.Show();
-                    
                 }
             }
         }
