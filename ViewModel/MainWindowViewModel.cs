@@ -15,6 +15,7 @@ namespace ChatApp.ViewModel
         private ChatViewModel chat;
 
         private ICommand _startServerCommand;
+        private ICommand _startClientCommand;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -111,6 +112,15 @@ namespace ChatApp.ViewModel
             get
             {
                 return new Command.StartServerCommand(this);
+            }
+            set { }
+        }
+
+        public ICommand StartClientCommand
+        {
+            get
+            {
+                return new Command.StartClientCommand(this);
             }
             set { }
         }
