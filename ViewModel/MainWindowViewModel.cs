@@ -94,6 +94,8 @@ namespace ChatApp.ViewModel
             chat = new ChatWindow();
             chat.ShowDialog();
         }
+            set { }
+        }
 
         public string Name
         {
@@ -102,7 +104,6 @@ namespace ChatApp.ViewModel
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-                System.Diagnostics.Debug.WriteLine(_name);
             }
         }
 
@@ -113,7 +114,6 @@ namespace ChatApp.ViewModel
             {
                 _ip = value;
                 OnPropertyChanged(nameof(Ip));
-                System.Diagnostics.Debug.WriteLine(_ip);
             }
         }
 
@@ -124,7 +124,6 @@ namespace ChatApp.ViewModel
             {
                 _port = value;
                 OnPropertyChanged(nameof(Port));
-                System.Diagnostics.Debug.WriteLine(_port);
             }
         }
 
