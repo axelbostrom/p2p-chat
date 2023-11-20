@@ -10,8 +10,11 @@ namespace ChatApp.ViewModel
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private NetworkManager _networkManager;
+
         private ICommand startChat;
         private ICommand startConnection;
+        private ICommand _sendCommand;
+
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -112,6 +115,13 @@ namespace ChatApp.ViewModel
             chatViewModel.DataContext = this;
             chatViewModel.ShowDialog();
         }
+
+        public ICommand SendCommand
+        {
+            get { return _sendCommand; }
+            set { _sendCommand = value; }
+        }
+
 
     }
 }

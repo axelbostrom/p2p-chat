@@ -1,5 +1,4 @@
-﻿using ChatApp.ViewModel;
-using System;
+﻿using System;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModels.Commands
@@ -7,9 +6,9 @@ namespace ChatApp.ViewModels.Commands
     internal class SendMessageCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private MainWindowViewModel _parent;
+        private ChatViewModel _parent;
 
-        public SendMessageCommand(MainWindowViewModel parent)
+        public SendMessageCommand(ChatViewModel parent)
         {
             _parent = parent;
         }
@@ -21,7 +20,7 @@ namespace ChatApp.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            _parent.sendMessage();
+
         }
     }
 }
