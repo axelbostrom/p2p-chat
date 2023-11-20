@@ -79,6 +79,8 @@ namespace ChatApp.ViewModel
 
         }
 
+        public ICommand StartServerCommand {  get; private set; }
+
         public ICommand StartConnection
         {
             get
