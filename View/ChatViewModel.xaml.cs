@@ -1,17 +1,31 @@
-﻿using System.Windows;
+﻿using ChatApp.Model;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
-namespace ChatApp.ViewModels
+namespace ChatApp.ViewModel
 {
     /// <summary>
     /// Interaction logic for ChatViewModel.xaml
     /// </summary>
     public partial class ChatViewModel : Window
     {
-        // private ObservableCollection<Message> Messages = new ObservableCollection<Message>();
+        private ObservableCollection<Message> Messages { get; set; } = new ObservableCollection<Message>();
+        private ICommand _sendMessageCommand;
 
         public ChatViewModel()
         {
             InitializeComponent();
+            DataContext = this;
+        }
+
+        public ICommand SendMessageCommand
+        {
+            get
+            {
+                return new Command.SendMessageCommand(this);
+            }
+            set { }
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -19,11 +33,22 @@ namespace ChatApp.ViewModels
 
         }
 
-        private void SendMessage_Click(object sender, RoutedEventArgs e)
+        internal void SendMessage()
         {
-            // Call the StartServer method in NetworkManager
             string message = MessageTextBox.Text;
             System.Diagnostics.Debug.WriteLine(message);
+
+            // Add message to chatbox here
+            // AddMessage(message);
+
+            // Clear messagebox
+            MessageTextBox.Text = string.Empty;
+        }
+
+        internal void AddMessage(string sender, string message)
+        {
+            System.Diagnostics.Debug.WriteLine("Add Message " + message);
+            // Messages.Add(new Message { Sender = sender, Timestamp = DateTime.Now, Content = message });
         }
     }
 }

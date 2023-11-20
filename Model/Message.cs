@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ChatApp.Models
+namespace ChatApp.Model
 {
 
 

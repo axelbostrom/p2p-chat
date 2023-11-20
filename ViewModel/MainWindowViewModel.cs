@@ -1,5 +1,4 @@
 ﻿using ChatApp.Model;
-using ChatApp.ViewModels;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -13,8 +12,8 @@ namespace ChatApp.ViewModel
         private string _ip = "127.0.0.1";
         private string _port = "3000";
         private NetworkManager _networkManager;
+        private ChatViewModel chat;
 
-        private ICommand _sendCommand;
         private ICommand _startServerCommand;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -50,7 +49,10 @@ namespace ChatApp.ViewModel
             if (e.PropertyName == "Message")
             {
                 var message = _networkManager.Message;
-                this.MyText = message;
+
+
+
+                chat.AddMessage(sender.ToString(), message);
             }
         }
 
@@ -60,7 +62,7 @@ namespace ChatApp.ViewModel
 
             if (e == "Connected!")
             {
-                startChatViewModel();
+                StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
@@ -82,6 +84,7 @@ namespace ChatApp.ViewModel
 
         }
 
+        //TODO: REMOVE/MOVE/FIX LOGIC
         public void StartConnectionAction(object param)
         {
             string userType = param as string;
@@ -97,17 +100,10 @@ namespace ChatApp.ViewModel
         }
 
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
-        public void startChatViewModel()
+        public void StartChatViewModel()
         {
-
-            ChatViewModel chat = new ChatViewModel();
-            chat.DataContext = this;
+            chat = new ChatViewModel();
             chat.ShowDialog();
-        }
-
-        public void sendMessage()
-        {
-            _networkManager.SendChar(MyText);
         }
 
         public ICommand StartServerCommand
@@ -118,13 +114,6 @@ namespace ChatApp.ViewModel
             }
             set { }
         }
-
-        public ICommand SendCommand
-        {
-            get { return _sendCommand; }
-            set { _sendCommand = value; }
-        }
-
 
         public string Name
         {

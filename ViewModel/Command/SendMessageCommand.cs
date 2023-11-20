@@ -3,16 +3,16 @@ using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class StartChatCommand : ICommand
+    internal class SendMessageCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private MainWindowViewModel _parent;
+        private ChatViewModel _parent;
 
-        public StartChatCommand(MainWindowViewModel parent)
+        public SendMessageCommand(ChatViewModel parent)
         {
             _parent = parent;
-
         }
+
         public bool CanExecute(object parameter)
         {
             return true;
@@ -20,7 +20,7 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.startChatViewModel();
+            _parent.SendMessage();
         }
     }
 }
