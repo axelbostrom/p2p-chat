@@ -7,14 +7,14 @@
         Title="Zlatan Chat" Height="500" Width="850">
     <Canvas Background="Lavender">
         <TextBlock x:Name="ChatTitl" TextWrapping="Wrap" Text="You are chatting with Zlatan" Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
-        <ListBox x:Name="ChatListBox" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <ListBox x:Name="ChatListBox" ItemsSource="{Binding Messages}" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
             <!-- ItemTemplate for each message in the chat -->
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock FontWeight="Bold" Text="{Binding Sender}" />
                         <TextBlock FontStyle="Italic" Text="{Binding Timestamp}" />
-                        <TextBlock Text="{Binding Messages}" />
+                        <TextBlock Text="{Binding Content}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

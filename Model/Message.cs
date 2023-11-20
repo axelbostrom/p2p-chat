@@ -58,7 +58,7 @@ namespace ChatApp.Model
             set
             {
                 _content = value;
-                OnPropertyChanged("Message");
+                OnPropertyChanged("Content");
             }
         }
     }
