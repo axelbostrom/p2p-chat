@@ -20,7 +20,7 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            System.Diagnostics.Debug.WriteLine("skrrrt");
+            System.Diagnostics.Debug.WriteLine(parent);
         }
     }
 }
