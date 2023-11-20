@@ -1,7 +1,5 @@
 ﻿using ChatApp.Model;
 using ChatApp.ViewModel;
-using System;
-using System.Net;
 using System.Windows;
 
 namespace ChatApp

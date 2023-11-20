@@ -1,4 +1,5 @@
 ﻿using ChatApp.Model;
+using ChatApp.View;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -13,7 +14,7 @@ namespace ChatApp.ViewModel
         private string _port = "3000";
 
         private NetworkManager _networkManager;
-        private ChatViewModel chat;
+        private ChatWindow chat;
 
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
@@ -60,7 +61,7 @@ namespace ChatApp.ViewModel
             }
             else if (e == "Connected!")
             {
-                //StartChatViewModel();
+                StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
@@ -90,7 +91,7 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
-            chat = new ChatViewModel();
+            chat = new ChatWindow();
             chat.ShowDialog();
         }
 
