@@ -16,6 +16,6 @@
         <TextBox x:Name="TextBox_Ip" Text="{Binding Ip, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="221" />
 
         <Button Content="Start Server" HorizontalAlignment="Left" Height="45" Margin="229,285,0,0" VerticalAlignment="Top" Command="{Binding Path=StartServerCommand}" Width="161" FontFamily="Comic Sans MS"/>
-        <Button Content="Start Client" HorizontalAlignment="Left" Height="45" Margin="410,285,0,0" VerticalAlignment="Top" Click="StartClient_Click" Width="161" FontFamily="Comic Sans MS"/>
+        <Button Content="Start Client" HorizontalAlignment="Left" Height="45" Margin="410,285,0,0" VerticalAlignment="Top" Command="{Binding Path=StartClientCommand}" Width="161" FontFamily="Comic Sans MS"/>
     </Canvas>
 </Window>
