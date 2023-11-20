@@ -32,11 +32,11 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public MainWindowViewModel(NetworkManager networkManager)
+        public MainWindowViewModel()
         {
-            _networkManager = networkManager;
-            networkManager.PropertyChanged += MyModel_PropertyChanged;
-            networkManager.EventOccured += NetworkManager_EventOccurred;
+            _networkManager = new NetworkManager();
+            _networkManager.PropertyChanged += MyModel_PropertyChanged;
+            _networkManager.EventOccured += NetworkManager_EventOccurred;
         }
 
         private void MyModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -91,7 +91,7 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
-            _chatWindow = new ChatWindow();
+            _chatWindow = new ChatWindow(_networkManager);
             _chatWindow.Show();
         }
 

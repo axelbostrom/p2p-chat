@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using ChatApp.Model;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -6,10 +7,18 @@ namespace ChatApp.ViewModel
 {
 
 
-    internal partial class ChatViewModel : INotifyPropertyChanged
+    internal class ChatViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _message;
+        private NetworkManager _networkManager;
+
+        public ChatViewModel(NetworkManager networkManager)
+        {
+            _networkManager = networkManager;
+        }
+
+        public NetworkManager NetworkManager { get { return _networkManager; }}
 
         public ICommand SendMessageCommand
         {
@@ -25,18 +34,6 @@ namespace ChatApp.ViewModel
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-        internal void SendMessage()
-        {
-            string message = Message;
-            System.Diagnostics.Debug.WriteLine(message);
-
-            // Add message to chatbox here
-            // AddMessage(message);
-
-            // Clear messagebox
-            Message = string.Empty;
         }
 
         internal void AddMessage(string message)

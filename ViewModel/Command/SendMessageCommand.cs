@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Model;
+using System;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
@@ -20,7 +21,7 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.SendMessage();
+            _parent.NetworkManager.SendChar(_parent.Message);
         }
     }
 }

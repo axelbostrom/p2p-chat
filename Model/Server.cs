@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace ChatApp.Model
 {
-    internal class Server : INotifyPropertyChanged
+    public class Server : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private TcpListener _tcpListener;
