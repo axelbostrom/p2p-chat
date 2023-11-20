@@ -20,10 +20,7 @@ namespace ChatApp.Models
         }
         private void OnPropertyChanged(string PropertyName)
         {
-            if (PropertyName != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
         public string Sender

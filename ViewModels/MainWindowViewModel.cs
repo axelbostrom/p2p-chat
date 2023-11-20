@@ -1,6 +1,5 @@
 ﻿using ChatApp.Model;
 using ChatApp.ViewModels;
-using ChatApp.ViewModels.Command;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -77,24 +76,6 @@ namespace ChatApp.ViewModel
 
             _networkManager.StartClient(user);
 
-        }
-
-        public ICommand StartServerCommand {  get; private set; }
-
-        public ICommand StartConnection
-        {
-            get
-            {
-                if (startConnection == null)
-                {
-                    startConnection = new RelayCommand(param => StartConnectionAction(param));
-                }
-                return startConnection;
-            }
-            set
-            {
-                startConnection = value;
-            }
         }
 
         public void StartConnectionAction(object param)
