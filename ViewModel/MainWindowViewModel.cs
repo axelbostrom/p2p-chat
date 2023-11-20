@@ -21,6 +21,7 @@ namespace ChatApp.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
+        private User _currentUser;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -43,7 +44,9 @@ namespace ChatApp.ViewModel
             {
                 var message = _networkManager.Message;
 
-                chat.AddMessage(sender.ToString(), message);
+
+
+                //chat.AddMessage(sender.ToString(), message);
             }
         }
 
@@ -66,15 +69,32 @@ namespace ChatApp.ViewModel
 
         }
 
+        public ICommand StartServerCommand { get { return new Command.StartServerCommand(this); } }
+        public ICommand StartClientCommand { get { return new Command.StartClientCommand(this); } }
+
+        //TODO: REMOVE/MOVE/FIX LOGIC
+        public void StartConnectionAction(object param)
+        {
+            string userType = param as string;
+
+            System.Diagnostics.Debug.WriteLine(userType);
+
+
+            if (userType != null)
+            {
+                // TODO: ADD USER need to get input first...
+                //currentUser = new User();
+            }
+        }
+
+        // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
             chat = new ChatViewModel();
             chat.ShowDialog();
         }
-
-        public ICommand StartServerCommand { get { return new Command.StartServerCommand(this); }}
-
-        public ICommand StartClientCommand { get { return new Command.StartClientCommand(this); }}
+            set { }
+        }
 
         public string Name
         {
