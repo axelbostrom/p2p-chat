@@ -14,7 +14,7 @@ namespace ChatApp.ViewModel
         private string _port = "3000";
 
         private NetworkManager _networkManager;
-        private ChatWindow chat;
+        private ChatWindow _chatWindow;
 
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
@@ -91,10 +91,8 @@ namespace ChatApp.ViewModel
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both
         public void StartChatViewModel()
         {
-            chat = new ChatWindow();
-            chat.ShowDialog();
-        }
-            set { }
+            _chatWindow = new ChatWindow();
+            _chatWindow.Show();
         }
 
         public string Name
@@ -126,6 +124,6 @@ namespace ChatApp.ViewModel
                 OnPropertyChanged(nameof(Port));
             }
         }
-
     }
+
 }
