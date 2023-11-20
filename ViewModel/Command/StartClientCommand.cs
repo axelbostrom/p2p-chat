@@ -7,12 +7,12 @@ using System.Xml.Linq;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class StartServerCommand : ICommand
+    internal class StartClientCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
         private MainWindowViewModel parent;
 
-        public StartServerCommand(MainWindowViewModel parent)
+        public StartClientCommand(MainWindowViewModel parent)
         {
             this.parent = parent;
         }
@@ -46,8 +46,8 @@ namespace ChatApp.ViewModel.Command
                 return;
             }
 
-            var user = new User(name, ip, port, "server");
-            parent.NetworkManager.StartServer(user);
+            var user = new User(name, ip, port, "client");
+            parent.NetworkManager.StartClient(user);
         }
     }
 }

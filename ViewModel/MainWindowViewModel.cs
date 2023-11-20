@@ -1,23 +1,20 @@
-﻿using ChatApp.Model;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-
-namespace ChatApp.ViewModel
+﻿namespace ChatApp.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         public string _name = "Zlatan";
         private string _ip = "127.0.0.1";
         private string _port = "3000";
+
         private NetworkManager _networkManager;
         private ChatViewModel chat;
 
         private ICommand _startServerCommand;
+        private ICommand _startClientCommand;
         private string text;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public NetworkManager NetworkManager { get { return _networkManager; } }
         private User _currentUser;
 
         public string MyText
@@ -28,8 +25,6 @@ namespace ChatApp.ViewModel
                 text = value;
                 OnPropertyChanged("MyText");
             }
-
-        }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -62,9 +57,13 @@ namespace ChatApp.ViewModel
         {
             // TODO: Add messagebox shown depending on error that occured
 
-            if (e == "Connected!")
+            if (e == "Server started succesfully!")
             {
                 StartChatViewModel();
+            }
+            else if (e == "Connected!")
+            {
+                //StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
@@ -113,6 +112,15 @@ namespace ChatApp.ViewModel
             get
             {
                 return new Command.StartServerCommand(this);
+            }
+            set { }
+        }
+
+        public ICommand StartClientCommand
+        {
+            get
+            {
+                return new Command.StartClientCommand(this);
             }
             set { }
         }
