@@ -25,13 +25,14 @@ namespace ChatApp.ViewModel.Command
             if (v == Visibility.Visible)
             {
                 v = Visibility.Hidden;
-            } else
+            }
+            else
             {
                 v = Visibility.Visible;
             }
             _parent.GridVisibility = v;
-            //_parent.AddMessage();
-            // _parent.NetworkManager.SendChar(_parent.Message);
+            _parent.AddMessage();
+            _parent.NetworkManager.SendUserMessage(_parent.Message);
         }
     }
 }

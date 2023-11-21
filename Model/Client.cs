@@ -2,10 +2,14 @@
 using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ChatApp.Model
 {
+
+    // The Client class is responsible for initiating connections to the server.
     public class Client : INotifyPropertyChanged
     {
         private IPAddress _ipAddress;
@@ -14,6 +18,9 @@ namespace ChatApp.Model
         private NetworkStream _stream;
         public event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<string> EventOccured;
+        public event EventHandler<string> MessageReceived;
+
+        private bool _isConnected;
 
 
         public Client(IPAddress ipAddress, int port)
@@ -30,23 +37,19 @@ namespace ChatApp.Model
             });
         }
 
+        private void OnMessageReceived(string message)
+        {
+            MessageReceived?.Invoke(this, message);
+        }
+
         public void Connect()
         {
             try
             {
-                // FROM https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.tcpclient?view=net-7.0
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-
                 // Prefer a using declaration to ensure the instance is Disposed later.
                 System.Diagnostics.Debug.WriteLine("Client is looking for server to connect to...");
 
                 _tcpClient = new TcpClient(_ipAddress.ToString(), _port);
-
-                // Translate the passed message into ASCII and store it as a Byte array.
-                // Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
                 // Get a client stream for reading and writing.
                 _stream = _tcpClient.GetStream();
@@ -55,23 +58,10 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine("Client connected!");
                 OnEventOccurred("Booted up succesfully!");
 
-                // Send the message to the connected TcpServer.
-                // _stream.Write(data, 0, data.Length);
+                _isConnected = true;
 
-                // Console.WriteLine("Sent: {0}", message);
+                Task.Run(ReceiveMessages);
 
-                // Receive the server response.
-
-                // Buffer to store the response bytes.
-                // data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                // String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                // Int32 bytes = _stream.Read(data, 0, data.Length);
-                // responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                // System.Diagnostics.Debug.WriteLine("Received: {0}", responseData);
             }
             catch (Exception ex)
             {
@@ -79,6 +69,71 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine($"Error connecting to server: {ex.Message}");
                 OnEventOccurred("Error connecting to server!");
             }
+        }
+
+        // Method to continuously receive messages from the server.
+        private void ReceiveMessages()
+        {
+            try
+            {
+                while (_isConnected)
+                {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = _stream.Read(buffer, 0, buffer.Length);
+
+                    if (bytesRead <= 0)
+                    {
+                        // The client has disconnected
+                        break;
+                    }
+
+                    string recievedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
+                    if (!string.IsNullOrEmpty(recievedMessage))
+                    {
+                        Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error receiving messages: {ex.Message}");
+            }
+            finally
+            {
+                Dispose(); // Close the client when the loop exits
+            }
+        }
+
+        public void SendMessage(string message)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    if (_stream != null && _stream.CanWrite)
+                    {
+                        var buffer = Encoding.UTF8.GetBytes(message);
+                        _stream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Stream is not ready for writing.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending message: {ex.Message}");
+                }
+            });
+        }
+
+        // Implement IDisposable to release resources.
+        public void Dispose()
+        {
+            _isConnected = false;  // Signal that the client is no longer connected
+            _stream?.Dispose();
+            _tcpClient?.Close();
         }
 
         public TcpClient GetTcpClient() { return _tcpClient; }

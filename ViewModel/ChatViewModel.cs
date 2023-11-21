@@ -46,13 +46,27 @@ namespace ChatApp.ViewModel
         public ChatViewModel(NetworkManager networkManager, User user)
         {
             _networkManager = networkManager;
+            networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _user = user;
             Messages = new ObservableCollection<Message>();
         }
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
 
-        public ICommand SendMessageCommand { get { return new Command.SendMessageCommand(this); }}
+        private void NetworkManager_MessageReceived(string message)
+        {
+            // Parse the message to extract sender's name, timestamp, etc.
+            string senderName = "Zlatan"; //ADD NAME
+            DateTime timestamp = DateTime.Now; // ADD DATE
+
+            // Create a new Message object
+            Message newMessage = new Message(senderName, timestamp, message);
+
+            // Add the new message to your Messages collection
+            Messages.Add(newMessage);
+        }
+
+        public ICommand SendMessageCommand { get { return new Command.SendMessageCommand(this); } }
         public ICommand AcceptConnectionCommand { get { return new Command.AcceptConnectionCommand(this); } }
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
 
