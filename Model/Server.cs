@@ -8,6 +8,8 @@ using System.Windows;
 
 namespace ChatApp.Model
 {
+
+    // The Server class is responsible for listening for incoming connections and managing client sessions.
     public class Server : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -15,6 +17,8 @@ namespace ChatApp.Model
         private IPAddress _ipAddress;
         private int _port;
         public event EventHandler<string> EventOccured;
+        public event EventHandler<string> MessageReceived;
+        private TcpClient _client;
 
         public Server(IPAddress ipAddress, int port)
         {
@@ -30,6 +34,16 @@ namespace ChatApp.Model
             });
         }
 
+        private void OnMessageReceived(string message)
+        {
+            MessageReceived?.Invoke(this, message);
+        }
+
+        private void OnPropertyChanged(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+
         public void StartListening()
         {
             try
@@ -40,8 +54,8 @@ namespace ChatApp.Model
 
                 OnEventOccurred("Booted up succesfully!");
 
-                TcpClient client = _tcpListener.AcceptTcpClient();
-                Task.Factory.StartNew(() => HandleClient(client));
+                _client = _tcpListener.AcceptTcpClient();
+                Task.Factory.StartNew(() => RecieveMessages(_client));
                 System.Diagnostics.Debug.WriteLine("Server connected!");
                 OnEventOccurred("Connected!");
             }
@@ -56,7 +70,7 @@ namespace ChatApp.Model
             }
         }
 
-        private void HandleClient(TcpClient client)
+        private void RecieveMessages(TcpClient client)
         {
             try
             {
@@ -68,32 +82,54 @@ namespace ChatApp.Model
                 byte[] data = new byte[256];
 
                 // String to store the response ASCII representation.
-                string responseData = String.Empty;
+                string recievedMessage = String.Empty;
 
-                // Read the first batch of the client's data.
-                int bytesRead = stream.Read(data, 0, data.Length);
-
-                while (bytesRead > 0)
+                while (true)
                 {
-                    responseData = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    System.Diagnostics.Debug.WriteLine($"Received from client: {responseData}");
 
-                    // Process the data as needed
+                    // Read the first batch of the client's data.
+                    int bytesRead = stream.Read(data, 0, data.Length);
 
-                    // Echo the data back to the client
-                    stream.Write(data, 0, bytesRead);
-                    System.Diagnostics.Debug.WriteLine($"Sent to client: {responseData}");
+                    if (bytesRead <= 0)
+                    {
+                        // The client has disconnected
+                        break;
+                    }
 
-                    bytesRead = stream.Read(data, 0, data.Length);
+                    recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
+                    System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
+                    Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
                 }
-
-                // Close the client connection
-                client.Close();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
                 OnEventOccurred("Error handling client.");
+            }
+        }
+
+        public void SendMessage(string message)
+        {
+            // Check if a client is connected before attempting to send a message
+            System.Diagnostics.Debug.WriteLine(_client.Connected);
+            if (_client != null && _client.Connected)
+            {
+                NetworkStream stream = _client.GetStream();
+
+                try
+                {
+                    var buffer = Encoding.UTF8.GetBytes(message);
+                    System.Diagnostics.Debug.WriteLine("Sending message to stream " + message);
+                    stream.Write(buffer, 0, buffer.Length);
+                }
+                catch (Exception)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error sending message from server: {ex.Message}");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
             }
         }
     }

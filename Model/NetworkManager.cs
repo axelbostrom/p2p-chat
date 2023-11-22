@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatApp.Model;
@@ -13,6 +12,7 @@ public class NetworkManager : INotifyPropertyChanged
     private Server _server;
     public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<string> EventOccured;
+    public event EventHandler<string> MessageReceived;
 
     private string _message;
 
@@ -29,6 +29,12 @@ public class NetworkManager : INotifyPropertyChanged
         EventOccured?.Invoke(this, errorMessage);
     }
 
+    private void OnMessageReceived(string message)
+    {
+        System.Diagnostics.Debug.WriteLine("Message recieved in NwM " + message);
+        MessageReceived?.Invoke(this, message);
+    }
+
     public string Message
     {
         get { return _message; }
@@ -43,6 +49,7 @@ public class NetworkManager : INotifyPropertyChanged
             // TODO: add checks of address and port before calling server or check in server?
             _server = new Server(user.Address, user.Port);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
+            _server.MessageReceived += (sender, message) => OnMessageReceived(message);
             await Task.Run(() => _server.StartListening());
             return true;
         }
@@ -61,10 +68,10 @@ public class NetworkManager : INotifyPropertyChanged
             // TODO: add checks of address and port before calling client or check in client?
             _client = new Client(user.Address, user.Port);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
+            _client.MessageReceived += (sender, message) => OnMessageReceived(message);
             await Task.Run(() =>
             {
                 _client.Connect();
-                // HandleConnection(_client.GetTcpClient());
             });
 
             return true;
@@ -76,33 +83,9 @@ public class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    private void HandleConnection(TcpClient endPoint)
+    public void SendUserMessage(string message)
     {
-        try
-        {
-            _stream = endPoint.GetStream();
-
-            while (true)
-            {
-                var buffer = new byte[1024];
-                int received = _stream.Read(buffer, 0, 1024);
-                var message = Encoding.UTF8.GetString(buffer, 0, received);
-                this.Message = message;
-                System.Diagnostics.Debug.WriteLine(message);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error handling connection: {ex.Message}");
-        }
-    }
-
-    public void SendChar(string str)
-    {
-        Task.Factory.StartNew(() =>
-        {
-            var buffer = Encoding.UTF8.GetBytes(str);
-            _stream.Write(buffer, 0, buffer.Length);
-        });
+        _client?.SendMessage(message);
+        _server?.SendMessage(message);
     }
 }
