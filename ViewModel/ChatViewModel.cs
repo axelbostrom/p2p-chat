@@ -17,7 +17,7 @@ namespace ChatApp.ViewModel
         private NetworkManager _networkManager;
         private User _user;
 
-        private Visibility _gridVisibility;
+        private Visibility _gridVisibility = Visibility.Hidden;
         public Visibility GridVisibility
         {
             get => _gridVisibility;
@@ -39,15 +39,29 @@ namespace ChatApp.ViewModel
             set
             {
                 _messages = value;
-                OnPropertyChanged(nameof(Messages)); GridVisibility = Visibility.Hidden;
+                OnPropertyChanged(nameof(Messages)); 
             }
         }
 
         public ChatViewModel(NetworkManager networkManager, User user)
         {
             _networkManager = networkManager;
+            _networkManager.EventOccured += NetworkManager_EventOccurred;
             _user = user;
             Messages = new ObservableCollection<Message>();
+        }
+
+        private void NetworkManager_EventOccurred(object? sender, string e)
+        {
+            // TODO: Add messagebox shown depending on error that occured
+
+            if (e == "xd")
+            {
+                Visibility v = GridVisibility;
+                GridVisibility = Visibility.Visible;
+            }
+            
+
         }
 
         public NetworkManager NetworkManager { get { return _networkManager; } }
@@ -82,5 +96,12 @@ namespace ChatApp.ViewModel
                 System.Diagnostics.Debug.WriteLine(_message);
             }
         }
+
+        public void WindowClosing()
+        {
+            // Perform actions needed when the window is closing
+            Application.Current.Shutdown();
+        }
+
     }
 }

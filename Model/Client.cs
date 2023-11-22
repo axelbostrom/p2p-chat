@@ -54,6 +54,7 @@ namespace ChatApp.Model
                 // Notify subscribers that the connection is successful
                 System.Diagnostics.Debug.WriteLine("Client connected!");
                 OnEventOccurred("Booted up succesfully!");
+                OnEventOccurred("Connected!");
 
                 // Send the message to the connected TcpServer.
                 // _stream.Write(data, 0, data.Length);

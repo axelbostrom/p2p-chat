@@ -7,10 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp", "ChatApp.csproj",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		ChatApp2|Any CPU = ChatApp2|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6C12B66-20F3-478F-94C4-50CBAA9C563D}.ChatApp2|Any CPU.ActiveCfg = ChatApp2|Any CPU
+		{F6C12B66-20F3-478F-94C4-50CBAA9C563D}.ChatApp2|Any CPU.Build.0 = ChatApp2|Any CPU
 		{F6C12B66-20F3-478F-94C4-50CBAA9C563D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6C12B66-20F3-478F-94C4-50CBAA9C563D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6C12B66-20F3-478F-94C4-50CBAA9C563D}.Release|Any CPU.ActiveCfg = Release|Any CPU

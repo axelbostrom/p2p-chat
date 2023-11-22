@@ -62,6 +62,8 @@ namespace ChatApp.Model
             {
                 NetworkStream stream = client.GetStream();
 
+                OnEventOccurred("xd");
+
                 // Buffer to store the response bytes.
                 byte[] data = new byte[256];
 

@@ -59,12 +59,13 @@ namespace ChatApp.ViewModel
 
             if (e == "Booted up succesfully!")
             {
-                _mainWindow.Hide();
-                StartChatViewModel();
+               // _mainWindow.Hide();
+               // _networkManager.EventOccured -= NetworkManager_EventOccurred;
+               // StartChatViewModel();
             }
             else if (e == "Connected!")
             {
-                //StartChatViewModel();
+                StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
