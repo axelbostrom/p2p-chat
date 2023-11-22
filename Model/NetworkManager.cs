@@ -88,4 +88,8 @@ public class NetworkManager : INotifyPropertyChanged
         _client?.SendMessage(message);
         _server?.SendMessage(message);
     }
+
+    public Client Client { get { return _client; } }
+
+    public Server Server { get { return _server; } }
 }

@@ -46,7 +46,7 @@ namespace ChatApp.ViewModel.Command
                 return;
             }
 
-            var user = new User(name, ip, port, "client");
+            var user = new User(name, ip, port);
             parent.User = user;
             parent.NetworkManager.StartClient(user);
         }

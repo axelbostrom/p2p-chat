@@ -59,13 +59,13 @@ namespace ChatApp.ViewModel
 
             if (e == "Booted up succesfully!")
             {
-               // _mainWindow.Hide();
-               // _networkManager.EventOccured -= NetworkManager_EventOccurred;
-               // StartChatViewModel();
+                _mainWindow.Hide();
+                _networkManager.EventOccured -= NetworkManager_EventOccurred;
+                StartChatViewModel();
             }
             else if (e == "Connected!")
             {
-                StartChatViewModel();
+               // StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
@@ -76,21 +76,6 @@ namespace ChatApp.ViewModel
 
         public ICommand StartServerCommand { get { return new Command.StartServerCommand(this); } }
         public ICommand StartClientCommand { get { return new Command.StartClientCommand(this); } }
-
-        //TODO: REMOVE/MOVE/FIX LOGIC
-        public void StartConnectionAction(object param)
-        {
-            string userType = param as string;
-
-            System.Diagnostics.Debug.WriteLine(userType);
-
-
-            if (userType != null)
-            {
-                // TODO: ADD USER need to get input first...
-                //currentUser = new User();
-            }
-        }
 
         // TODO: When server and client have entered correct info and pressed respective button => start chat for both AND Change name
         public void StartChatViewModel()

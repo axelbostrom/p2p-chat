@@ -22,14 +22,6 @@ namespace ChatApp.ViewModel.Command
         public void Execute(object parameter)
         {
             Visibility v = _parent.GridVisibility;
-            if (v == Visibility.Visible)
-            {
-                v = Visibility.Hidden;
-            }
-            else
-            {
-                v = Visibility.Visible;
-            }
             _parent.GridVisibility = v;
             _parent.AddMessage();
             _parent.NetworkManager.SendUserMessage(_parent.Message);

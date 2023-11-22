@@ -5,17 +5,23 @@ namespace ChatApp.Model
 {
     public class User : INotifyPropertyChanged
     {
+
+        public enum UserType
+        {
+            Client,
+            Server
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _name;
         private int _port;
         private IPAddress _address;
-        private string _type; // User type, server or client.
+        private UserType _type; // User type, server or client.
 
-        public User(string name, IPAddress address, int port, string type)
+        public User(string name, IPAddress address, int port)
         {
             _name = name;
             _address = address;
-            _type = type;
             _port = port;
         }
 
@@ -37,8 +43,7 @@ namespace ChatApp.Model
             set { _address = value; }
         }
 
-        // TODO: Remove type from User
-        public string Type
+        public UserType Type
         {
             get { return _type; }
             set { _type = value; }

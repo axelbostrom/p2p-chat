@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -19,6 +20,9 @@ namespace ChatApp.Model
         public event EventHandler<string> EventOccured;
         public event EventHandler<string> MessageReceived;
         private TcpClient _client;
+
+        public bool acceptOrDeny;
+        private TaskCompletionSource<bool> _userResponse = new TaskCompletionSource<bool>();
 
         public Server(IPAddress ipAddress, int port)
         {
@@ -53,7 +57,6 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
                 OnEventOccurred("Booted up succesfully!");
-
                 _client = _tcpListener.AcceptTcpClient();
                 Task.Factory.StartNew(() => RecieveMessages(_client));
                 System.Diagnostics.Debug.WriteLine("Server connected!");
@@ -70,7 +73,19 @@ namespace ChatApp.Model
             }
         }
 
-        private void RecieveMessages(TcpClient client)
+        public void AcceptClientConnection()
+        {
+            acceptOrDeny = true; // Set acceptOrDeny based on user's "Yes" response
+            _userResponse.TrySetResult(true); // Signal the task completion source
+        }
+
+        public void DenyClientConnection()
+        {
+            acceptOrDeny = false; // Set acceptOrDeny based on user's "No" response
+            _userResponse.TrySetResult(true); // Signal the task completion source
+        }
+
+        private async void RecieveMessages(TcpClient client)
         {
             try
             {
@@ -78,43 +93,55 @@ namespace ChatApp.Model
 
                 OnEventOccurred("xd");
 
-                // Buffer to store the response bytes.
-                byte[] data = new byte[256];
+                await _userResponse.Task;
 
-                // String to store the response ASCII representation.
-                string recievedMessage = String.Empty;
-
-                while (true)
+                if(acceptOrDeny)
                 {
+                    // Buffer to store the response bytes.
+                    byte[] data = new byte[256];
 
-                    // Read the first batch of the client's data.
-                    int bytesRead = stream.Read(data, 0, data.Length);
+                    // String to store the response ASCII representation.
+                    string recievedMessage = String.Empty;
 
-                    if (bytesRead <= 0)
+                    while (true)
                     {
-                        // The client has disconnected
-                        break;
-                    }
 
-                    recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
-                    Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
+                        // Read the first batch of the client's data.
+                        int bytesRead = stream.Read(data, 0, data.Length);
+
+                        if (bytesRead <= 0)
+                        {
+                            // The client has disconnected
+                            break;
+                        }
+
+                        recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
+                        System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
+                        Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
+                    }
                 }
+                
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
                 OnEventOccurred("Error handling client.");
             }
+            finally
+            {
+                client.Close();
+            }
         }
 
-        public void SendMessage(string message)
+        public async void SendMessage(string message)
         {
             // Check if a client is connected before attempting to send a message
             System.Diagnostics.Debug.WriteLine(_client.Connected);
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
+
+                await _userResponse.Task;
 
                 try
                 {
