@@ -1,7 +1,7 @@
 ﻿using ChatApp.Model;
 using ChatApp.View;
-using System.Collections.ObjectModel;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -22,10 +22,10 @@ namespace ChatApp.ViewModel
 
         private ChatWindow _chatWindow;
         private MainWindow _mainWindow;
-        
+
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Visibility _gridVisibility = Visibility.Hidden;
@@ -43,7 +43,7 @@ namespace ChatApp.ViewModel
             _networkManager = new NetworkManager();
             _networkManager.EventOccured += NetworkManager_EventOccurred;
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
-            Messages = new ObservableCollection<Message>();
+            _messages = new ObservableCollection<Message>();
         }
 
         public string Message
@@ -103,10 +103,10 @@ namespace ChatApp.ViewModel
 
         private ObservableCollection<Message> _messages;
 
-        private ObservableCollection<Message> Messages
+        public ObservableCollection<Message> Messages
         {
             get { return _messages; }
-            set
+            private set
             {
                 _messages = value;
                 OnPropertyChanged(nameof(Messages));
@@ -124,7 +124,7 @@ namespace ChatApp.ViewModel
             }
             else if (e == "Connected!")
             {
-               // StartChatViewModel();
+                // StartChatViewModel();
             }
             else if (e == "Error connecting to server!")
             {
@@ -152,7 +152,7 @@ namespace ChatApp.ViewModel
             Messages.Add(messageToSend);
         }
 
-        
+
         public Visibility GridVisibility
         {
             get => _gridVisibility;

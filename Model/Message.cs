@@ -5,7 +5,7 @@ namespace ChatApp.Model
 {
 
 
-    internal class Message : INotifyPropertyChanged
+    public class Message : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _sender;
@@ -18,7 +18,7 @@ namespace ChatApp.Model
             _timestamp = timestamp;
             _content = content;
         }
-        private void OnPropertyChanged(string PropertyName)
+        public void OnPropertyChanged(string PropertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
