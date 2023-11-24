@@ -47,7 +47,7 @@ public class NetworkManager : INotifyPropertyChanged
         try
         {
             // TODO: add checks of address and port before calling server or check in server?
-            _server = new Server(user.Address, user.Port);
+            _server = new Server(user);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _server.MessageReceived += (sender, message) => OnMessageReceived(message);
             await Task.Run(() => _server.StartListening());
@@ -66,7 +66,7 @@ public class NetworkManager : INotifyPropertyChanged
         try
         {
             // TODO: add checks of address and port before calling client or check in client?
-            _client = new Client(user.Address, user.Port);
+            _client = new Client(user);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _client.MessageReceived += (sender, message) => OnMessageReceived(message);
             await Task.Run(() =>
