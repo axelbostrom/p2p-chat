@@ -7,9 +7,9 @@ namespace ChatApp.ViewModel.Command
     internal class SendMessageCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private ChatViewModel _parent;
+        private MainWindowViewModel _parent;
 
-        public SendMessageCommand(ChatViewModel parent)
+        public SendMessageCommand(MainWindowViewModel parent)
         {
             _parent = parent;
         }
@@ -21,8 +21,6 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            Visibility v = _parent.GridVisibility;
-            _parent.GridVisibility = v;
             _parent.AddMessage();
             _parent.NetworkManager.SendUserMessage(_parent.Message);
         }

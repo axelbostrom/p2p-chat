@@ -7,9 +7,9 @@ namespace ChatApp.ViewModel.Command
     internal class AcceptConnectionCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private ChatViewModel _parent;
+        private MainWindowViewModel _parent;
 
-        public AcceptConnectionCommand(ChatViewModel parent)
+        public AcceptConnectionCommand(MainWindowViewModel parent)
         {
             _parent = parent;
         }

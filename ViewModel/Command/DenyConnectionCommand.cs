@@ -7,9 +7,9 @@ namespace ChatApp.ViewModel.Command
     internal class DenyConnectionCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private ChatViewModel _parent;
+        private MainWindowViewModel _parent;
 
-        public DenyConnectionCommand(ChatViewModel parent)
+        public DenyConnectionCommand(MainWindowViewModel parent)
         {
             _parent = parent;
         }
