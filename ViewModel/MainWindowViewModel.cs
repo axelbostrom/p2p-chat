@@ -15,6 +15,7 @@ namespace ChatApp.ViewModel
         private string _ip = "127.0.0.1";
         private string _port = "3000";
         private User _user;
+        private string _otherUser;
         private string _message;
 
         private NetworkManager _networkManager;
@@ -182,16 +183,20 @@ namespace ChatApp.ViewModel
 
         private void NetworkManager_MessageReceived(Message message)
         {
-            // Parse the message to extract sender's name, timestamp, etc.
-            string senderName = "Zlatan"; //ADD NAME
-            DateTime timestamp = DateTime.Now; // ADD DATE
-            MessageType messageType = MessageType.Message;
+            if (message.Type == MessageType.Message)
+            {
+                Messages.Add(message);
+            }
+            else if (message.Type == MessageType.ConnectionEstablished)
+            {
+                // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
+                // MAYBE CALL HELLO WORLD?
+                // Update name in chatview etc
+                _otherUser = message.Sender;
+                System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
 
-            // Create a new Message object
-            Message newMessage = new Message(messageType, senderName, timestamp, message.Content);
+            }
 
-            // Add the new message to your Messages collection
-            Messages.Add(newMessage);
         }
     }
 }

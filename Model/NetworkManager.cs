@@ -53,6 +53,8 @@ public class NetworkManager : INotifyPropertyChanged
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _server.MessageReceived += (sender, message) => OnMessageReceived(message);
             await Task.Run(() => _server.StartListening());
+            SendConnectionEstablished();
+
             return true;
         }
         catch (Exception ex)
@@ -72,10 +74,8 @@ public class NetworkManager : INotifyPropertyChanged
             _client = new Client(user);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _client.MessageReceived += (sender, message) => OnMessageReceived(message);
-            await Task.Run(() =>
-            {
-                _client.Connect();
-            });
+            await Task.Run(() => _client.Connect());
+            SendConnectionEstablished();
 
             return true;
         }
@@ -92,6 +92,16 @@ public class NetworkManager : INotifyPropertyChanged
         // System.Diagnostics.Debug.WriteLine(_user.Name + " sending message: " + message);
         _client?.SendMessage(messageToSend);
         _server?.SendMessage(messageToSend);
+    }
+
+    private void SendConnectionEstablished()
+    {
+        // Create a connection request message
+        Message connectionRequestMessage = new Message(MessageType.ConnectionEstablished, _user.Name);
+
+        // Send the connection request to the server
+        _client?.SendMessage(connectionRequestMessage);
+        _server?.SendMessage(connectionRequestMessage);
     }
 
     public Client Client { get { return _client; } }

@@ -3,7 +3,7 @@
     public enum MessageType
     {
         Message,
-        ConnectionRequest,
+        ConnectionEstablished,
         AcceptConnection,
         DenyConnection,
         // Add more types as needed

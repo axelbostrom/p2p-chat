@@ -1,4 +1,12 @@
-﻿namespace ChatApp.Model
+﻿using System;
+using System.ComponentModel;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace ChatApp.Model
 {
 
     // The Server class is responsible for listening for incoming connections and managing client sessions.
