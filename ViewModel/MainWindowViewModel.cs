@@ -23,6 +23,8 @@ namespace ChatApp.ViewModel
 
         private ChatWindow _chatWindow;
         private MainWindow _mainWindow;
+        private WaitWindow _waitWindow;
+
 
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
@@ -120,14 +122,13 @@ namespace ChatApp.ViewModel
         {
             // TODO: Add messagebox shown depending on error that occured
 
-            if (e == "Booted up succesfully!")
+            if (e == "Server booted up successfully!")
             {
-                _mainWindow.Hide();
-                StartChatViewModel();
+                BootChatWindow();   
             }
-            else if (e == "Connected!")
+            else if (e == "Client booted up successfully!")
             {
-                // StartChatViewModel();
+                BootWaitWindow();;
             }
             else if (e == "Error connecting to server!")
             {
@@ -141,11 +142,18 @@ namespace ChatApp.ViewModel
 
         }
 
-        // TODO: When server and client have entered correct info and pressed respective button => start chat for both AND Change name
-        public void StartChatViewModel()
+        private void BootChatWindow()
         {
+            _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
             _chatWindow.Show();
+        }
+
+        private void BootWaitWindow()
+        {
+            _mainWindow.Hide();
+            _waitWindow = new WaitWindow();
+            _waitWindow.Show();
         }
 
         public void AddMessage()
@@ -155,7 +163,6 @@ namespace ChatApp.ViewModel
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
         }
-
 
         public Visibility GridVisibility
         {
@@ -194,7 +201,17 @@ namespace ChatApp.ViewModel
                 // Update name in chatview etc
                 _otherUser = message.Sender;
                 System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
-
+            }
+            else if (message.Type == MessageType.AcceptConnection)
+            {
+                _waitWindow?.Hide();
+                IsSendButtonEnabled = true;
+                BootChatWindow();
+            }
+            else if (message.Type == MessageType.DenyConnection)
+            {
+                _waitWindow.Hide();
+                _mainWindow.Show();
             }
 
         }

@@ -53,11 +53,10 @@ namespace ChatApp.Model
                 _tcpListener.Start();
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
-                OnEventOccurred("Booted up succesfully!");
+                OnEventOccurred("Server booted up successfully!");
                 _client = _tcpListener.AcceptTcpClient();
                 Task.Factory.StartNew(() => RecieveMessages(_client));
                 System.Diagnostics.Debug.WriteLine("Server connected!");
-                OnEventOccurred("Connected!");
             }
             catch (Exception ex)
             {
@@ -78,8 +77,6 @@ namespace ChatApp.Model
 
                 OnEventOccurred("New Client Connection");
 
-                // await _userResponse.Task;
-
                 byte[] data = new byte[256];
 
                 // String to store the response ASCII representation.
@@ -93,6 +90,7 @@ namespace ChatApp.Model
 
                     if (bytesRead <= 0)
                     {
+                        System.Diagnostics.Debug.WriteLine("dc");
                         // The client has disconnected
                         break;
                     }
@@ -124,7 +122,7 @@ namespace ChatApp.Model
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
-                // await _userResponse.Task;
+
                 try
                 {
                     string jsonMessage = JsonSerializer.Serialize(message);

@@ -23,6 +23,7 @@ namespace ChatApp.ViewModel.Command
         {
             _parent.GridVisibility = Visibility.Hidden;
             _parent.IsSendButtonEnabled = true;
+            _parent.NetworkManager.SendConnectionAccepted();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace ChatApp.ViewModel.Command
         public void Execute(object parameter)
         {
             _parent.GridVisibility = Visibility.Hidden;
+            _parent.NetworkManager.SendConnectionDenied();
         }
     }
 }

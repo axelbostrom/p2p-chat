@@ -53,8 +53,7 @@ namespace ChatApp.Model
                 _stream = _tcpClient.GetStream();
 
                 // Notify subscribers that the connection is successful
-                OnEventOccurred("Booted up succesfully!");
-                OnEventOccurred("Connected!");
+                OnEventOccurred("Client booted up successfully!");
 
                 _isConnected = true;
 
@@ -103,7 +102,6 @@ namespace ChatApp.Model
             }
             finally
             {
-                System.Diagnostics.Debug.WriteLine("din mamma");
                 Dispose(); // Close the client when the loop exits
             }
         }

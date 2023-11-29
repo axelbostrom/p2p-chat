@@ -59,7 +59,7 @@ public class NetworkManager : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error starting server: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Error starting server: {ex.Message}");
             return false;
         }
     }
@@ -81,7 +81,7 @@ public class NetworkManager : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error starting client: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Error starting client: {ex.Message}");
             return false;
         }
     }
@@ -102,6 +102,20 @@ public class NetworkManager : INotifyPropertyChanged
         // Send the connection request to the server
         _client?.SendMessage(connectionRequestMessage);
         _server?.SendMessage(connectionRequestMessage);
+    }
+
+    internal void SendConnectionAccepted()
+    {
+        Message connectionAcceptMessage = new Message(MessageType.AcceptConnection, _user.Name);
+
+        _server?.SendMessage(connectionAcceptMessage);
+    }
+
+    internal void SendConnectionDenied()
+    {
+        Message connectionDenyMessage = new Message(MessageType.DenyConnection, _user.Name);
+
+        _server?.SendMessage(connectionDenyMessage);
     }
 
     public Client Client { get { return _client; } }
