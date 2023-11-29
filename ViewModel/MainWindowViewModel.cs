@@ -15,8 +15,11 @@ namespace ChatApp.ViewModel
         private string _ip = "127.0.0.1";
         private string _port = "3000";
         private User _user;
-        private string _otherUser;
+        public string _otherUser;
+        private string _userConnectionText;
         private string _message;
+
+        private string _chattingWithText;
 
         private NetworkManager _networkManager;
         public NetworkManager NetworkManager { get { return _networkManager; } }
@@ -50,53 +53,6 @@ namespace ChatApp.ViewModel
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
         }
-
-        public string Message
-        {
-            get { return _message; }
-            set
-            {
-                _message = value;
-                OnPropertyChanged(nameof(Message));
-            }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        public string Ip
-        {
-            get { return _ip; }
-            set
-            {
-                _ip = value;
-                OnPropertyChanged(nameof(Ip));
-            }
-        }
-
-        public string Port
-        {
-            get { return _port; }
-            set
-            {
-                _port = value;
-                OnPropertyChanged(nameof(Port));
-            }
-        }
-
-        public User User
-        {
-            get { return _user; }
-            set { _user = value; }
-        }
-
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -159,6 +115,98 @@ namespace ChatApp.ViewModel
             Messages.Add(messageToSend);
         }
 
+        private void NetworkManager_MessageReceived(Message message)
+        {
+            if (message.Type == MessageType.Message)
+            {
+                Messages.Add(message);
+            }
+            else if (message.Type == MessageType.ConnectionEstablished)
+            {
+                // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
+                // MAYBE CALL HELLO WORLD?
+                // Update name in chatview etc
+                _otherUser = message.Sender;
+
+                if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
+                {
+                    UserConnectionText = _otherUser + " wants to connect with you";
+                    GridVisibility = Visibility.Visible;
+                }
+                
+                System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
+            }
+            else if (message.Type == MessageType.AcceptConnection)
+            {
+                _waitWindow?.Hide();
+                IsSendButtonEnabled = true;
+                ChattingWithText = "You are now chatting with " + _otherUser;
+                BootChatWindow();
+            }
+            else if (message.Type == MessageType.DenyConnection)
+            {
+                _waitWindow.Hide();
+                _mainWindow.Show();
+            }
+
+        }
+
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(Message));
+            }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        public string Ip
+        {
+            get { return _ip; }
+            set
+            {
+                _ip = value;
+                OnPropertyChanged(nameof(Ip));
+            }
+        }
+
+        public string Port
+        {
+            get { return _port; }
+            set
+            {
+                _port = value;
+                OnPropertyChanged(nameof(Port));
+            }
+        }
+
+        public User User
+        {
+            get { return _user; }
+            set { _user = value; }
+        }
+
+        public string ChattingWithText
+        {
+            get { return _chattingWithText; }
+            set
+            {
+                _chattingWithText = value;
+                OnPropertyChanged(nameof(ChattingWithText));
+            }
+        }
+
         public Visibility GridVisibility
         {
             get => _gridVisibility;
@@ -182,38 +230,14 @@ namespace ChatApp.ViewModel
             }
         }
 
-
-        private void NetworkManager_MessageReceived(Message message)
+        public string UserConnectionText
         {
-            if (message.Type == MessageType.Message)
+            get { return _userConnectionText; }
+            set
             {
-                Messages.Add(message);
+                _userConnectionText = value;
+                OnPropertyChanged(nameof(UserConnectionText));
             }
-            else if (message.Type == MessageType.ConnectionEstablished)
-            {
-                // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
-                // MAYBE CALL HELLO WORLD?
-                // Update name in chatview etc
-
-                if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
-                {
-                    GridVisibility = Visibility.Visible;
-                }
-                _otherUser = message.Sender;
-                System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
-            }
-            else if (message.Type == MessageType.AcceptConnection)
-            {
-                _waitWindow?.Hide();
-                IsSendButtonEnabled = true;
-                BootChatWindow();
-            }
-            else if (message.Type == MessageType.DenyConnection)
-            {
-                _waitWindow.Hide();
-                _mainWindow.Show();
-            }
-
         }
     }
 }

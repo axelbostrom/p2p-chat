@@ -55,7 +55,7 @@ namespace ChatApp.Model
 
                 OnEventOccurred("Server booted up successfully!");
                 _client = _tcpListener.AcceptTcpClient();
-                Task.Factory.StartNew(() => RecieveMessages(_client));
+                Task.Factory.StartNew(() => ReceiveMessages(_client));
                 System.Diagnostics.Debug.WriteLine("Server connected!");
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace ChatApp.Model
             }
         }
 
-        private void RecieveMessages(TcpClient client)
+        private void ReceiveMessages(TcpClient client)
         {
             try
             {
