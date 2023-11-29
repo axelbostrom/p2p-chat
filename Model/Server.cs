@@ -1,12 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace ChatApp.Model
+﻿namespace ChatApp.Model
 {
 
     // The Server class is responsible for listening for incoming connections and managing client sessions.
@@ -70,25 +62,13 @@ namespace ChatApp.Model
             }
         }
 
-        public void AcceptClientConnection()
-        {
-            acceptOrDeny = true; // Set acceptOrDeny based on user's "Yes" response
-            _userResponse.TrySetResult(true); // Signal the task completion source
-        }
-
-        public void DenyClientConnection()
-        {
-            acceptOrDeny = false; // Set acceptOrDeny based on user's "No" response
-            _userResponse.TrySetResult(true); // Signal the task completion source
-        }
-
-        private async void RecieveMessages(TcpClient client)
+        private void RecieveMessages(TcpClient client)
         {
             try
             {
                 NetworkStream stream = client.GetStream();
 
-                // OnEventOccurred("xd");
+                OnEventOccurred("New Client Connection");
 
                 // await _userResponse.Task;
 
@@ -131,7 +111,7 @@ namespace ChatApp.Model
             }
         }
 
-        public async void SendMessage(Message message)
+        public void SendMessage(Message message)
         {
             if (_client != null && _client.Connected)
             {

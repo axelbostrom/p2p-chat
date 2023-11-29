@@ -26,6 +26,8 @@ namespace ChatApp.ViewModel
         private ICommand _startServerCommand;
         private ICommand _startClientCommand;
 
+        private bool _isSendButtonEnabled = false;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Visibility _gridVisibility = Visibility.Hidden;
@@ -130,7 +132,7 @@ namespace ChatApp.ViewModel
             {
                 MessageBox.Show("Server not started!");
             }
-            else if (e == "xd")
+            else if (e == "New Client Connection")
             {
                 Visibility v = GridVisibility;
                 GridVisibility = Visibility.Visible;
@@ -164,6 +166,16 @@ namespace ChatApp.ViewModel
                     _gridVisibility = value;
                     OnPropertyChanged(nameof(GridVisibility));
                 }
+            }
+        }
+
+        public bool IsSendButtonEnabled
+        {
+            get { return _isSendButtonEnabled; }
+            set
+            {
+                _isSendButtonEnabled = value;
+                OnPropertyChanged(nameof(IsSendButtonEnabled)); // Implement INotifyPropertyChanged
             }
         }
 
