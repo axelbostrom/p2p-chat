@@ -6,6 +6,7 @@
         ConnectionEstablished,
         AcceptConnection,
         DenyConnection,
+        RequestConnection
         // Add more types as needed
     }
 }

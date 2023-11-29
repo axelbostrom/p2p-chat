@@ -16,7 +16,6 @@ namespace ChatApp.Model
         private string _name;
         private int _port;
         private IPAddress _address;
-        private UserType _type; // User type, server or client.
 
         public User(string name, IPAddress address, int port)
         {
@@ -41,12 +40,6 @@ namespace ChatApp.Model
         {
             get { return _address; }
             set { _address = value; }
-        }
-
-        public UserType Type
-        {
-            get { return _type; }
-            set { _type = value; }
         }
     }
 }

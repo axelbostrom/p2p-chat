@@ -75,8 +75,6 @@ namespace ChatApp.Model
             {
                 NetworkStream stream = client.GetStream();
 
-                OnEventOccurred("New Client Connection");
-
                 byte[] data = new byte[256];
 
                 // String to store the response ASCII representation.

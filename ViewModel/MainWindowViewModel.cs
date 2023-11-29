@@ -134,11 +134,6 @@ namespace ChatApp.ViewModel
             {
                 MessageBox.Show("Server not started!");
             }
-            else if (e == "New Client Connection")
-            {
-                Visibility v = GridVisibility;
-                GridVisibility = Visibility.Visible;
-            }
 
         }
 
@@ -199,6 +194,11 @@ namespace ChatApp.ViewModel
                 // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
                 // MAYBE CALL HELLO WORLD?
                 // Update name in chatview etc
+
+                if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
+                {
+                    GridVisibility = Visibility.Visible;
+                }
                 _otherUser = message.Sender;
                 System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
             }
