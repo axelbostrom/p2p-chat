@@ -11,16 +11,35 @@ namespace ChatApp.Model
         private string _sender;
         private string _content;
         private DateTime _timestamp;
+        private MessageType _type;
 
-        public Message(string sender, DateTime timestamp, string content)
+        public Message(MessageType type, string sender, DateTime timestamp, string content)
         {
+            _type = type;
             _sender = sender;
             _timestamp = timestamp;
             _content = content;
         }
+
+        public Message(MessageType type, string sender)
+        {
+            _type = type;
+            _sender = sender;
+        }
+
         public void OnPropertyChanged(string PropertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+
+        public MessageType Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
+                OnPropertyChanged("Type");
+            }
         }
 
         public string Sender

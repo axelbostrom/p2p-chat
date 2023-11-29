@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
@@ -22,7 +21,7 @@ namespace ChatApp.ViewModel.Command
         public void Execute(object parameter)
         {
             _parent.AddMessage();
-            _parent.NetworkManager.SendUserMessage(_parent.Message);
+            //_parent.NetworkManager.SendUserMessage(_parent.Message);
         }
     }
 }
