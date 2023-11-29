@@ -8,4 +8,12 @@
     <Configurations>Debug;Release;ChatApp2</Configurations>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="View\usericon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\usericon.png" />
+  </ItemGroup>
+
 </Project>

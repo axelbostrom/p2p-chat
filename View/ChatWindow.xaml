@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         Title="Zlatan Chat" Height="500" Width="850">
     <Canvas Background="Lavender">
-        <Image Source="../usericon.png" Width="40" Height="40" />
+        <Image Source="/View/usericon.png" Width="40" Height="40" />
+        <TextBlock FontWeight="Bold" TextWrapping="Wrap" Text="Connected as:"  Canvas.Left="45" Canvas.Top="3" FontFamily="Comic Sans MS" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="{Binding Name}"  Canvas.Left="45" Canvas.Top="23" FontFamily="Comic Sans MS" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="{Binding ChattingWithText}"  Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
         <ListBox x:Name="ChatListBox" ItemsSource="{Binding Messages}" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
