@@ -27,6 +27,11 @@ namespace ChatApp.Model
             _sender = sender;
         }
 
+        public Message()
+        {
+
+        }
+
         public void OnPropertyChanged(string PropertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));

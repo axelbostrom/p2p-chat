@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -54,7 +53,6 @@ namespace ChatApp.Model
                 _stream = _tcpClient.GetStream();
 
                 // Notify subscribers that the connection is successful
-                System.Diagnostics.Debug.WriteLine("Client connected!");
                 OnEventOccurred("Booted up succesfully!");
                 OnEventOccurred("Connected!");
 
@@ -76,12 +74,11 @@ namespace ChatApp.Model
         {
             try
             {
-                while (_isConnected)
+                while (true)
                 {
+                    System.Diagnostics.Debug.WriteLine("Recieving");
                     byte[] buffer = new byte[1024];
                     int bytesRead = _stream.Read(buffer, 0, buffer.Length);
-
-                    string recievedMessage = String.Empty;
 
                     if (bytesRead <= 0)
                     {
@@ -89,15 +86,15 @@ namespace ChatApp.Model
                         break;
                     }
 
+                    string recievedMessage = String.Empty;
+
                     recievedMessage = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
 
                     // Deserialize the received JSON message
                     Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
 
                     // Handle the received message
                     OnMessageReceived(message);
-
                 }
             }
             catch (Exception ex)
@@ -140,7 +137,7 @@ namespace ChatApp.Model
         // Implement IDisposable to release resources.
         public void Dispose()
         {
-            _isConnected = false;  // Signal that the client is no longer connected
+            // _isConnected = false;  // Signal that the client is no longer connected
             _stream?.Dispose();
             _tcpClient?.Close();
         }

@@ -151,7 +151,6 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
-            _networkManager.SendUserMessage(messageToSend);
         }
 
 

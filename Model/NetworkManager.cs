@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ChatApp.Model;
 
@@ -10,6 +11,7 @@ public class NetworkManager : INotifyPropertyChanged
     private NetworkStream _stream;
     private Client _client;
     private Server _server;
+    private User _user;
     public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<string> EventOccured;
     public event EventHandler<Message> MessageReceived;
@@ -31,8 +33,7 @@ public class NetworkManager : INotifyPropertyChanged
 
     private void OnMessageReceived(Message message)
     {
-        System.Diagnostics.Debug.WriteLine("Message recieved in NwM " + message.Content);
-        MessageReceived?.Invoke(this, message);
+        Application.Current.Dispatcher.Invoke(() => MessageReceived?.Invoke(this, message));
     }
 
     public Message Message
@@ -47,6 +48,7 @@ public class NetworkManager : INotifyPropertyChanged
         try
         {
             // TODO: add checks of address and port before calling server or check in server?
+            _user = user;
             _server = new Server(user);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _server.MessageReceived += (sender, message) => OnMessageReceived(message);
@@ -66,6 +68,7 @@ public class NetworkManager : INotifyPropertyChanged
         try
         {
             // TODO: add checks of address and port before calling client or check in client?
+            _user = user;
             _client = new Client(user);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _client.MessageReceived += (sender, message) => OnMessageReceived(message);
@@ -83,10 +86,12 @@ public class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    public void SendUserMessage(Message message)
+    internal void SendChatMessage(string message)
     {
-        _client?.SendMessage(message);
-        _server?.SendMessage(message);
+        Message messageToSend = new Message(MessageType.Message, _user.Name, DateTime.Now, message);
+        // System.Diagnostics.Debug.WriteLine(_user.Name + " sending message: " + message);
+        _client?.SendMessage(messageToSend);
+        _server?.SendMessage(messageToSend);
     }
 
     public Client Client { get { return _client; } }

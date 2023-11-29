@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -89,46 +88,42 @@ namespace ChatApp.Model
             {
                 NetworkStream stream = client.GetStream();
 
-                OnEventOccurred("xd");
+                // OnEventOccurred("xd");
 
-                await _userResponse.Task;
+                // await _userResponse.Task;
 
-                if (acceptOrDeny)
+                byte[] data = new byte[256];
+
+                // String to store the response ASCII representation.
+                string recievedMessage = String.Empty;
+
+                while (true)
                 {
-                    // Buffer to store the response bytes.
-                    byte[] data = new byte[256];
 
-                    // String to store the response ASCII representation.
-                    string recievedMessage = String.Empty;
+                    // Read the first batch of the client's data.
+                    int bytesRead = stream.Read(data, 0, data.Length);
 
-                    while (true)
+                    if (bytesRead <= 0)
                     {
-
-                        // Read the first batch of the client's data.
-                        int bytesRead = stream.Read(data, 0, data.Length);
-
-                        if (bytesRead <= 0)
-                        {
-                            // The client has disconnected
-                            break;
-                        }
-
-                        recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
-                        System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
-
-                        // Deserialize the received JSON message
-                        Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
-
-                        // Handle the received message
-                        OnMessageReceived(message);
+                        // The client has disconnected
+                        break;
                     }
+
+                    recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
+                    // System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
+
+                    // Deserialize the received JSON message
+                    Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
+
+                    // Handle the received message
+                    OnMessageReceived(message);
                 }
 
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
-                OnEventOccurred("Error handling client.");
+                // OnEventOccurred("Error handling client.");
             }
             finally
             {
@@ -138,19 +133,16 @@ namespace ChatApp.Model
 
         public async void SendMessage(Message message)
         {
-            // Check if a client is connected before attempting to send a message
-            // System.Diagnostics.Debug.WriteLine(_client.Connected);
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
-                await _userResponse.Task;
+                // await _userResponse.Task;
                 try
                 {
                     string jsonMessage = JsonSerializer.Serialize(message);
 
                     var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
-                    //System.Diagnostics.Debug.WriteLine("Sending message to stream " + message);
                     stream.Write(buffer, 0, buffer.Length);
                 }
                 catch (Exception)
