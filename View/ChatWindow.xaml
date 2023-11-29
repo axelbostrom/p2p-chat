@@ -20,7 +20,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <TextBox x:Name="MessageTextBox" Canvas.Left="175" Canvas.Top="344" Width="492" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}"/>
+        <Button Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
 
         <Grid Canvas.Left="404" Canvas.Top="420" Visibility="{Binding GridVisibility}">
             <Grid.ColumnDefinitions>

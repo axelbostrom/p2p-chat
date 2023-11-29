@@ -71,30 +71,14 @@ namespace ChatApp.Model
             }
         }
 
-        public void AcceptClientConnection()
-        {
-            acceptOrDeny = true; // Set acceptOrDeny based on user's "Yes" response
-            _userResponse.TrySetResult(true); // Signal the task completion source
-        }
-
-        public void DenyClientConnection()
-        {
-            acceptOrDeny = false; // Set acceptOrDeny based on user's "No" response
-            _userResponse.TrySetResult(true); // Signal the task completion source
-        }
-
-        private async void RecieveMessages(TcpClient client)
+        private void RecieveMessages(TcpClient client)
         {
             try
             {
                 NetworkStream stream = client.GetStream();
 
-                OnEventOccurred("xd");
+                OnEventOccurred("New Client Connection");
 
-                await _userResponse.Task;
-
-                if(acceptOrDeny)
-                {
                     // Buffer to store the response bytes.
                     byte[] data = new byte[256];
 
@@ -117,7 +101,6 @@ namespace ChatApp.Model
                         System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
                         Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
                     }
-                }
                 
             }
             catch (Exception ex)
@@ -131,15 +114,13 @@ namespace ChatApp.Model
             }
         }
 
-        public async void SendMessage(string message)
+        public void SendMessage(string message)
         {
             // Check if a client is connected before attempting to send a message
             System.Diagnostics.Debug.WriteLine(_client.Connected);
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
-
-                await _userResponse.Task;
 
                 try
                 {

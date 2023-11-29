@@ -100,6 +100,7 @@ namespace ChatApp.Model
             }
             finally
             {
+                System.Diagnostics.Debug.WriteLine("din mamma");
                 Dispose(); // Close the client when the loop exits
             }
         }
