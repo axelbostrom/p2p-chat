@@ -106,8 +106,6 @@ namespace ChatApp.Model
                         // Handle the received message
                         OnMessageReceived(message);
                     }
-                }
-
                 
             }
             catch (Exception ex)
@@ -121,15 +119,13 @@ namespace ChatApp.Model
             }
         }
 
-        public async void SendMessage(Message message)
-        public void SendMessage(string message)
+        public void SendMessage(Message message)
         {
             // Check if a client is connected before attempting to send a message
             // System.Diagnostics.Debug.WriteLine(_client.Connected);
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
-                await _userResponse.Task;
 
                 try
                 {

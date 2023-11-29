@@ -21,7 +21,6 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.NetworkManager.Server.DenyClientConnection();
             _parent.GridVisibility = Visibility.Hidden;
         }
     }
