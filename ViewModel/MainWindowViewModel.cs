@@ -148,8 +148,10 @@ namespace ChatApp.ViewModel
         public void AddMessage()
         {
             System.Diagnostics.Debug.WriteLine("Add Message " + _message + " for user " + _user.Name);
-            Message messageToSend = new Message(_user.Name, DateTime.Now, _message);
+            MessageType messageType = MessageType.Message;
+            Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
+            _networkManager.SendUserMessage(messageToSend);
         }
 
 
@@ -167,14 +169,15 @@ namespace ChatApp.ViewModel
         }
 
 
-        private void NetworkManager_MessageReceived(string message)
+        private void NetworkManager_MessageReceived(Message message)
         {
             // Parse the message to extract sender's name, timestamp, etc.
             string senderName = "Zlatan"; //ADD NAME
             DateTime timestamp = DateTime.Now; // ADD DATE
+            MessageType messageType = MessageType.Message;
 
             // Create a new Message object
-            Message newMessage = new Message(senderName, timestamp, message);
+            Message newMessage = new Message(messageType, senderName, timestamp, message.Content);
 
             // Add the new message to your Messages collection
             Messages.Add(newMessage);

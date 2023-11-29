@@ -12,9 +12,9 @@ public class NetworkManager : INotifyPropertyChanged
     private Server _server;
     public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<string> EventOccured;
-    public event EventHandler<string> MessageReceived;
+    public event EventHandler<Message> MessageReceived;
 
-    private string _message;
+    private Message _message;
 
     private void OnPropertyChanged(string propertyName = null)
     {
@@ -29,13 +29,13 @@ public class NetworkManager : INotifyPropertyChanged
         EventOccured?.Invoke(this, errorMessage);
     }
 
-    private void OnMessageReceived(string message)
+    private void OnMessageReceived(Message message)
     {
-        System.Diagnostics.Debug.WriteLine("Message recieved in NwM " + message);
+        System.Diagnostics.Debug.WriteLine("Message recieved in NwM " + message.Content);
         MessageReceived?.Invoke(this, message);
     }
 
-    public string Message
+    public Message Message
     {
         get { return _message; }
         set { _message = value; OnPropertyChanged("Message"); }
@@ -83,7 +83,7 @@ public class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    public void SendUserMessage(string message)
+    public void SendUserMessage(Message message)
     {
         _client?.SendMessage(message);
         _server?.SendMessage(message);

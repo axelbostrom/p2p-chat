@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,7 +18,7 @@ namespace ChatApp.Model
         private IPAddress _ipAddress;
         private int _port;
         public event EventHandler<string> EventOccured;
-        public event EventHandler<string> MessageReceived;
+        public event EventHandler<Message> MessageReceived;
         private TcpClient _client;
 
         public bool acceptOrDeny;
@@ -38,7 +38,7 @@ namespace ChatApp.Model
             });
         }
 
-        private void OnMessageReceived(string message)
+        private void OnMessageReceived(Message message)
         {
             MessageReceived?.Invoke(this, message);
         }
@@ -95,7 +95,7 @@ namespace ChatApp.Model
 
                 await _userResponse.Task;
 
-                if(acceptOrDeny)
+                if (acceptOrDeny)
                 {
                     // Buffer to store the response bytes.
                     byte[] data = new byte[256];
@@ -117,10 +117,15 @@ namespace ChatApp.Model
 
                         recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
                         System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
-                        Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
+
+                        // Deserialize the received JSON message
+                        Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
+
+                        // Handle the received message
+                        OnMessageReceived(message);
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -133,20 +138,21 @@ namespace ChatApp.Model
             }
         }
 
-        public async void SendMessage(string message)
+        public async void SendMessage(Message message)
         {
             // Check if a client is connected before attempting to send a message
-            System.Diagnostics.Debug.WriteLine(_client.Connected);
+            // System.Diagnostics.Debug.WriteLine(_client.Connected);
             if (_client != null && _client.Connected)
             {
                 NetworkStream stream = _client.GetStream();
-
                 await _userResponse.Task;
-
                 try
                 {
-                    var buffer = Encoding.UTF8.GetBytes(message);
-                    System.Diagnostics.Debug.WriteLine("Sending message to stream " + message);
+                    string jsonMessage = JsonSerializer.Serialize(message);
+
+                    var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+
+                    //System.Diagnostics.Debug.WriteLine("Sending message to stream " + message);
                     stream.Write(buffer, 0, buffer.Length);
                 }
                 catch (Exception)

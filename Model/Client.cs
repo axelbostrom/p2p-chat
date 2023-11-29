@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,7 +19,7 @@ namespace ChatApp.Model
         private NetworkStream _stream;
         public event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<string> EventOccured;
-        public event EventHandler<string> MessageReceived;
+        public event EventHandler<Message> MessageReceived;
 
         private bool _isConnected;
 
@@ -37,7 +38,7 @@ namespace ChatApp.Model
             });
         }
 
-        private void OnMessageReceived(string message)
+        private void OnMessageReceived(Message message)
         {
             MessageReceived?.Invoke(this, message);
         }
@@ -82,18 +83,23 @@ namespace ChatApp.Model
                     byte[] buffer = new byte[1024];
                     int bytesRead = _stream.Read(buffer, 0, buffer.Length);
 
+                    string recievedMessage = String.Empty;
+
                     if (bytesRead <= 0)
                     {
                         // The client has disconnected
                         break;
                     }
 
-                    string recievedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    recievedMessage = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
 
-                    if (!string.IsNullOrEmpty(recievedMessage))
-                    {
-                        Application.Current.Dispatcher.Invoke(() => OnMessageReceived(recievedMessage));
-                    }
+                    // Deserialize the received JSON message
+                    Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
+
+                    // Handle the received message
+                    OnMessageReceived(message);
+
                 }
             }
             catch (Exception ex)
@@ -106,7 +112,7 @@ namespace ChatApp.Model
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(Message message)
         {
             Task.Factory.StartNew(() =>
             {
@@ -114,7 +120,10 @@ namespace ChatApp.Model
                 {
                     if (_stream != null && _stream.CanWrite)
                     {
-                        var buffer = Encoding.UTF8.GetBytes(message);
+                        string jsonMessage = JsonSerializer.Serialize(message);
+
+                        var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+
                         _stream.Write(buffer, 0, buffer.Length);
                     }
                     else
@@ -128,6 +137,7 @@ namespace ChatApp.Model
                 }
             });
         }
+
 
         // Implement IDisposable to release resources.
         public void Dispose()
