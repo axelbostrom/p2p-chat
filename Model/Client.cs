@@ -13,8 +13,7 @@ namespace ChatApp.Model
     // The Client class is responsible for initiating connections to the server.
     public class Client : INotifyPropertyChanged
     {
-        private IPAddress _ipAddress;
-        private int _port;
+        private User _user;
         private TcpClient _tcpClient;
         private NetworkStream _stream;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -24,10 +23,9 @@ namespace ChatApp.Model
         private bool _isConnected;
 
 
-        public Client(IPAddress ipAddress, int port)
+        public Client(User user)
         {
-            _ipAddress = ipAddress;
-            _port = port;
+            _user = user;
         }
 
         private void OnEventOccurred(string eventMessage)
@@ -50,7 +48,7 @@ namespace ChatApp.Model
                 // Prefer a using declaration to ensure the instance is Disposed later.
                 System.Diagnostics.Debug.WriteLine("Client is looking for server to connect to...");
 
-                _tcpClient = new TcpClient(_ipAddress.ToString(), _port);
+                _tcpClient = new TcpClient(_user.Address.ToString(), _user.Port);
 
                 // Get a client stream for reading and writing.
                 _stream = _tcpClient.GetStream();

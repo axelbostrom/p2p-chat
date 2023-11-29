@@ -15,8 +15,7 @@ namespace ChatApp.Model
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private TcpListener _tcpListener;
-        private IPAddress _ipAddress;
-        private int _port;
+        private User _user;
         public event EventHandler<string> EventOccured;
         public event EventHandler<Message> MessageReceived;
         private TcpClient _client;
@@ -24,10 +23,9 @@ namespace ChatApp.Model
         public bool acceptOrDeny;
         private TaskCompletionSource<bool> _userResponse = new TaskCompletionSource<bool>();
 
-        public Server(IPAddress ipAddress, int port)
+        public Server(User user)
         {
-            _ipAddress = ipAddress;
-            _port = port;
+            _user = user;
         }
 
         private void OnEventOccurred(string eventMessage)
@@ -52,7 +50,7 @@ namespace ChatApp.Model
         {
             try
             {
-                _tcpListener = new TcpListener(_ipAddress, _port);
+                _tcpListener = new TcpListener(_user.Address, _user.Port);
                 _tcpListener.Start();
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
