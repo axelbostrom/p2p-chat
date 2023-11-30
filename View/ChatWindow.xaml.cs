@@ -13,6 +13,7 @@ namespace ChatApp.View
         {
             InitializeComponent();
             this.DataContext = viewModel;
+            this.Closing += viewModel.onClose;
         }
     }
 }
