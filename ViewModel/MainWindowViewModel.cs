@@ -117,6 +117,8 @@ namespace ChatApp.ViewModel
 
         private void NetworkManager_MessageReceived(Message message)
         {
+            _otherUser = message.Sender;
+
             if (message.Type == MessageType.Message)
             {
                 Messages.Add(message);
@@ -126,7 +128,6 @@ namespace ChatApp.ViewModel
                 // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
                 // MAYBE CALL HELLO WORLD?
                 // Update name in chatview etc
-                _otherUser = message.Sender;
 
                 if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
                 {
@@ -147,7 +148,8 @@ namespace ChatApp.ViewModel
             {
                 _waitWindow.Hide();
                 _mainWindow.Show();
-                MessageBox.Show("Your request to chat was denied.");
+                string textDeny = _otherUser + " denied your chat request.";
+                MessageBox.Show(textDeny);
             }
 
         }
