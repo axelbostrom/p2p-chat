@@ -100,8 +100,14 @@ namespace ChatApp.ViewModel
         private void BootWaitWindow()
         {
             _mainWindow.Hide();
-            _waitWindow = new WaitWindow();
+            _waitWindow = new WaitWindow(this);
             _waitWindow.Show();
+        }
+
+        public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            NetworkManager.Server?.StopServer();
+            MessageBox.Show("CLOSE BIIITCH");
         }
 
         public void AddMessage()
@@ -122,10 +128,7 @@ namespace ChatApp.ViewModel
             }
             else if (message.Type == MessageType.ConnectionEstablished)
             {
-                // CONNECTION REQUEST DO WHAT SHOULD BE DONE, MORE FOR GETTING USERNAME ETC
-                // MAYBE CALL HELLO WORLD?
-                // Update name in chatview etc
-
+                
                 if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
                 {
                     UserConnectionText = _otherUser + " wants to connect with you";
@@ -226,7 +229,7 @@ namespace ChatApp.ViewModel
             set
             {
                 _isSendButtonEnabled = value;
-                OnPropertyChanged(nameof(IsSendButtonEnabled)); // Implement INotifyPropertyChanged
+                OnPropertyChanged(nameof(IsSendButtonEnabled));
             }
         }
 

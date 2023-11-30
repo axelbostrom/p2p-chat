@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,11 @@ namespace ChatApp.View
     /// </summary>
     public partial class WaitWindow : Window
     {
-        public WaitWindow()
+        public WaitWindow(MainWindowViewModel viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
+            this.Closing += viewModel.onClose;
         }
     }
 }
