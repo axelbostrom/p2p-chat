@@ -54,9 +54,12 @@ namespace ChatApp.Model
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
                 OnEventOccurred("Server booted up successfully!");
-                _client = _tcpListener.AcceptTcpClient();
-                Task.Factory.StartNew(() => ReceiveMessages(_client));
-                System.Diagnostics.Debug.WriteLine("Server connected!");
+                while (true)
+                {
+                    _client = _tcpListener.AcceptTcpClient();
+                    Task.Factory.StartNew(() => ReceiveMessages(_client));
+                    System.Diagnostics.Debug.WriteLine("Server connected!");
+                }
             }
             catch (Exception ex)
             {
@@ -138,6 +141,11 @@ namespace ChatApp.Model
             {
                 System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
             }
+        }
+
+        public void DenyClientConnection()
+        {
+            _client.Close();
         }
     }
 }

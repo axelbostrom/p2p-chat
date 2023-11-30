@@ -80,11 +80,11 @@ namespace ChatApp.ViewModel
 
             if (e == "Server booted up successfully!")
             {
-                BootChatWindow();   
+                BootChatWindow();
             }
             else if (e == "Client booted up successfully!")
             {
-                BootWaitWindow();;
+                BootWaitWindow(); ;
             }
             else if (e == "Error connecting to server!")
             {
@@ -133,7 +133,7 @@ namespace ChatApp.ViewModel
                     UserConnectionText = _otherUser + " wants to connect with you";
                     GridVisibility = Visibility.Visible;
                 }
-                
+
                 System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
             }
             else if (message.Type == MessageType.AcceptConnection)
@@ -147,6 +147,7 @@ namespace ChatApp.ViewModel
             {
                 _waitWindow.Hide();
                 _mainWindow.Show();
+                MessageBox.Show("Your request to chat was denied.");
             }
 
         }

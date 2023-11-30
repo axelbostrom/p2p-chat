@@ -116,6 +116,7 @@ public class NetworkManager : INotifyPropertyChanged
         Message connectionDenyMessage = new Message(MessageType.DenyConnection, _user.Name);
 
         _server?.SendMessage(connectionDenyMessage);
+        _server?.DenyClientConnection();
     }
 
     public Client Client { get { return _client; } }
