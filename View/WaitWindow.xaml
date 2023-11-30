@@ -9,7 +9,7 @@
     <Canvas>
         <TextBlock FontFamily="Comic Sans MS" TextWrapping="Wrap" Canvas.Left="76" Canvas.Top="82" HorizontalAlignment="Left" VerticalAlignment="Top"><Run Language="sv-se" Text="Waiting for the server to accept connection"/></TextBlock>
         <ProgressBar IsIndeterminate="True" Width="182" Canvas.Left="109" Canvas.Top="115" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FF0628B0" />
-        <Button FontFamily="Comic Sans MS" Content="Disconnect" Canvas.Left="140" Canvas.Top="174" Width="120" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding ClientDisconnectCommand}" />
+        <Button FontFamily="Comic Sans MS" Content="Disconnect" Canvas.Left="140" Canvas.Top="174" Width="120" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding DisconnectCommand}" />
 
     </Canvas>
 </Window>

@@ -28,10 +28,6 @@ namespace ChatApp.ViewModel
         private MainWindow _mainWindow;
         private WaitWindow _waitWindow;
 
-
-        private ICommand _startServerCommand;
-        private ICommand _startClientCommand;
-
         private bool _isSendButtonEnabled = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -44,6 +40,7 @@ namespace ChatApp.ViewModel
         public ICommand SendMessageCommand { get { return new Command.SendMessageCommand(this); } }
         public ICommand AcceptConnectionCommand { get { return new Command.AcceptConnectionCommand(this); } }
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
+        public ICommand DisconnectCommand { get { return new Command.DisconnectCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {

@@ -119,6 +119,20 @@ public class NetworkManager : INotifyPropertyChanged
         _server?.DenyClientConnection();
     }
 
+    internal void Disconnect()
+    {
+        System.Diagnostics.Debug.WriteLine("Client disconnecting");
+        if (_client != null)
+        {
+
+            _client.Dispose();
+        }
+        else if (_server != null)
+        {
+
+        }
+    }
+
     public Client Client { get { return _client; } }
 
     public Server Server { get { return _server; } }

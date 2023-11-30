@@ -139,6 +139,7 @@ namespace ChatApp.Model
             // _isConnected = false;  // Signal that the client is no longer connected
             _stream?.Dispose();
             _tcpClient?.Close();
+
         }
 
         public TcpClient GetTcpClient() { return _tcpClient; }
