@@ -150,8 +150,8 @@ namespace ChatApp.Model
 
         public void StopServer()
         {
-            _client.GetStream()?.Dispose();
-            _client.Close();
+            _client?.GetStream()?.Dispose();
+            _client?.Close();
             _tcpListener?.Stop();
         }
     }

@@ -107,7 +107,8 @@ namespace ChatApp.ViewModel
         public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
         {
             NetworkManager.Server?.StopServer();
-            MessageBox.Show("CLOSE BIIITCH");
+            NetworkManager.Client?.Disconnect();
+            Environment.Exit(0);
         }
 
         public void AddMessage()

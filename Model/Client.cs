@@ -44,15 +44,12 @@ namespace ChatApp.Model
         {
             try
             {
-                // Prefer a using declaration to ensure the instance is Disposed later.
                 System.Diagnostics.Debug.WriteLine("Client is looking for server to connect to...");
 
                 _tcpClient = new TcpClient(_user.Address.ToString(), _user.Port);
 
-                // Get a client stream for reading and writing.
                 _stream = _tcpClient.GetStream();
 
-                // Notify subscribers that the connection is successful
                 OnEventOccurred("Client booted up successfully!");
 
                 _isConnected = true;
@@ -73,7 +70,7 @@ namespace ChatApp.Model
         {
             try
             {
-                while (true)
+                while (_isConnected)
                 {
                     System.Diagnostics.Debug.WriteLine("Recieving");
                     byte[] buffer = new byte[1024];
@@ -102,7 +99,7 @@ namespace ChatApp.Model
             }
             finally
             {
-                Dispose(); // Close the client when the loop exits
+                //Dis(); // Close the client when the loop exits
             }
         }
 
@@ -112,7 +109,7 @@ namespace ChatApp.Model
             {
                 try
                 {
-                    if (_stream != null && _stream.CanWrite)
+                    if (_stream != null && _stream.CanWrite && _isConnected)
                     {
                         string jsonMessage = JsonSerializer.Serialize(message);
 
@@ -134,9 +131,9 @@ namespace ChatApp.Model
 
 
         // Implement IDisposable to release resources.
-        public void Dispose()
+        public void Disconnect()
         {
-            // _isConnected = false;  // Signal that the client is no longer connected
+            _isConnected = false;
             _stream?.Dispose();
             _tcpClient?.Close();
 

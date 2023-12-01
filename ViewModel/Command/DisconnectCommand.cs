@@ -1,4 +1,7 @@
-﻿namespace ChatApp.ViewModel.Command
+﻿using System;
+using System.Windows.Input;
+
+namespace ChatApp.ViewModel.Command
 {
     internal class DisconnectCommand : ICommand
     {
@@ -17,7 +20,7 @@
 
         public void Execute(object parameter)
         {
-            _parent.NetworkManager.Disconnect();
+            _parent.NetworkManager.Client.Disconnect();
         }
     }
 }

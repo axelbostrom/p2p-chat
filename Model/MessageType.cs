@@ -6,6 +6,7 @@
         ConnectionEstablished,
         AcceptConnection,
         DenyConnection,
+        DisconnectMessage
         // Add more types as needed
     }
 }
