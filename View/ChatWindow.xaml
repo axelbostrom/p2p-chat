@@ -10,7 +10,7 @@
         <TextBlock FontWeight="Bold" TextWrapping="Wrap" Text="Connected as:"  Canvas.Left="45" Canvas.Top="3" FontFamily="Comic Sans MS" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="{Binding Name}"  Canvas.Left="45" Canvas.Top="23" FontFamily="Comic Sans MS" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="{Binding ChattingWithText}"  Canvas.Left="176" Canvas.Top="40" FontFamily="Comic Sans MS"/>
-        <ListBox x:Name="ChatListBox" ItemsSource="{Binding Messages}" Canvas.Left="175" Canvas.Top="62" Width="585" Height="282" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <ListBox x:Name="ChatListBox" ItemsSource="{Binding Messages}" Canvas.Left="222" Canvas.Top="85" Width="576" Height="282" HorizontalAlignment="Left" VerticalAlignment="Center">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -21,10 +21,10 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBox FontFamily="Comic Sans MS" x:Name="MessageTextBox" Canvas.Left="175" Canvas.Top="344" Width="492" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button FontFamily="Comic Sans MS" Content="Send" Canvas.Left="667" Canvas.Top="344" Width="93" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
+        <TextBox FontFamily="Comic Sans MS" x:Name="MessageTextBox" Canvas.Left="222" Canvas.Top="367" Width="482" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button FontFamily="Comic Sans MS" Content="Send" Canvas.Left="704" Canvas.Top="367" Width="94" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
 
-        <Grid Canvas.Left="404" Canvas.Top="420" Visibility="{Binding GridVisibility}">
+        <Grid Canvas.Left="328" Canvas.Top="30" Visibility="{Binding GridVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -37,5 +37,16 @@
 
             <Button FontFamily="Comic Sans MS" Content="Deny" Width="50" Height="28" Command="{Binding DenyConnectionCommand}" Background="#FF3232" Grid.Column="2" Margin="5"/>
         </Grid>
+        <TextBox FontFamily="Comic Sans MS" Canvas.Left="20" TextWrapping="Wrap" Text="{Binding SearchText}" Canvas.Top="85" Width="186" HorizontalAlignment="Center" VerticalAlignment="Center" Height="20"/>
+        <ListBox FontFamily="Comic Sans MS" Height="312" Canvas.Left="20" Canvas.Top="110" Width="186" ItemsSource="{Binding Conversations}" SelectedItem="{Binding SelectedConversation}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                        <TextBlock Text="{Binding LastMessage.Time, StringFormat='HH:mm:ss'}" FontStyle="Italic" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Canvas>
 </Window>
