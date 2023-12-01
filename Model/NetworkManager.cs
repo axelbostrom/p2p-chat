@@ -119,6 +119,14 @@ public class NetworkManager : INotifyPropertyChanged
         _server?.DenyClientConnection();
     }
 
+    internal void SendDisconnect()
+    {
+        Message disconnectMessage = new Message(MessageType.Disconnect, _user.Name);
+
+        _server?.SendMessage(disconnectMessage);
+        _server?.DenyClientConnection();
+    }
+
     public Client Client { get { return _client; } }
 
     public Server Server { get { return _server; } }
