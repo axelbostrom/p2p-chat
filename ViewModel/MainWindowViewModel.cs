@@ -73,8 +73,6 @@ namespace ChatApp.ViewModel
 
         private void NetworkManager_EventOccurred(object? sender, string e)
         {
-            // TODO: Add messagebox shown depending on error that occured
-
             if (e == "Server booted up successfully!")
             {
                 BootChatWindow();
@@ -106,9 +104,15 @@ namespace ChatApp.ViewModel
 
         public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Disconnect();
+            Environment.Exit(0);
+        }
+
+        public void Disconnect()
+        {
+            NetworkManager.SendDisconnect();
             NetworkManager.Server?.StopServer();
             NetworkManager.Client?.Disconnect();
-            Environment.Exit(0);
         }
 
         public void AddMessage()
@@ -151,6 +155,23 @@ namespace ChatApp.ViewModel
                 _mainWindow.Show();
                 string textDeny = _otherUser + " denied your chat request.";
                 MessageBox.Show(textDeny);
+            }
+
+            else if (message.Type == MessageType.Disconnect)
+            {
+                if (NetworkManager.Server != null)
+                {
+                    ChattingWithText = _otherUser + " has disconnected!";
+                    IsSendButtonEnabled = false;
+                    // TODO: CLEAR ACTIVE MESSAGES IN CHAT WINDOW
+                }
+                else
+                {
+                    MessageBox.Show("Server has disconnected!");
+                    Disconnect();
+                    _chatWindow.Close();
+                    _mainWindow.Show();
+                }
             }
 
         }

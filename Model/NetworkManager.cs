@@ -47,7 +47,6 @@ public class NetworkManager : INotifyPropertyChanged
     {
         try
         {
-            // TODO: add checks of address and port before calling server or check in server?
             _user = user;
             _server = new Server(user);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
@@ -69,7 +68,6 @@ public class NetworkManager : INotifyPropertyChanged
     {
         try
         {
-            // TODO: add checks of address and port before calling client or check in client?
             _user = user;
             _client = new Client(user);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
@@ -89,17 +87,14 @@ public class NetworkManager : INotifyPropertyChanged
     internal void SendChatMessage(string message)
     {
         Message messageToSend = new Message(MessageType.Message, _user.Name, DateTime.Now, message);
-        // System.Diagnostics.Debug.WriteLine(_user.Name + " sending message: " + message);
         _client?.SendMessage(messageToSend);
         _server?.SendMessage(messageToSend);
     }
 
     private void SendConnectionEstablished()
     {
-        // Create a connection request message
         Message connectionRequestMessage = new Message(MessageType.ConnectionEstablished, _user.Name);
 
-        // Send the connection request to the server
         _client?.SendMessage(connectionRequestMessage);
         _server?.SendMessage(connectionRequestMessage);
     }
@@ -124,7 +119,7 @@ public class NetworkManager : INotifyPropertyChanged
         Message disconnectMessage = new Message(MessageType.Disconnect, _user.Name);
 
         _server?.SendMessage(disconnectMessage);
-        _server?.DenyClientConnection();
+        _client?.SendMessage(disconnectMessage);
     }
 
     public Client Client { get { return _client; } }
