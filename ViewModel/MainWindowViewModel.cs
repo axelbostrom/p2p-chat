@@ -17,7 +17,7 @@ namespace ChatApp.ViewModel
         private User _user;
         public string _otherUser;
         private string _userConnectionText;
-        private string _message;
+        private string _message = "";
 
         private string _chattingWithText;
 
@@ -121,7 +121,6 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
-            Message = "";
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -171,7 +170,7 @@ namespace ChatApp.ViewModel
                     MessageBox.Show("Server has disconnected!");
                     Disconnect();
                     IsSendButtonEnabled = false;
-                    _chatWindow = null;
+                    _chatWindow.Hide();
                     // does not work.
                     _mainWindow.Show();
                 }
