@@ -1,6 +1,7 @@
 ﻿using ChatApp.Model;
 using ChatApp.View;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,10 @@ namespace ChatApp.ViewModel
         public string _otherUser;
         private string _userConnectionText;
         private string _message = "";
+
+        private ObservableCollection<Message> _messages; // For Ui
+        private List<Message> _messageList; // For history
+        private MessageHistory _messageHistory;
 
         private string _chattingWithText;
 
@@ -59,8 +64,6 @@ namespace ChatApp.ViewModel
             }
         }
 
-        private ObservableCollection<Message> _messages;
-
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
@@ -70,6 +73,8 @@ namespace ChatApp.ViewModel
                 OnPropertyChanged(nameof(Messages));
             }
         }
+
+
 
         private void NetworkManager_EventOccurred(object? sender, string e)
         {
@@ -92,6 +97,8 @@ namespace ChatApp.ViewModel
         {
             _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
+            _messageHistory = new MessageHistory(Name);
+            _messageHistory.UpdateOtherUser(_otherUser);
             _chatWindow.Show();
         }
 
@@ -121,6 +128,8 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
+            _messageList.Add(messageToSend);
+            _messageHistory.UpdateConversation(_messageList);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -133,7 +142,7 @@ namespace ChatApp.ViewModel
             }
             else if (message.Type == MessageType.ConnectionEstablished)
             {
-                
+
                 if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
                 {
                     UserConnectionText = _otherUser + " wants to connect with you";
