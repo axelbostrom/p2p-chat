@@ -20,8 +20,11 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.AddMessage();
-            _parent.NetworkManager.SendChatMessage(_parent.Message);
+            if (!_parent.Message.Equals(""))
+            {
+                _parent.AddMessage();
+                _parent.NetworkManager.SendChatMessage(_parent.Message);
+            }
         }
     }
 }
