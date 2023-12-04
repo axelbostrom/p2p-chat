@@ -23,6 +23,11 @@ namespace ChatApp.Model
         internal void UpdateConversation(List<Message> messageList)
         {
             _messages = messageList;
+            foreach (Message msg in _messages)
+            {
+                System.Diagnostics.Debug.WriteLine(msg.Content);
+            }
+            
         }
 
         internal void UpdateOtherUser(string otherUser)
@@ -32,21 +37,8 @@ namespace ChatApp.Model
 
         private void FindHistory()
         {
-            string filePath = "";
-
-            if (Directory.Exists(filePath))
-            {
-                string[] files = Directory.GetFiles(filePath, $"{_userName}*.json");
-
-                _messages = new List<Message>();
-                foreach (string file in files)
-                {
-                    string json = File.ReadAllText(file);
-                    List<Message> messagesFromFile = JsonSerializer.Deserialize<List<Message>>(json);
-
-                    _messages.AddRange(messagesFromFile);
-                }
-            }
+            
+            
         }
     }
 }

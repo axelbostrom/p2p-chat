@@ -54,6 +54,7 @@ namespace ChatApp.ViewModel
             _networkManager.EventOccured += NetworkManager_EventOccurred;
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
+            _messageList = new List<Message>();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
