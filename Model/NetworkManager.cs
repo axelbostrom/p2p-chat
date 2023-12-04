@@ -122,6 +122,16 @@ public class NetworkManager : INotifyPropertyChanged
         _client?.SendMessage(disconnectMessage);
     }
 
+    internal void SendBuzzMessage()
+    {
+        Message sendBuzzMessage = new Message(MessageType.Buzz, _user.Name);
+
+        System.Diagnostics.Debug.WriteLine("Sending buzz");
+
+        _server?.SendMessage(sendBuzzMessage);
+        _client?.SendMessage(sendBuzzMessage);
+    }
+
     public Client Client { get { return _client; } }
 
     public Server Server { get { return _server; } }

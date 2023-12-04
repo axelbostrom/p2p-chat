@@ -21,9 +21,9 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBox FontFamily="Comic Sans MS" x:Name="MessageTextBox" Canvas.Left="222" Canvas.Top="367" Width="482" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button FontFamily="Comic Sans MS" Content="Send" Canvas.Left="704" Canvas.Top="367" Width="94" Height="55" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
-
+        <TextBox FontFamily="Comic Sans MS" x:Name="MessageTextBox" Canvas.Left="222" Canvas.Top="367" Width="415" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button FontFamily="Comic Sans MS" Content="Send" Canvas.Left="637" Canvas.Top="367" Width="94" Height="55" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
+        <Button FontFamily="Comic Sans MS" Content="Buzz" Canvas.Left="731" Canvas.Top="367" Width="67" Height="55" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SendBuzzCommand}" IsEnabled="{Binding IsSendButtonEnabled}" Background="#A020F0"/>
         <Grid Canvas.Left="328" Canvas.Top="30" Visibility="{Binding GridVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
