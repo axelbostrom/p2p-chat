@@ -180,7 +180,6 @@ namespace ChatApp.ViewModel
                     Disconnect();
                     IsSendButtonEnabled = false;
                     _chatWindow.Hide();
-                    // does not work.
                     _mainWindow.Show();
                 }
             }
