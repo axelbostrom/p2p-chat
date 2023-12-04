@@ -46,6 +46,7 @@ namespace ChatApp.ViewModel
         public ICommand AcceptConnectionCommand { get { return new Command.AcceptConnectionCommand(this); } }
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
         public ICommand DisconnectCommand { get { return new Command.DisconnectCommand(this); } }
+        public ICommand SendBuzzCommand { get { return new Command.SendBuzzCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
@@ -129,8 +130,8 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
-            _messageList.Add(messageToSend);
-            _messageHistory.UpdateConversation(_messageList);
+            //_messageList.Add(messageToSend);
+            //_messageHistory.UpdateConversation(_messageList);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -166,7 +167,6 @@ namespace ChatApp.ViewModel
                 string textDeny = _otherUser + " denied your chat request.";
                 MessageBox.Show(textDeny);
             }
-
             else if (message.Type == MessageType.Disconnect)
             {
                 if (NetworkManager.Server != null)
@@ -183,6 +183,12 @@ namespace ChatApp.ViewModel
                     _chatWindow.Hide();
                     _mainWindow.Show();
                 }
+            }
+            else if (message.Type == MessageType.Buzz)
+            {
+                // TODO: make actual buzz
+                System.Diagnostics.Debug.WriteLine("bUZZZ");
+                MessageBox.Show("Buzz");
             }
 
         }
