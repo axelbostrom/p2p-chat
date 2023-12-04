@@ -18,7 +18,7 @@ namespace ChatApp.ViewModel
         private User _user;
         public string _otherUser;
         private string _userConnectionText;
-        private string _message = "";
+        private string _message = string.Empty;
 
         private ObservableCollection<Message> _messages; // For Ui
         private List<Message> _messageList; // For history

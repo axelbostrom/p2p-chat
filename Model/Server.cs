@@ -150,7 +150,16 @@ namespace ChatApp.Model
 
         public void StopServer()
         {
-            _client?.GetStream()?.Dispose();
+            try
+            {
+                _client?.GetStream()?.Dispose();
+            }
+            // If client has already been disposed.
+            catch (SocketException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            
             _client?.Close();
             _tcpListener?.Stop();
         }
