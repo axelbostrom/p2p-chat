@@ -17,7 +17,7 @@ namespace ChatApp.ViewModel
         private User _user;
         public string _otherUser;
         private string _userConnectionText;
-        private string _message = "";
+        private string _message = string.Empty;
 
         private string _chattingWithText;
 
