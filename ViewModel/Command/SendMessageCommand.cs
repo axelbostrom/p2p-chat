@@ -24,6 +24,7 @@ namespace ChatApp.ViewModel.Command
             {
                 _parent.AddMessage();
                 _parent.NetworkManager.SendChatMessage(_parent.Message);
+                _parent.Message = string.Empty;
             }
         }
     }
