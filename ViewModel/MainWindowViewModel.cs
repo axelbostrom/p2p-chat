@@ -100,7 +100,6 @@ namespace ChatApp.ViewModel
             _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
             _messageHistory = new MessageHistory(Name);
-            _messageHistory.UpdateOtherUser(_otherUser);
             _chatWindow.Show();
         }
 
@@ -130,8 +129,8 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(messageToSend);
-            //_messageList.Add(messageToSend);
-            //_messageHistory.UpdateConversation(_messageList);
+            _messageList.Add(messageToSend);
+            _messageHistory.UpdateConversation(_messageList);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -141,6 +140,11 @@ namespace ChatApp.ViewModel
             if (message.Type == MessageType.Message)
             {
                 Messages.Add(message);
+                if (NetworkManager.Server != null)
+                {
+                    _messageList.Add(message);
+                    _messageHistory.UpdateConversation(_messageList);
+                }
             }
             else if (message.Type == MessageType.ConnectionEstablished)
             {
@@ -222,6 +226,8 @@ namespace ChatApp.ViewModel
                 OnPropertyChanged(nameof(Ip));
             }
         }
+
+        public MessageHistory MessageHistory { get { return _messageHistory; } }    
 
         public string Port
         {

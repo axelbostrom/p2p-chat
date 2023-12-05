@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
+using System.Linq;
+using System.Net.Http.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using System;
+using System.Runtime.Intrinsics.X86;
 
 namespace ChatApp.Model
 {
@@ -23,11 +28,30 @@ namespace ChatApp.Model
         internal void UpdateConversation(List<Message> messageList)
         {
             _messages = messageList;
-            foreach (Message msg in _messages)
+            var newConversation = new
             {
-                System.Diagnostics.Debug.WriteLine(msg.Content);
+                user1 = _userName,
+                user2 = _otherUser,
+                messages = _messages
+            };
+
+            string json = JsonSerializer.Serialize(newConversation);
+
+            string[] lines = File.ReadAllLines("history.json");
+
+            int exists = ConversationExists();
+
+            if (exists == -1)
+            {
+                lines = lines.Append(json).ToArray();
             }
-            
+            else
+            {
+                lines[exists] = json;
+            }
+
+            File.WriteAllLines("history.json", lines);
+
         }
 
         internal void UpdateOtherUser(string otherUser)
@@ -37,8 +61,30 @@ namespace ChatApp.Model
 
         private void FindHistory()
         {
-            
-            
+            string[] lines = File.ReadAllLines("history.json");
+            List<string> conversations = new List<string>();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(_userName)) conversations.Add(lines[i]);
+            }
+        }
+
+        private int ConversationExists()
+        {
+
+            string[] lines = File.ReadAllLines("history.json");
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith("{\"user1\":\"" + _otherUser + "\",\"user2\":\"" + _userName) || 
+                    lines[i].StartsWith("{\"user1\":\"" + _userName + "\",\"user2\":\"" + _otherUser))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }

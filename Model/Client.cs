@@ -119,12 +119,12 @@ namespace ChatApp.Model
                     }
                     else
                     {
-                        Console.WriteLine("Error: Stream is not ready for writing.");
+                        System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error sending message: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Error sending message: {ex.Message}");
                 }
             });
         }

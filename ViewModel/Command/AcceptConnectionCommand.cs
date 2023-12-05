@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Model;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -24,6 +25,7 @@ namespace ChatApp.ViewModel.Command
             _parent.GridVisibility = Visibility.Hidden;
             _parent.IsSendButtonEnabled = true;
             _parent.ChattingWithText = "You are now chatting with " + _parent._otherUser;
+            _parent.MessageHistory.UpdateOtherUser(_parent._otherUser);
             _parent.NetworkManager.SendConnectionAccepted();
         }
     }
