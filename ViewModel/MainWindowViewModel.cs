@@ -140,67 +140,93 @@ namespace ChatApp.ViewModel
         {
             _otherUser = message.Sender;
 
-            if (message.Type == MessageType.Message)
+            switch (message.Type)
             {
-                Messages.Add(message);
-                if (NetworkManager.Server != null)
-                {
-                    _messageList.Add(message);
-                    _messageHistory.UpdateConversation(_messageList);
-                }
-            }
-            else if (message.Type == MessageType.ConnectionEstablished)
-            {
+                case MessageType.Message:
+                    HandleMessageTypeMessage(message);
+                    break;
 
-                if (NetworkManager.Server != null) // fake news, it can be null. This is just for server.
-                {
-                    UserConnectionText = _otherUser + " wants to connect with you";
-                    GridVisibility = Visibility.Visible;
-                }
+                case MessageType.ConnectionEstablished:
+                    HandleMessageTypeConnectionEstablished(message);
+                    break;
 
-                System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
-            }
-            else if (message.Type == MessageType.AcceptConnection)
-            {
-                _waitWindow?.Hide();
-                IsSendButtonEnabled = true;
-                ChattingWithText = "You are now chatting with " + _otherUser;
-                BootChatWindow();
-            }
-            else if (message.Type == MessageType.DenyConnection)
-            {
-                _waitWindow.Hide();
-                _mainWindow.Show();
-                string textDeny = _otherUser + " denied your chat request.";
-                MessageBox.Show(textDeny);
-            }
-            else if (message.Type == MessageType.Disconnect)
-            {
-                if (NetworkManager.Server != null)
-                {
-                    ChattingWithText = _otherUser + " has disconnected!";
-                    IsSendButtonEnabled = false;
-                    // TODO: CLEAR ACTIVE MESSAGES IN CHAT WINDOW
-                    // NO, CLEAR BEFORE NEW CHAT
-                }
-                else
-                {
-                    // TODO: NO POP-UP, TEXT?
-                    MessageBox.Show("Server has disconnected!");
-                    Disconnect();
-                    IsSendButtonEnabled = false;
-                    _chatWindow.Hide();
-                    _mainWindow.Show();
-                }
-            }
-            else if (message.Type == MessageType.Buzz)
-            {
-                PlaySound();
-            }
+                case MessageType.AcceptConnection:
+                    HandleMessageTypeAcceptConnection(message);
+                    break;
 
+                case MessageType.DenyConnection:
+                    HandleMessageTypeDenyConnection(message);
+                    break;
+
+                case MessageType.Disconnect:
+                    HandleMessageTypeDisconnect(message);
+                    break;
+
+                case MessageType.Buzz:
+                    HandleMessageTypeBuzz();
+                    break;
+            }
         }
 
-        private void PlaySound()
+        private void HandleMessageTypeMessage(Message message)
+        {
+            Messages.Add(message);
+
+            if (NetworkManager.Server != null)
+            {
+                _messageList.Add(message);
+                _messageHistory.UpdateConversation(_messageList);
+            }
+        }
+
+        private void HandleMessageTypeConnectionEstablished(Message message)
+        {
+            if (NetworkManager.Server != null)
+            {
+                UserConnectionText = _otherUser + " wants to connect with you";
+                GridVisibility = Visibility.Visible;
+            }
+
+            System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
+        }
+
+        private void HandleMessageTypeAcceptConnection(Message message)
+        {
+            _waitWindow?.Hide();
+            IsSendButtonEnabled = true;
+            ChattingWithText = "You are now chatting with " + _otherUser;
+            BootChatWindow();
+        }
+
+        private void HandleMessageTypeDenyConnection(Message message)
+        {
+            _waitWindow.Hide();
+            _mainWindow.Show();
+            string textDeny = _otherUser + " denied your chat request.";
+            MessageBox.Show(textDeny);
+        }
+
+        private void HandleMessageTypeDisconnect(Message message)
+        {
+            if (NetworkManager.Server != null)
+            {
+                ChattingWithText = _otherUser + " has disconnected!";
+                IsSendButtonEnabled = false;
+                // TODO: CLEAR ACTIVE MESSAGES IN CHAT WINDOW
+                // NO, CLEAR BEFORE NEW CHAT OR WHEN CHANGING TO CHAT FROM HISTORY
+            }
+            else
+            {
+                // TODO: NO POP-UP, TEXT?
+                MessageBox.Show("Server has disconnected!");
+                Disconnect();
+                IsSendButtonEnabled = false;
+                _chatWindow.Hide();
+                _mainWindow.Show();
+            }
+        }
+
+        private void HandleMessageTypeBuzz()
         {
             string soundFile = "go.mp3";
 
@@ -266,7 +292,7 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public MessageHistory MessageHistory { get { return _messageHistory; } }    
+        public MessageHistory MessageHistory { get { return _messageHistory; } }
 
         public string Port
         {

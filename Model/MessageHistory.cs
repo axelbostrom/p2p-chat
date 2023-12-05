@@ -1,11 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
-using System;
-using System.Runtime.Intrinsics.X86;
 
 namespace ChatApp.Model
 {
@@ -77,7 +73,7 @@ namespace ChatApp.Model
 
             for (int i = 0; i < lines.Length; i++)
             {
-                if (lines[i].StartsWith("{\"user1\":\"" + _otherUser + "\",\"user2\":\"" + _userName) || 
+                if (lines[i].StartsWith("{\"user1\":\"" + _otherUser + "\",\"user2\":\"" + _userName) ||
                     lines[i].StartsWith("{\"user1\":\"" + _userName + "\",\"user2\":\"" + _otherUser))
                 {
                     return i;
