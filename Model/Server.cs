@@ -148,10 +148,6 @@ namespace ChatApp.Model
             _client.Close();
         }
 
-        //TODO: Exception thrown: 'System.ObjectDisposedException' in System.Private.CoreLib.dll
-        // An exception of type 'System.ObjectDisposedException' occurred in System.Private.CoreLib.dll but was not handled in user code
-        // Cannot access a disposed object.
-
         public void StopServer()
         {
             try
@@ -160,6 +156,10 @@ namespace ChatApp.Model
             }
             // If client has already been disposed.
             catch (SocketException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            catch (ObjectDisposedException ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
