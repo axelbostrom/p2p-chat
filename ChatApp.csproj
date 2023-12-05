@@ -16,4 +16,10 @@
     <Resource Include="View\usericon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="go.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

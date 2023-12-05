@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ChatApp.ViewModel
 {
@@ -77,7 +80,7 @@ namespace ChatApp.ViewModel
         }
 
 
-
+        // TODO FIX EVENT HANDLING BETTER
         private void NetworkManager_EventOccurred(object? sender, string e)
         {
             if (e == "Server booted up successfully!")
@@ -174,9 +177,11 @@ namespace ChatApp.ViewModel
                     ChattingWithText = _otherUser + " has disconnected!";
                     IsSendButtonEnabled = false;
                     // TODO: CLEAR ACTIVE MESSAGES IN CHAT WINDOW
+                    // NO, CLEAR BEFORE NEW CHAT
                 }
                 else
                 {
+                    // TODO: NO POP-UP, TEXT?
                     MessageBox.Show("Server has disconnected!");
                     Disconnect();
                     IsSendButtonEnabled = false;
@@ -186,11 +191,45 @@ namespace ChatApp.ViewModel
             }
             else if (message.Type == MessageType.Buzz)
             {
-                // TODO: make actual buzz
-                System.Diagnostics.Debug.WriteLine("bUZZZ");
-                MessageBox.Show("Buzz");
+                PlaySound();
             }
 
+        }
+
+        private void PlaySound()
+        {
+            string soundFile = "go.mp3";
+
+            try
+            {
+                string soundPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, soundFile);
+
+                if (File.Exists(soundPath))
+                {
+                    MediaPlayer player = new MediaPlayer();
+                    player.Open(new Uri(soundPath, UriKind.Absolute));
+
+                    player.Position = TimeSpan.FromSeconds(0.8);
+
+                    player.Play();
+
+                    Task.Delay(TimeSpan.FromSeconds(2.5)).ContinueWith(_ =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            player.Stop();
+                        });
+                    });
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error playing sound: File not found at {soundPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error playing sound: {ex.Message}");
+            }
         }
 
         public string Message
