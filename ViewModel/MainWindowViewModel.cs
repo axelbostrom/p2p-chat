@@ -228,7 +228,7 @@ namespace ChatApp.ViewModel
 
         private void HandleMessageTypeBuzz()
         {
-            string soundFile = "go.mp3";
+            string soundFile = "Resources/go.mp3";
 
             try
             {
@@ -237,7 +237,7 @@ namespace ChatApp.ViewModel
                 if (File.Exists(soundPath))
                 {
                     MediaPlayer player = new MediaPlayer();
-                    player.Open(new Uri(soundPath, UriKind.Absolute));
+                    player.Open(new Uri(soundPath));
 
                     player.Position = TimeSpan.FromSeconds(0.8);
 
@@ -261,7 +261,6 @@ namespace ChatApp.ViewModel
                 System.Diagnostics.Debug.WriteLine($"Error playing sound: {ex.Message}");
             }
         }
-
         public string Message
         {
             get { return _message; }

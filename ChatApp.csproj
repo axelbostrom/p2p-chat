@@ -9,17 +9,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\backgroundimage.jpg" />
+    <None Remove="Resources\go.mp3" />
+    <None Remove="Resources\icon.png" />
     <None Remove="View\usericon.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\go.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\backgroundimage.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="View\usericon.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="go.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Model\history.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -6,16 +6,22 @@
         xmlns:local="clr-namespace:ChatApp" xmlns:viewmodel="clr-namespace:ChatApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Canvas Background="Bisque">
-        <TextBlock TextWrapping="Wrap" Text="Avarage Zlatan Enjoyer chat" FontFamily="Comic Sans MS" FontSize="30" Canvas.Left="199" Canvas.Top="22" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="Enter your name:" Margin="229,82,229,335" FontFamily="Comic Sans MS"/>
-        <TextBox x:Name="TextBox_Name" Text="{Binding Name, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="103" />
-        <TextBlock TextWrapping="Wrap" Text="Enter your port number:" Margin="229,143,229,274" FontFamily="Comic Sans MS"/>
-        <TextBox x:Name="TextBox_Port" Text="{Binding Port, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="164" />
-        <TextBlock TextWrapping="Wrap" Text="Enter your IP-address:" Margin="229,200,229,216" FontFamily="Comic Sans MS"/>
-        <TextBox x:Name="TextBox_Ip" Text="{Binding Ip, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="229" Canvas.Top="221" />
+    <Canvas>
+        <Canvas.Background>
+            <ImageBrush ImageSource="/Resources/backgroundimage.jpg" Stretch="UniformToFill"/>
+        </Canvas.Background>
 
-        <Button Content="Start Server" HorizontalAlignment="Left" Height="45" Margin="229,285,0,0" VerticalAlignment="Top" Command="{Binding Path=StartServerCommand}" Width="161" FontFamily="Comic Sans MS"/>
-        <Button Content="Start Client" HorizontalAlignment="Left" Height="45" Margin="410,285,0,0" VerticalAlignment="Top" Command="{Binding Path=StartClientCommand}" Width="161" FontFamily="Comic Sans MS"/>
+        <Rectangle Fill="White" Opacity="0.5" Width="800" Height="450" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Top="-14"/>
+
+        <TextBlock TextWrapping="Wrap" FontFamily="Comic Sans MS" FontSize="30" Canvas.Left="313" Canvas.Top="73" HorizontalAlignment="Left" VerticalAlignment="Top"><Run Language="sv-se" Text="Zlatan Chat"/><LineBreak/><Run Language="sv-se"/></TextBlock>
+        <TextBlock TextWrapping="Wrap" Text="Enter your name:" FontFamily="Comic Sans MS" Canvas.Left="219" Canvas.Top="176"/>
+        <TextBox x:Name="TextBox_Name" Text="{Binding Name, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="219" Canvas.Top="197" />
+        <TextBlock TextWrapping="Wrap" Text="Enter your port number:" FontFamily="Comic Sans MS" Canvas.Left="219" Canvas.Top="237"/>
+        <TextBox x:Name="TextBox_Port" Text="{Binding Port, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="219" Canvas.Top="258" />
+        <TextBlock TextWrapping="Wrap" Text="Enter your IP-address:" FontFamily="Comic Sans MS" Canvas.Left="219" Canvas.Top="294"/>
+        <TextBox x:Name="TextBox_Ip" Text="{Binding Ip, Mode=TwoWay}" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" VerticalAlignment="Top" Width="342" Canvas.Left="219" Canvas.Top="315" />
+
+        <Button Content="Start Server" HorizontalAlignment="Center" Height="45" VerticalAlignment="Top" Command="{Binding Path=StartServerCommand}" Width="161" FontFamily="Comic Sans MS" Canvas.Left="219" Canvas.Top="358"/>
+        <Button Content="Start Client" HorizontalAlignment="Center" Height="45" VerticalAlignment="Top" Command="{Binding Path=StartClientCommand}" Width="161" FontFamily="Comic Sans MS" Canvas.Left="400" Canvas.Top="358"/>
     </Canvas>
 </Window>
