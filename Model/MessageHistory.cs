@@ -59,10 +59,21 @@ namespace ChatApp.Model
         {
             string[] lines = File.ReadAllLines("history.json");
             List<string> conversations = new List<string>();
+            List<string> conversationUsers = new List<string>();
 
             for (int i = 0; i < lines.Length; i++)
             {
-                if (lines[i].Contains(_userName)) conversations.Add(lines[i]);
+                if (lines[i].Contains("{\"user1\":\"" + _userName + "\""))
+                {
+                    conversations.Add(lines[i]);
+                    conversationUsers.Add(lines[i]);
+                    string jsonMessage = JsonSerializer.Serialize(lines[i]);
+                }
+                if (lines[i].Contains("{\"user2\":\"" + _userName + "\""))
+                {
+                    conversations.Add(lines[i]);
+                }
+                    
             }
         }
 
