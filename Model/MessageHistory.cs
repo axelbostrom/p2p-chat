@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ChatApp.Model
@@ -10,43 +13,62 @@ namespace ChatApp.Model
         private string _userName;
         private string _otherUser;
         private List<Message> _messages;
+        
 
         public MessageHistory(string userName)
         {
             _userName = userName;
-            FindHistory();
         }
 
-        public string UserName { get { return _userName; } }
+        public class Conversation
+        {
+            public string User1 { get; set; }
+            public string User2 { get; set; }
+            public List<Message> Messages { get; set; }
+        }
 
-        public List<Message> Messages { get { return _messages; } set { _messages = value; } }
+        public string UserName
+        {
+            get { return _userName; }
+        }
+
+        public List<Message> Messages
+        {
+            get { return _messages; }
+            set { _messages = value; }
+        }
 
         internal void UpdateConversation(List<Message> messageList)
         {
-            _messages = messageList;
-            var newConversation = new
+            if (_otherUser == null)
             {
-                user1 = _userName,
-                user2 = _otherUser,
-                messages = _messages
+                return;
+            }
+            _messages = messageList;
+            var newConversation = new Conversation
+            {
+                User1 = _userName,
+                User2 = _otherUser,
+                Messages = _messages
             };
 
-            string json = JsonSerializer.Serialize(newConversation);
+            List<Conversation> existingConversations = new List<Conversation>();
 
-            string[] lines = File.ReadAllLines("history.json");
 
-            int exists = ConversationExists();
+            string existingJson = File.ReadAllText("history.json");
 
-            if (exists == -1)
+            if (!string.IsNullOrWhiteSpace(existingJson))
             {
-                lines = lines.Append(json).ToArray();
-            }
-            else
-            {
-                lines[exists] = json;
+                existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
             }
 
-            File.WriteAllLines("history.json", lines);
+            existingConversations.Add(newConversation);
+
+            string updatedJson = JsonSerializer.Serialize(existingConversations,
+                new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText("history.json", updatedJson);
+            Console.WriteLine("Conversation appended to JSON file.");
 
         }
 
@@ -55,43 +77,82 @@ namespace ChatApp.Model
             _otherUser = otherUser;
         }
 
-        private void FindHistory()
+        public List<string> GetChatUserHistory()
         {
             string[] lines = File.ReadAllLines("history.json");
-            List<string> conversations = new List<string>();
+            List<Conversation> existingConversations = new List<Conversation>();
             List<string> conversationUsers = new List<string>();
 
-            for (int i = 0; i < lines.Length; i++)
+            string existingJson = File.ReadAllText("history.json");
+
+            if (!string.IsNullOrWhiteSpace(existingJson))
             {
-                if (lines[i].Contains("{\"user1\":\"" + _userName + "\""))
-                {
-                    conversations.Add(lines[i]);
-                    conversationUsers.Add(lines[i]);
-                    string jsonMessage = JsonSerializer.Serialize(lines[i]);
-                }
-                if (lines[i].Contains("{\"user2\":\"" + _userName + "\""))
-                {
-                    conversations.Add(lines[i]);
-                }
-                    
+                existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
             }
+
+            foreach (Conversation conv in existingConversations)
+            {
+                if (conv.User1.Equals(_userName))
+                {
+                    conversationUsers.Add(conv.User2);
+                }
+
+                if (conv.User2.Equals(_userName))
+                {
+                    if(!conversationUsers.Contains(conv.User1)) conversationUsers.Add(conv.User1);
+                }
+            }
+
+            return conversationUsers;
         }
 
-        private int ConversationExists()
+        public List<Message> GetChatHistory(string user)
         {
-
             string[] lines = File.ReadAllLines("history.json");
+            List<Conversation> existingConversations = new List<Conversation>();
 
-            for (int i = 0; i < lines.Length; i++)
+
+            string existingJson = File.ReadAllText("history.json");
+
+            if (!string.IsNullOrWhiteSpace(existingJson))
             {
-                if (lines[i].StartsWith("{\"user1\":\"" + _otherUser + "\",\"user2\":\"" + _userName) ||
-                    lines[i].StartsWith("{\"user1\":\"" + _userName + "\",\"user2\":\"" + _otherUser))
+                existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
+            }
+
+            foreach (Conversation conv in existingConversations)
+            {
+                if ((conv.User1.Equals(_userName) && conv.User2.Equals(user)) ||
+                    (conv.User2.Equals(_userName) && conv.User1.Equals(user)))
                 {
-                    return i;
+                    return conv.Messages;
                 }
             }
 
-            return -1;
+            return null;
+        }
+
+        public List<Message> GetChatHistory()
+        {
+            string[] lines = File.ReadAllLines("history.json");
+            List<Conversation> existingConversations = new List<Conversation>();
+
+
+            string existingJson = File.ReadAllText("history.json");
+
+            if (!string.IsNullOrWhiteSpace(existingJson))
+            {
+                existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
+            }
+
+            foreach (Conversation conv in existingConversations)
+            {
+                if ((conv.User1.Equals(_userName) && conv.User2.Equals(_otherUser)) ||
+                    (conv.User2.Equals(_userName) && conv.User1.Equals(_otherUser)))
+                {
+                    return conv.Messages;
+                }
+            }
+            return null;
         }
     }
 }

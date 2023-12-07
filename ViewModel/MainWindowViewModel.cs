@@ -24,6 +24,7 @@ namespace ChatApp.ViewModel
         private string _message = string.Empty;
 
         private ObservableCollection<Message> _messages; // For Ui
+        private ObservableCollection<string> _chats; // For Ui
         private List<Message> _messageList; // For history
         private MessageHistory _messageHistory;
 
@@ -58,6 +59,7 @@ namespace ChatApp.ViewModel
             _networkManager.EventOccured += NetworkManager_EventOccurred;
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
+            _chats = new ObservableCollection<string>();
             _messageList = new List<Message>();
         }
 
@@ -76,6 +78,16 @@ namespace ChatApp.ViewModel
             {
                 _messages = value;
                 OnPropertyChanged(nameof(Messages));
+            }
+        }
+
+        public ObservableCollection<string> Chats
+        {
+            get { return _chats; }
+            private set
+            {
+                _chats = value;
+                OnPropertyChanged(nameof(Chats));
             }
         }
 
@@ -103,6 +115,7 @@ namespace ChatApp.ViewModel
             _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
             _messageHistory = new MessageHistory(Name);
+            LoadChatHistory();
             _chatWindow.Show();
         }
 
@@ -111,6 +124,16 @@ namespace ChatApp.ViewModel
             _mainWindow.Hide();
             _waitWindow = new WaitWindow(this);
             _waitWindow.Show();
+        }
+
+        private void LoadChatHistory()
+        {
+            List<string> users = _messageHistory.GetChatUserHistory();
+            foreach (string u in users)
+            {
+                System.Diagnostics.Debug.WriteLine(u);
+                Chats.Add(u);
+            }
         }
 
         public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
@@ -130,9 +153,9 @@ namespace ChatApp.ViewModel
         {
             System.Diagnostics.Debug.WriteLine("Add Message " + _message + " for user " + _user.Name);
             MessageType messageType = MessageType.Message;
-            Message messageToSend = new Message(messageType, _user.Name, DateTime.Now, _message);
-            Messages.Add(messageToSend);
-            _messageList.Add(messageToSend);
+            Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
+            Messages.Add(msg);
+            _messageList.Add(msg);
             _messageHistory.UpdateConversation(_messageList);
         }
 
