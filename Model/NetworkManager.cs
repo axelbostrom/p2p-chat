@@ -42,7 +42,6 @@ public class NetworkManager : INotifyPropertyChanged
         set { _message = value; OnPropertyChanged("Message"); }
     }
 
-    // TODO: Remove nestled try/catch?
     public async Task<bool> StartServer(User user)
     {
         try
@@ -68,7 +67,6 @@ public class NetworkManager : INotifyPropertyChanged
         }
     }
 
-    // TODO: Remove nestled try/catch?
     public async Task<bool> StartClient(User user)
     {
         try

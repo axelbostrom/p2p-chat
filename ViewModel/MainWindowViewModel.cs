@@ -93,7 +93,11 @@ namespace ChatApp.ViewModel
             }
             else if (e == "Error connecting to server!")
             {
-                MessageBox.Show("Server not started!");
+                MessageBox.Show("Error connecting to server!");
+            }
+            else if (e == "Error creating server!")
+            {
+                MessageBox.Show("Server already exists!");
             }
 
         }

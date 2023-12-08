@@ -64,7 +64,8 @@ namespace ChatApp.Model
             }
             catch (SocketException ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Socket error: {ex.Message}");
+                OnEventOccurred("Error creating server!");
             }
             catch (Exception ex)
             {
@@ -114,7 +115,7 @@ namespace ChatApp.Model
             catch (IOException ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Network error handling client: {ex.Message}");
-                // OnEventOccurred("Error handling client.");
+                OnEventOccurred("Error handling client.");
             }
             catch (JsonException ex)
             {
@@ -159,6 +160,7 @@ namespace ChatApp.Model
             }
             else
             {
+                // TODO: När server skickar kommer den hit också?
                 System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
             }
         }
