@@ -13,11 +13,11 @@ namespace ChatApp.Model
         private string _userName;
         private string _otherUser;
         private List<Message> _messages;
-        
 
         public MessageHistory(string userName)
         {
             _userName = userName;
+            _messages = new List<Message>();
         }
 
         public class Conversation
@@ -38,22 +38,15 @@ namespace ChatApp.Model
             set { _messages = value; }
         }
 
-        internal void UpdateConversation(List<Message> messageList)
+        internal void UpdateConversation(Message message)
         {
             if (_otherUser == null)
             {
                 return;
             }
-            _messages = messageList;
-            var newConversation = new Conversation
-            {
-                User1 = _userName,
-                User2 = _otherUser,
-                Messages = _messages
-            };
-
+            _messages.Add(message);
+            
             List<Conversation> existingConversations = new List<Conversation>();
-
 
             string existingJson = File.ReadAllText("history.json");
 
@@ -62,48 +55,81 @@ namespace ChatApp.Model
                 existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
             }
 
-            existingConversations.Add(newConversation);
+            // Check if a conversation between these users already exists
+            bool conversationExists = false;
+            foreach (var conversation in existingConversations)
+            {
+                if ((conversation.User1 == _userName && conversation.User2 == _otherUser) ||
+                    (conversation.User1 == _otherUser && conversation.User2 == _userName))
+                {
+                    conversation.Messages.Add(message);
+                    conversationExists = true;
+                    break;
+                }
+            }
+
+            if (!conversationExists)
+            {
+                var newConversation = new Conversation
+                {
+                    User1 = _userName,
+                    User2 = _otherUser,
+                    Messages = _messages
+                };
+                // Conversation doesn't exist, add the new conversation
+                existingConversations.Add(newConversation);
+            }
 
             string updatedJson = JsonSerializer.Serialize(existingConversations,
                 new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText("history.json", updatedJson);
             Console.WriteLine("Conversation appended to JSON file.");
-
         }
+
 
         internal void UpdateOtherUser(string otherUser)
         {
             _otherUser = otherUser;
         }
 
-        public List<string> GetChatUserHistory()
+        public Dictionary<string, DateTime> GetChatUserHistory()
         {
-            string[] lines = File.ReadAllLines("history.json");
-            List<Conversation> existingConversations = new List<Conversation>();
-            List<string> conversationUsers = new List<string>();
-
             string existingJson = File.ReadAllText("history.json");
+
+            List<Conversation> existingConversations = new List<Conversation>();
 
             if (!string.IsNullOrWhiteSpace(existingJson))
             {
                 existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
             }
 
+            Dictionary<string, DateTime> userLastMessageTimestamp = new Dictionary<string, DateTime>();
+
             foreach (Conversation conv in existingConversations)
             {
-                if (conv.User1.Equals(_userName))
+                DateTime lastMessageTime = DateTime.MinValue;
+
+                foreach (Message msg in conv.Messages)
                 {
-                    conversationUsers.Add(conv.User2);
+                    if (msg.Timestamp > lastMessageTime)
+                    {
+                        lastMessageTime = msg.Timestamp;
+                    }
                 }
 
+                if (conv.User1.Equals(_userName))
+                {
+                    userLastMessageTimestamp.Add(conv.User2, lastMessageTime);
+                    continue;
+                }
                 if (conv.User2.Equals(_userName))
                 {
-                    if(!conversationUsers.Contains(conv.User1)) conversationUsers.Add(conv.User1);
+                    userLastMessageTimestamp.Add(conv.User1, lastMessageTime);
                 }
             }
 
-            return conversationUsers;
+            return userLastMessageTimestamp;
         }
 
         public List<Message> GetChatHistory(string user)

@@ -25,7 +25,6 @@ namespace ChatApp.ViewModel
 
         private ObservableCollection<Message> _messages; // For Ui
         private ObservableCollection<string> _chats; // For Ui
-        private List<Message> _messageList; // For history
         private MessageHistory _messageHistory;
 
         private string _chattingWithText;
@@ -60,7 +59,6 @@ namespace ChatApp.ViewModel
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
             _chats = new ObservableCollection<string>();
-            _messageList = new List<Message>();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -128,11 +126,19 @@ namespace ChatApp.ViewModel
 
         private void LoadChatHistory()
         {
-            List<string> users = _messageHistory.GetChatUserHistory();
-            foreach (string u in users)
+            Chats.Clear();
+
+            Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
+
+            List<KeyValuePair<string, DateTime>> sortedUsers = new List<KeyValuePair<string, DateTime>>(users);
+
+            // sort by most recent timestamp, to sort least recent change pair2.Value.CompareTo(pair1.Value)); to pair1.Value.CompareTo(pair2.value));
+            sortedUsers.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+
+            foreach (var user in sortedUsers)
             {
-                System.Diagnostics.Debug.WriteLine(u);
-                Chats.Add(u);
+                System.Diagnostics.Debug.WriteLine("Key:" + user.Key + "  Value: " + user.Value);
+                Chats.Add(user.Key);
             }
         }
 
@@ -155,8 +161,8 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(msg);
-            _messageList.Add(msg);
-            _messageHistory.UpdateConversation(_messageList);
+            _messageHistory.UpdateConversation(msg);
+            LoadChatHistory();
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -194,12 +200,9 @@ namespace ChatApp.ViewModel
         private void HandleMessageTypeMessage(Message message)
         {
             Messages.Add(message);
-
-            if (NetworkManager.Server != null)
-            {
-                _messageList.Add(message);
-                _messageHistory.UpdateConversation(_messageList);
-            }
+            _messageHistory.UpdateConversation(message);
+            LoadChatHistory();
+            // if message is first message sent between the users, add to message history
         }
 
         private void HandleMessageTypeConnectionEstablished(Message message)
@@ -240,7 +243,6 @@ namespace ChatApp.ViewModel
             }
             else
             {
-                // TODO: NO POP-UP, TEXT?
                 MessageBox.Show("Server has disconnected!");
                 Disconnect();
                 IsSendButtonEnabled = false;
