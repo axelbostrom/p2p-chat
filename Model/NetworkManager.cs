@@ -56,9 +56,14 @@ public class NetworkManager : INotifyPropertyChanged
 
             return true;
         }
+        catch (ArgumentNullException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error starting client: {ex.Message}");
+            return false;
+        }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error starting server: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             return false;
         }
     }
@@ -77,9 +82,14 @@ public class NetworkManager : INotifyPropertyChanged
 
             return true;
         }
-        catch (Exception ex)
+        catch (ArgumentNullException ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error starting client: {ex.Message}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             return false;
         }
     }

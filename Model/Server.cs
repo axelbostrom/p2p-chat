@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -61,10 +62,13 @@ namespace ChatApp.Model
                     System.Diagnostics.Debug.WriteLine("Server connected!");
                 }
             }
+            catch (SocketException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error connecting to client: {ex.Message}");
-                OnEventOccurred("Error connecting to client!");
+                System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             }
             finally
             {
@@ -107,10 +111,18 @@ namespace ChatApp.Model
                 }
 
             }
+            catch (IOException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Network error handling client: {ex.Message}");
+                // OnEventOccurred("Error handling client.");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error deserializing JSON: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error handling client: {ex.Message}");
-                // OnEventOccurred("Error handling client.");
+                System.Diagnostics.Debug.WriteLine($"Unexpected error handling client: {ex.Message}");
             }
             finally
             {
@@ -132,9 +144,17 @@ namespace ChatApp.Model
 
                     stream.Write(buffer, 0, buffer.Length);
                 }
-                catch (Exception)
+                catch (IOException ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error sending message from server: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
+                }
+                catch (JsonException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
                 }
             }
             else
