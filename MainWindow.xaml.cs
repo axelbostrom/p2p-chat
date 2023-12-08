@@ -1,4 +1,5 @@
-﻿using ChatApp.Model;
+﻿using System;
+using ChatApp.Model;
 using ChatApp.ViewModel;
 using System.Windows;
 
@@ -14,6 +15,12 @@ namespace ChatApp
             InitializeComponent();
             MainWindowViewModel viewModel = new MainWindowViewModel(this);
             this.DataContext = viewModel;
+            this.Closing += onClose;
+        }
+
+        private void onClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

@@ -154,7 +154,7 @@ namespace ChatApp.Model
                 }
             }
 
-            return null;
+            return Enumerable.Empty<Message>().ToList();
         }
 
         public List<Message> GetChatHistory()
@@ -178,7 +178,7 @@ namespace ChatApp.Model
                     return conv.Messages;
                 }
             }
-            return null;
+            return Enumerable.Empty<Message>().ToList();
         }
     }
 }

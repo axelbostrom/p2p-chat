@@ -23,13 +23,14 @@ namespace ChatApp.ViewModel
         public string _otherUser;
         private string _userConnectionText;
         private string _searchText;
+        private string _chattingWithText;
         private string _message = string.Empty;
 
         private ObservableCollection<Message> _messages; // For Ui
         private ObservableCollection<string> _chats; // For Ui
+        
         private MessageHistory _messageHistory;
-
-        private string _chattingWithText;
+        private string _selectedChat;
 
         private NetworkManager _networkManager;
         public NetworkManager NetworkManager { get { return _networkManager; } }
@@ -53,6 +54,7 @@ namespace ChatApp.ViewModel
         public ICommand DisconnectCommand { get { return new Command.DisconnectCommand(this); } }
         public ICommand SendBuzzCommand { get { return new Command.SendBuzzCommand(this); } }
         public ICommand SearchCommand { get { return new Command.SearchCommand(this); } }
+        public ICommand ReturnCommand { get { return new Command.ReturnCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
@@ -121,6 +123,7 @@ namespace ChatApp.ViewModel
             _chatWindow = new ChatWindow(this);
             _messageHistory = new MessageHistory(Name);
             LoadChatHistory();
+            if (_networkManager.Server == null) LoadOtherUserMessages();
             _chatWindow.Show();
         }
 
@@ -138,7 +141,7 @@ namespace ChatApp.ViewModel
             Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
 
             var filteredUsers = users.Select(pair => pair.Key) // select all usernames
-                .Where(user => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty
+                .Where(user => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames)
                                user.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
                 .OrderByDescending(user => users[user]); // order by descending, i.e. most recent chat first
 
@@ -146,6 +149,41 @@ namespace ChatApp.ViewModel
             {
                 Chats.Add(user);
             }
+        }
+
+        private void LoadMessages()
+        {
+            Messages.Clear();
+
+            if (_selectedChat.Equals(_otherUser))
+            {
+                ChattingWithText = "You are now chatting with " + _otherUser;
+                IsSendButtonEnabled = true;
+            }
+            else
+            {
+                ChattingWithText = "Your chat with " + _selectedChat;
+                IsSendButtonEnabled = false;
+            }
+
+            foreach (Message msg in _messageHistory.GetChatHistory(_selectedChat))
+            {
+                Messages.Add(msg);
+            }
+        }
+
+        public void LoadOtherUserMessages()
+        {
+            Messages.Clear();
+            List<Message> msgs = _messageHistory.GetChatHistory();
+            ChattingWithText = "You are now chatting with " + _otherUser;
+            IsSendButtonEnabled = true;
+            foreach (Message msg in _messageHistory.GetChatHistory())
+            {
+                Messages.Add(msg);
+            }
+            
+            
         }
 
         public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
@@ -208,7 +246,6 @@ namespace ChatApp.ViewModel
             Messages.Add(message);
             _messageHistory.UpdateConversation(message);
             LoadChatHistory();
-            // if message is first message sent between the users, add to message history
         }
 
         private void HandleMessageTypeConnectionEstablished(Message message)
@@ -226,7 +263,6 @@ namespace ChatApp.ViewModel
         {
             _waitWindow?.Hide();
             IsSendButtonEnabled = true;
-            ChattingWithText = "You are now chatting with " + _otherUser;
             BootChatWindow();
         }
 
@@ -234,8 +270,7 @@ namespace ChatApp.ViewModel
         {
             _waitWindow.Hide();
             _mainWindow.Show();
-            string textDeny = _otherUser + " denied your chat request.";
-            MessageBox.Show(textDeny);
+            MessageBox.Show(_otherUser + " denied your chat request.");
         }
 
         private void HandleMessageTypeDisconnect(Message message)
@@ -244,8 +279,6 @@ namespace ChatApp.ViewModel
             {
                 ChattingWithText = _otherUser + " has disconnected!";
                 IsSendButtonEnabled = false;
-                // TODO: CLEAR ACTIVE MESSAGES IN CHAT WINDOW
-                // NO, CLEAR BEFORE NEW CHAT OR WHEN CHANGING TO CHAT FROM HISTORY
             }
             else
             {
@@ -393,6 +426,16 @@ namespace ChatApp.ViewModel
                     _searchText = value;
                     OnPropertyChanged(nameof(SearchText));
                 }
+            }
+        }
+        public string SelectedChat
+        {
+            get { return _selectedChat; }
+            set
+            {
+                _selectedChat = value;
+                OnPropertyChanged(nameof(SelectedChat));
+                LoadMessages();
             }
         }
     }

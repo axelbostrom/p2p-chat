@@ -5,12 +5,12 @@ using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class AcceptConnectionCommand : ICommand
+    internal class ReturnCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
         private MainWindowViewModel _parent;
 
-        public AcceptConnectionCommand(MainWindowViewModel parent)
+        public ReturnCommand(MainWindowViewModel parent)
         {
             _parent = parent;
         }
@@ -22,12 +22,8 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.GridVisibility = Visibility.Hidden;
-            _parent.IsSendButtonEnabled = true;
             _parent.ChattingWithText = "You are now chatting with " + _parent._otherUser;
-            _parent.MessageHistory.UpdateOtherUser(_parent._otherUser);
             _parent.LoadOtherUserMessages();
-            _parent.NetworkManager.SendConnectionAccepted();
         }
     }
 }
