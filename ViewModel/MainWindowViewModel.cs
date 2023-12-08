@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace ChatApp.ViewModel
         private User _user;
         public string _otherUser;
         private string _userConnectionText;
+        private string _searchText;
         private string _message = string.Empty;
 
         private ObservableCollection<Message> _messages; // For Ui
@@ -50,6 +52,7 @@ namespace ChatApp.ViewModel
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
         public ICommand DisconnectCommand { get { return new Command.DisconnectCommand(this); } }
         public ICommand SendBuzzCommand { get { return new Command.SendBuzzCommand(this); } }
+        public ICommand SearchCommand { get { return new Command.SearchCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
@@ -128,21 +131,20 @@ namespace ChatApp.ViewModel
             _waitWindow.Show();
         }
 
-        private void LoadChatHistory()
+        public void LoadChatHistory()
         {
             Chats.Clear();
 
             Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
 
-            List<KeyValuePair<string, DateTime>> sortedUsers = new List<KeyValuePair<string, DateTime>>(users);
+            var filteredUsers = users.Select(pair => pair.Key) // select all usernames
+                .Where(user => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty
+                               user.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
+                .OrderByDescending(user => users[user]); // order by descending, i.e. most recent chat first
 
-            // sort by most recent timestamp, to sort least recent change pair2.Value.CompareTo(pair1.Value)); to pair1.Value.CompareTo(pair2.value));
-            sortedUsers.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
-
-            foreach (var user in sortedUsers)
+            foreach (var user in filteredUsers)
             {
-                System.Diagnostics.Debug.WriteLine("Key:" + user.Key + "  Value: " + user.Value);
-                Chats.Add(user.Key);
+                Chats.Add(user);
             }
         }
 
@@ -379,6 +381,18 @@ namespace ChatApp.ViewModel
             {
                 _userConnectionText = value;
                 OnPropertyChanged(nameof(UserConnectionText));
+            }
+        }
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged(nameof(SearchText));
+                }
             }
         }
     }

@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:viewmodel="clr-namespace:ChatApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         mc:Ignorable="d"
         Title="Zlatan Chat" Height="500" Width="850">
     <Canvas Background="Lavender">
@@ -37,12 +39,23 @@
 
             <Button FontFamily="Comic Sans MS" Content="Deny" Width="50" Height="28" Command="{Binding DenyConnectionCommand}" Background="#FF3232" Grid.Column="2" Margin="5"/>
         </Grid>
-        <TextBox FontFamily="Comic Sans MS" Canvas.Left="20" TextWrapping="Wrap" Text="{Binding SearchText, Mode=TwoWay}" Canvas.Top="85" Width="186" HorizontalAlignment="Center" VerticalAlignment="Center" Height="20"/>
-        <ListBox FontFamily="Comic Sans MS" Height="312" Canvas.Left="20" Canvas.Top="110" Width="186" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedConversation}" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBox FontFamily="Comic Sans MS" Canvas.Left="20" TextWrapping="Wrap" Text="{Binding SearchText, Mode=TwoWay}" Canvas.Top="81" Width="158" HorizontalAlignment="Left" VerticalAlignment="Center" Height="24"/>
+        <Button Command="{Binding SearchCommand}">
+            <Canvas>
+                <Ellipse Width="24" Height="24" Fill="White" Canvas.Left="182" Canvas.Top="81" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Path  Data="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 20l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                       Fill="Black"
+                       Width="24"
+                       Height="24"
+                       Canvas.Left="182"
+                       Canvas.Top="81"/>
+            </Canvas>
+        </Button>
+        <ListBox FontFamily="Comic Sans MS" Height="312" Canvas.Left="20" Canvas.Top="110" Width="186" ItemsSource="{Binding Chats}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding}" FontWeight="Bold" />
+                        <TextBlock Text="{Binding}" FontFamily="Comic Sans MS" FontWeight="Bold" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
