@@ -42,7 +42,6 @@ public class NetworkManager : INotifyPropertyChanged
         set { _message = value; OnPropertyChanged("Message"); }
     }
 
-    // TODO: Remove nestled try/catch?
     public async Task<bool> StartServer(User user)
     {
         try
@@ -56,14 +55,18 @@ public class NetworkManager : INotifyPropertyChanged
 
             return true;
         }
+        catch (ArgumentNullException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error starting client: {ex.Message}");
+            return false;
+        }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error starting server: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             return false;
         }
     }
 
-    // TODO: Remove nestled try/catch?
     public async Task<bool> StartClient(User user)
     {
         try
@@ -77,9 +80,14 @@ public class NetworkManager : INotifyPropertyChanged
 
             return true;
         }
-        catch (Exception ex)
+        catch (ArgumentNullException ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error starting client: {ex.Message}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             return false;
         }
     }

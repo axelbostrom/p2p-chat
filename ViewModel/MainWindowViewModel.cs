@@ -103,7 +103,11 @@ namespace ChatApp.ViewModel
             }
             else if (e == "Error connecting to server!")
             {
-                MessageBox.Show("Server not started!");
+                MessageBox.Show("Error connecting to server!");
+            }
+            else if (e == "Error creating server!")
+            {
+                MessageBox.Show("Server already exists!");
             }
 
         }
@@ -250,7 +254,6 @@ namespace ChatApp.ViewModel
                 _mainWindow.Show();
             }
         }
-
         private void HandleMessageTypeBuzz()
         {
             string soundFile = "Resources/go.mp3";
@@ -259,33 +262,35 @@ namespace ChatApp.ViewModel
             {
                 string soundPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, soundFile);
 
-                if (File.Exists(soundPath))
+                MediaPlayer player = new MediaPlayer();
+                player.Open(new Uri(soundPath));
+
+                player.Position = TimeSpan.FromSeconds(0.8);
+
+                player.Play();
+
+                Task.Delay(TimeSpan.FromSeconds(2.5)).ContinueWith(_ =>
                 {
-                    MediaPlayer player = new MediaPlayer();
-                    player.Open(new Uri(soundPath));
-
-                    player.Position = TimeSpan.FromSeconds(0.8);
-
-                    player.Play();
-
-                    Task.Delay(TimeSpan.FromSeconds(2.5)).ContinueWith(_ =>
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            player.Stop();
-                        });
+                        player.Stop();
                     });
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error playing sound: File not found at {soundPath}");
-                }
+                });
+            }
+            catch (FileNotFoundException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error playing sound: File not found - {ex.Message}");
+            }
+            catch (UriFormatException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error playing sound: Invalid URI - {ex.Message}");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error playing sound: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error playing sound: {ex.GetType().Name} - {ex.Message}");
             }
         }
+
         public string Message
         {
             get { return _message; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -57,12 +58,27 @@ namespace ChatApp.Model
                 Task.Run(ReceiveMessages);
 
             }
-            catch (Exception ex)
+            catch (SocketException ex)
             {
-
-                System.Diagnostics.Debug.WriteLine($"Error connecting to server: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Socket error connecting to server: {ex.Message}");
                 OnEventOccurred("Error connecting to server!");
             }
+            catch (ArgumentException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Invalid argument when connecting to server: {ex.Message}");
+                OnEventOccurred("Error connecting to server!");
+            }
+            catch (InvalidOperationException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Invalid operation when connecting to server: {ex.Message}");
+                OnEventOccurred("Error connecting to server!");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error connecting to server: {ex.Message}");
+                OnEventOccurred("Error connecting to server!");
+            }
+
         }
 
         // Method to continuously receive messages from the server.
@@ -93,9 +109,18 @@ namespace ChatApp.Model
                     OnMessageReceived(message);
                 }
             }
+            catch (IOException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Network error handling client: {ex.Message}");
+                // OnEventOccurred("Error handling client.");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error deserializing JSON: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error receiving messages: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Unexpected error handling client: {ex.Message}");
             }
             finally
             {
@@ -122,9 +147,17 @@ namespace ChatApp.Model
                         System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
                     }
                 }
+                catch (IOException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
+                }
+                catch (JsonException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+                }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Error sending message: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
                 }
             });
         }
