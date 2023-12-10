@@ -27,10 +27,10 @@ namespace ChatApp.ViewModel
         private string _message = string.Empty;
 
         private ObservableCollection<Message> _messages; // For Ui
-        private ObservableCollection<string> _chats; // For Ui
-        
+        private ObservableCollection<UserHistoryInfo> _chats; // For Ui
+
         private MessageHistory _messageHistory;
-        private string _selectedChat;
+        private UserHistoryInfo _selectedChat;
 
         private NetworkManager _networkManager;
         public NetworkManager NetworkManager { get { return _networkManager; } }
@@ -63,7 +63,7 @@ namespace ChatApp.ViewModel
             _networkManager.EventOccured += NetworkManager_EventOccurred;
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
-            _chats = new ObservableCollection<string>();
+            _chats = new ObservableCollection<UserHistoryInfo>();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -84,7 +84,13 @@ namespace ChatApp.ViewModel
             }
         }
 
-        public ObservableCollection<string> Chats
+        public struct UserHistoryInfo
+        {
+            public string UserName { get; set; }
+            public DateTime TimeStamp { get; set; }
+        }
+
+        public ObservableCollection<UserHistoryInfo> Chats
         {
             get { return _chats; }
             private set
@@ -140,14 +146,14 @@ namespace ChatApp.ViewModel
 
             Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
 
-            var filteredUsers = users.Select(pair => pair.Key) // select all usernames
-                .Where(user => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames)
-                               user.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
-                .OrderByDescending(user => users[user]); // order by descending, i.e. most recent chat first
+            var filteredUsers = users// select all usernames
+                .Where(pair => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames)
+                               pair.Key.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
+                .OrderByDescending(pair => pair.Value); // order by descending, i.e. most recent chat first
 
             foreach (var user in filteredUsers)
             {
-                Chats.Add(user);
+                Chats.Add(new UserHistoryInfo { UserName = user.Key, TimeStamp = user.Value });
             }
         }
 
@@ -155,18 +161,20 @@ namespace ChatApp.ViewModel
         {
             Messages.Clear();
 
-            if (_selectedChat.Equals(_otherUser))
+            string sChat = _selectedChat.UserName;
+
+            if (sChat.Equals(_otherUser))
             {
                 ChattingWithText = "You are now chatting with " + _otherUser;
                 IsSendButtonEnabled = true;
             }
             else
             {
-                ChattingWithText = "Your chat with " + _selectedChat;
+                ChattingWithText = "Your chat with " + sChat;
                 IsSendButtonEnabled = false;
             }
 
-            foreach (Message msg in _messageHistory.GetChatHistory(_selectedChat))
+            foreach (Message msg in _messageHistory.GetChatHistory(sChat))
             {
                 Messages.Add(msg);
             }
@@ -175,6 +183,10 @@ namespace ChatApp.ViewModel
         public void LoadOtherUserMessages()
         {
             Messages.Clear();
+            if (_otherUser == null)
+            {
+                return;
+            }
             List<Message> msgs = _messageHistory.GetChatHistory();
             ChattingWithText = "You are now chatting with " + _otherUser;
             IsSendButtonEnabled = true;
@@ -428,7 +440,7 @@ namespace ChatApp.ViewModel
                 }
             }
         }
-        public string SelectedChat
+        public UserHistoryInfo SelectedChat
         {
             get { return _selectedChat; }
             set

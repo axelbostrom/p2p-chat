@@ -55,7 +55,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding}" FontFamily="Comic Sans MS" FontWeight="Bold" />
+                        <TextBlock Text="{Binding UserName}" FontFamily="Comic Sans MS" FontWeight="Bold" />
+                        <TextBlock Text="{Binding TimeStamp, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" FontFamily="Comic Sans MS" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

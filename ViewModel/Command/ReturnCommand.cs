@@ -22,7 +22,7 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            _parent.ChattingWithText = "You are now chatting with " + _parent._otherUser;
+            _parent.ChattingWithText = _parent._otherUser != null ? "You are now chatting with " + _parent._otherUser : "";
             _parent.LoadOtherUserMessages();
         }
     }
