@@ -54,7 +54,7 @@ namespace ChatApp.Model
                 _tcpListener.Start();
                 System.Diagnostics.Debug.WriteLine("Server is waiting for client to connect...");
 
-                OnEventOccurred("Server booted up successfully!");
+                OnEventOccurred("SERVER_BOOT_SUCCESS");
                 while (true)
                 {
                     _client = _tcpListener.AcceptTcpClient();
@@ -64,8 +64,17 @@ namespace ChatApp.Model
             }
             catch (SocketException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Socket error: {ex.Message}");
-                OnEventOccurred("Error creating server!");
+                System.Diagnostics.Debug.WriteLine($"Socket error: {ex.ErrorCode}");
+                switch (ex.SocketErrorCode)
+                {
+                    case SocketError.AddressAlreadyInUse:
+                        OnEventOccurred("ADDRESS_IN_USE");
+                        break;
+                    // Handle other error codes as needed
+                    default:
+                        OnEventOccurred("Error connecting to server!");
+                        break;
+                }
             }
             catch (Exception ex)
             {

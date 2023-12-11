@@ -51,7 +51,7 @@ namespace ChatApp.Model
 
                 _stream = _tcpClient.GetStream();
 
-                OnEventOccurred("Client booted up successfully!");
+                OnEventOccurred("CLIENT_BOOT_SUCCESS");
 
                 _isConnected = true;
 
@@ -61,22 +61,11 @@ namespace ChatApp.Model
             catch (SocketException ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Socket error connecting to server: {ex.Message}");
-                OnEventOccurred("Error connecting to server!");
-            }
-            catch (ArgumentException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Invalid argument when connecting to server: {ex.Message}");
-                OnEventOccurred("Error connecting to server!");
-            }
-            catch (InvalidOperationException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Invalid operation when connecting to server: {ex.Message}");
-                OnEventOccurred("Error connecting to server!");
+                OnEventOccurred("ERROR_CONNECT_SERVER");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Unexpected error connecting to server: {ex.Message}");
-                OnEventOccurred("Error connecting to server!");
             }
 
         }

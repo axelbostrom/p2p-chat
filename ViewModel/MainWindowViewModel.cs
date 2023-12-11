@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -104,21 +103,21 @@ namespace ChatApp.ViewModel
         // TODO FIX EVENT HANDLING BETTER
         private void NetworkManager_EventOccurred(object? sender, string e)
         {
-            if (e == "Server booted up successfully!")
+            if (e == "SERVER_BOOT_SUCCESS")
             {
                 BootChatWindow();
             }
-            else if (e == "Client booted up successfully!")
+            else if (e == "CLIENT_BOOT_SUCCESS")
             {
                 BootWaitWindow(); ;
             }
-            else if (e == "Error connecting to server!")
+            else if (e == "ERROR_CONNECT_SERVER")
             {
-                MessageBox.Show("Error connecting to server!");
+                MessageBox.Show("No server online on this portnumber.");
             }
-            else if (e == "Error creating server!")
+            else if (e == "ADDRESS_IN_USE")
             {
-                MessageBox.Show("Server already exists!");
+                MessageBox.Show("Server using this portnumber already exists.");
             }
 
         }
@@ -193,8 +192,8 @@ namespace ChatApp.ViewModel
                 System.Diagnostics.Debug.WriteLine(msg.Content);
                 Messages.Add(msg);
             }
-            
-            
+
+
         }
 
         public void onClose(object sender, CancelEventArgs e)
@@ -468,7 +467,7 @@ namespace ChatApp.ViewModel
                         LoadMessages();
                     }
                 }
-                
+
             }
         }
     }
