@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -51,10 +52,8 @@ namespace ChatApp.ViewModel
         public ICommand SendMessageCommand { get { return new Command.SendMessageCommand(this); } }
         public ICommand AcceptConnectionCommand { get { return new Command.AcceptConnectionCommand(this); } }
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
-        public ICommand DisconnectCommand { get { return new Command.DisconnectCommand(this); } }
         public ICommand SendBuzzCommand { get { return new Command.SendBuzzCommand(this); } }
         public ICommand SearchCommand { get { return new Command.SearchCommand(this); } }
-        public ICommand ReturnCommand { get { return new Command.ReturnCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
@@ -64,6 +63,7 @@ namespace ChatApp.ViewModel
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
             _chats = new ObservableCollection<UserHistoryInfo>();
+            System.Diagnostics.Debug.WriteLine("Selected Chat =    " + SelectedChat + "     very cool");
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -128,8 +128,13 @@ namespace ChatApp.ViewModel
             _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
             _messageHistory = new MessageHistory(Name);
+            _messageHistory.UpdateOtherUser(_otherUser);
             LoadChatHistory();
-            if (_networkManager.Server == null) LoadOtherUserMessages();
+            if (_networkManager.Server == null)
+            {
+                System.Diagnostics.Debug.WriteLine("123");
+                LoadOtherUserMessages();
+            }
             _chatWindow.Show();
         }
 
@@ -146,8 +151,8 @@ namespace ChatApp.ViewModel
 
             Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
 
-            var filteredUsers = users// select all usernames
-                .Where(pair => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames)
+            var filteredUsers = users// select all usernames and timestamps
+                .Where(pair => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames/timestamps)
                                pair.Key.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
                 .OrderByDescending(pair => pair.Value); // order by descending, i.e. most recent chat first
 
@@ -163,16 +168,8 @@ namespace ChatApp.ViewModel
 
             string sChat = _selectedChat.UserName;
 
-            if (sChat.Equals(_otherUser))
-            {
-                ChattingWithText = "You are now chatting with " + _otherUser;
-                IsSendButtonEnabled = true;
-            }
-            else
-            {
-                ChattingWithText = "Your chat with " + sChat;
-                IsSendButtonEnabled = false;
-            }
+            ChattingWithText = "Your chat with " + sChat;
+            IsSendButtonEnabled = false;
 
             foreach (Message msg in _messageHistory.GetChatHistory(sChat))
             {
@@ -190,15 +187,17 @@ namespace ChatApp.ViewModel
             List<Message> msgs = _messageHistory.GetChatHistory();
             ChattingWithText = "You are now chatting with " + _otherUser;
             IsSendButtonEnabled = true;
+            System.Diagnostics.Debug.WriteLine(_messageHistory.GetChatHistory());
             foreach (Message msg in _messageHistory.GetChatHistory())
             {
+                System.Diagnostics.Debug.WriteLine(msg.Content);
                 Messages.Add(msg);
             }
             
             
         }
 
-        public void onClose(object sender, System.ComponentModel.CancelEventArgs e)
+        public void onClose(object sender, CancelEventArgs e)
         {
             Disconnect();
             Environment.Exit(0);
@@ -291,6 +290,7 @@ namespace ChatApp.ViewModel
             {
                 ChattingWithText = _otherUser + " has disconnected!";
                 IsSendButtonEnabled = false;
+                _otherUser = null;
             }
             else
             {
@@ -442,12 +442,33 @@ namespace ChatApp.ViewModel
         }
         public UserHistoryInfo SelectedChat
         {
-            get { return _selectedChat; }
+            get
+            {
+                return _selectedChat;
+            }
             set
             {
                 _selectedChat = value;
                 OnPropertyChanged(nameof(SelectedChat));
-                LoadMessages();
+
+                if (_otherUser == null)
+                {
+                    LoadMessages();
+                }
+                else if (_otherUser.Equals(_selectedChat.UserName))
+                {
+                    return;
+                }
+                else
+                {
+                    MessageBoxResult result = MessageBox.Show("Are you sure you want to disconnect and view the chat?", "Disconnect and view chat", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        NetworkManager.SendDisconnect();
+                        LoadMessages();
+                    }
+                }
+                
             }
         }
     }

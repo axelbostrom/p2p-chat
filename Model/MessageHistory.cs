@@ -27,17 +27,6 @@ namespace ChatApp.Model
             public List<Message> Messages { get; set; }
         }
 
-        public string UserName
-        {
-            get { return _userName; }
-        }
-
-        public List<Message> Messages
-        {
-            get { return _messages; }
-            set { _messages = value; }
-        }
-
         internal void UpdateConversation(Message message)
         {
             if (_otherUser == null)
@@ -55,7 +44,6 @@ namespace ChatApp.Model
                 existingConversations = JsonSerializer.Deserialize<List<Conversation>>(existingJson);
             }
 
-            // Check if a conversation between these users already exists
             bool conversationExists = false;
             foreach (var conversation in existingConversations)
             {
@@ -76,7 +64,6 @@ namespace ChatApp.Model
                     User2 = _otherUser,
                     Messages = _messages
                 };
-                // Conversation doesn't exist, add the new conversation
                 existingConversations.Add(newConversation);
             }
 
