@@ -132,7 +132,6 @@ namespace ChatApp.ViewModel
             LoadChatHistory();
             if (_networkManager.Server == null)
             {
-                System.Diagnostics.Debug.WriteLine("123");
                 LoadOtherUserMessages();
             }
             _chatWindow.Show();
