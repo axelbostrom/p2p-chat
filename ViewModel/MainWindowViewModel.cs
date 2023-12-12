@@ -295,6 +295,7 @@ namespace ChatApp.ViewModel
                 MessageBox.Show("Server has disconnected!");
                 Disconnect();
                 IsSendButtonEnabled = false;
+                ChattingWithText = String.Empty;
                 _chatWindow.Hide();
                 _mainWindow.Show();
             }
