@@ -70,7 +70,6 @@ namespace ChatApp.Model
                 new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText("history.json", updatedJson);
-            Console.WriteLine("Conversation appended to JSON file.");
         }
 
 
