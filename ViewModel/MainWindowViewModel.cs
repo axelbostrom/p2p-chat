@@ -214,8 +214,7 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(msg);
-            _messageHistory.UpdateConversation(msg);
-            LoadChatHistory();
+            if (NetworkManager.Server != null)  _messageHistory.UpdateConversation(msg);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -253,8 +252,7 @@ namespace ChatApp.ViewModel
         private void HandleMessageTypeMessage(Message message)
         {
             Messages.Add(message);
-            _messageHistory.UpdateConversation(message);
-            LoadChatHistory();
+            if (NetworkManager.Server != null) _messageHistory.UpdateConversation(message);
         }
 
         private void HandleMessageTypeConnectionEstablished(Message message)
@@ -289,15 +287,18 @@ namespace ChatApp.ViewModel
                 ChattingWithText = _otherUser + " has disconnected!";
                 IsSendButtonEnabled = false;
                 _otherUser = null;
+                LoadChatHistory();
             }
             else
             {
-                MessageBox.Show("Server has disconnected!");
                 Disconnect();
                 IsSendButtonEnabled = false;
                 ChattingWithText = String.Empty;
+                Messages.Clear();
+                _otherUser = null;
                 _chatWindow.Hide();
                 _mainWindow.Show();
+                MessageBox.Show("Server has disconnected!");
             }
         }
         private void HandleMessageTypeBuzz()
@@ -456,6 +457,7 @@ namespace ChatApp.ViewModel
                 }
                 else if (_otherUser.Equals(_selectedChat.UserName))
                 {
+                    System.Diagnostics.Debug.WriteLine("jupp");
                     return;
                 }
                 else
