@@ -61,11 +61,13 @@ namespace ChatApp.Model
             catch (SocketException ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Socket error connecting to server: {ex.Message}");
+                _isConnected = false;
                 OnEventOccurred("ERROR_CONNECT_SERVER");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Unexpected error connecting to server: {ex.Message}");
+                _isConnected = false;
             }
 
         }
@@ -83,7 +85,7 @@ namespace ChatApp.Model
 
                     if (bytesRead <= 0)
                     {
-                        // The client has disconnected
+                        _isConnected = false;
                         break;
                     }
 
@@ -101,6 +103,7 @@ namespace ChatApp.Model
             catch (IOException ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Network error handling client: {ex.Message}");
+                _isConnected = false;
                 // OnEventOccurred("Error handling client.");
             }
             catch (JsonException ex)
@@ -113,51 +116,67 @@ namespace ChatApp.Model
             }
             finally
             {
-                //Dis(); // Close the client when the loop exits
+                _isConnected = false;
+                _tcpClient.Close();
             }
         }
 
         public void SendMessage(Message message)
         {
-            Task.Factory.StartNew(() =>
+            try
             {
-                try
+                if (_stream != null && _stream.CanWrite && _isConnected)
                 {
-                    if (_stream != null && _stream.CanWrite && _isConnected)
-                    {
-                        string jsonMessage = JsonSerializer.Serialize(message);
+                    string jsonMessage = JsonSerializer.Serialize(message);
 
-                        var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+                    var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
-                        _stream.Write(buffer, 0, buffer.Length);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
-                    }
+                    _stream.Write(buffer, 0, buffer.Length);
                 }
-                catch (IOException ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
                 }
-                catch (JsonException ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
-                }
-            });
+            }
+            catch (IOException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
+            }
         }
 
 
         // Implement IDisposable to release resources.
         public void Disconnect()
         {
+            System.Diagnostics.Debug.WriteLine("Client disconnect");
             _isConnected = false;
-            _stream?.Dispose();
-            _tcpClient?.Close();
+
+            try
+            {
+                if (_stream != null)
+                {
+                    _stream.Close();
+                    _stream.Dispose();
+                }
+
+                _tcpClient?.Close();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error during disconnect: {ex.Message}");
+            }
+            finally
+            {
+                OnEventOccurred("CLIENT_DISCONNECTED");
+            }
 
         }
 
