@@ -106,7 +106,6 @@ namespace ChatApp.Model
                     if (bytesRead <= 0)
                     {
                         System.Diagnostics.Debug.WriteLine("dc");
-                        // The client has disconnected
                         break;
                     }
 
@@ -142,35 +141,34 @@ namespace ChatApp.Model
 
         public void SendMessage(Message message)
         {
-            if (_client != null && _client.Connected)
+            try
             {
-                NetworkStream stream = _client.GetStream();
-
-                try
+                if (_client != null && _client.Connected)
                 {
+                    NetworkStream stream = _client.GetStream();
+
                     string jsonMessage = JsonSerializer.Serialize(message);
 
                     var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
                     stream.Write(buffer, 0, buffer.Length);
                 }
-                catch (IOException ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
-                }
-                catch (JsonException ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
                 }
             }
-            else
+            catch (IOException ex)
             {
-                // TODO: När server skickar kommer den hit också?
-                System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
+                System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
             }
         }
 
@@ -185,7 +183,6 @@ namespace ChatApp.Model
             {
                 _client?.GetStream()?.Dispose();
             }
-            // If client has already been disposed.
             catch (SocketException ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
@@ -194,7 +191,6 @@ namespace ChatApp.Model
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
-
             _client?.Close();
             _tcpListener?.Stop();
         }
