@@ -80,6 +80,11 @@ namespace ChatApp.Model
 
         public Dictionary<string, DateTime> GetChatUserHistory()
         {
+            if (!File.Exists("history.json"))
+            {
+                File.Create("history.json");
+            }
+
             string existingJson = File.ReadAllText("history.json");
 
             List<Conversation> existingConversations = new List<Conversation>();
