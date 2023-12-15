@@ -110,7 +110,6 @@ namespace ChatApp.Model
                     }
 
                     recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    // System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
 
                     // Deserialize the received JSON message
                     Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
