@@ -457,7 +457,6 @@ namespace ChatApp.ViewModel
                 }
                 else if (_otherUser.Equals(_selectedChat.UserName))
                 {
-                    System.Diagnostics.Debug.WriteLine("jupp");
                     return;
                 }
                 else
@@ -466,6 +465,7 @@ namespace ChatApp.ViewModel
                     if (result == MessageBoxResult.Yes)
                     {
                         NetworkManager.SendDisconnect();
+                        _otherUser = null;
                         LoadMessages();
                     }
                 }
