@@ -285,6 +285,7 @@ namespace ChatApp.ViewModel
                 ChattingWithText = _otherUser + " has disconnected!";
                 IsSendButtonEnabled = false;
                 _otherUser = null;
+                Messages.Clear();
                 LoadChatHistory();
             }
             else

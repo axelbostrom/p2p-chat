@@ -31,10 +31,4 @@
     <Resource Include="View\usericon.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="history.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

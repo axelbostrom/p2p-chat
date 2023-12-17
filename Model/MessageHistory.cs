@@ -32,6 +32,7 @@ namespace ChatApp.Model
             {
                 return;
             }
+
             _messages.Add(message);
 
             List<Conversation> existingConversations = new List<Conversation>();
@@ -76,6 +77,7 @@ namespace ChatApp.Model
         internal void UpdateOtherUser(string otherUser)
         {
             _otherUser = otherUser;
+            _messages.Clear();
         }
 
         public Dictionary<string, DateTime> GetChatUserHistory()
