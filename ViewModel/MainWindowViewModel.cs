@@ -62,7 +62,6 @@ namespace ChatApp.ViewModel
             _networkManager.MessageReceived += (sender, message) => NetworkManager_MessageReceived(message);
             _messages = new ObservableCollection<Message>();
             _chats = new ObservableCollection<UserHistoryInfo>();
-            System.Diagnostics.Debug.WriteLine("Selected Chat =    " + SelectedChat + "     very cool");
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -184,10 +183,8 @@ namespace ChatApp.ViewModel
             List<Message> msgs = _messageHistory.GetChatHistory();
             ChattingWithText = "You are now chatting with " + _otherUser;
             IsSendButtonEnabled = true;
-            System.Diagnostics.Debug.WriteLine(_messageHistory.GetChatHistory());
             foreach (Message msg in _messageHistory.GetChatHistory())
             {
-                System.Diagnostics.Debug.WriteLine(msg.Content);
                 Messages.Add(msg);
             }
 
@@ -260,8 +257,6 @@ namespace ChatApp.ViewModel
                 UserConnectionText = _otherUser + " wants to connect with you";
                 GridVisibility = Visibility.Visible;
             }
-
-            System.Diagnostics.Debug.WriteLine("Connection request from " + _otherUser);
         }
 
         private void HandleMessageTypeAcceptConnection(Message message)
@@ -289,7 +284,7 @@ namespace ChatApp.ViewModel
             }
             else
             {
-                DisconnectAsync();
+                NetworkManager.Client.Disconnect();
                 IsSendButtonEnabled = false;
                 ChattingWithText = String.Empty;
                 Messages.Clear();
