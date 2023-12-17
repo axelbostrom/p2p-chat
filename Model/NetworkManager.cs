@@ -114,27 +114,28 @@ public class NetworkManager : INotifyPropertyChanged
         _server?.SendMessage(connectionAcceptMessage);
     }
 
-    internal void SendConnectionDenied()
+    internal async Task SendConnectionDeniedAsync()
     {
         Message connectionDenyMessage = new Message(MessageType.DenyConnection, _user.Name);
 
-        _server?.SendMessage(connectionDenyMessage);
+        await _server?.SendMessage(connectionDenyMessage);
         _server?.DenyClientConnection();
     }
 
-    internal void SendDisconnect()
+    internal async Task SendDisconnect()
     {
         Message disconnectMessage = new Message(MessageType.Disconnect, _user.Name);
 
-        _server?.SendMessage(disconnectMessage);
-        _client?.SendMessage(disconnectMessage);
+        Task serverSendTask = _server?.SendMessage(disconnectMessage);
+        Task clientSendTask = _client?.SendMessage(disconnectMessage);
+
+        if (serverSendTask != null) await serverSendTask;
+        if (clientSendTask != null) await clientSendTask;
     }
 
     internal void SendBuzzMessage()
     {
         Message sendBuzzMessage = new Message(MessageType.Buzz, _user.Name);
-
-        System.Diagnostics.Debug.WriteLine("Sending buzz");
 
         _server?.SendMessage(sendBuzzMessage);
         _client?.SendMessage(sendBuzzMessage);

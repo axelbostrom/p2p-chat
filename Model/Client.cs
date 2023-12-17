@@ -93,10 +93,8 @@ namespace ChatApp.Model
 
                     recievedMessage = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                    // Deserialize the received JSON message
                     Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
 
-                    // Handle the received message
                     OnMessageReceived(message);
                 }
             }
@@ -104,7 +102,6 @@ namespace ChatApp.Model
             {
                 System.Diagnostics.Debug.WriteLine($"Network error handling client: {ex.Message}");
                 _isConnected = false;
-                // OnEventOccurred("Error handling client.");
             }
             catch (JsonException ex)
             {
@@ -121,35 +118,38 @@ namespace ChatApp.Model
             }
         }
 
-        public void SendMessage(Message message)
+        public async Task SendMessage(Message message)
         {
-            try
+            await Task.Run(() =>
             {
-                if (_stream != null && _stream.CanWrite && _isConnected)
+                try
                 {
-                    string jsonMessage = JsonSerializer.Serialize(message);
+                    if (_stream != null && _stream.CanWrite && _isConnected)
+                    {
+                        string jsonMessage = JsonSerializer.Serialize(message);
 
-                    var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+                        var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
-                    _stream.Write(buffer, 0, buffer.Length);
+                        _stream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
+                    }
                 }
-                else
+                catch (IOException ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error: Stream is not ready for writing.");
+                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
                 }
-            }
-            catch (IOException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
-            }
-            catch (JsonException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
-            }
+                catch (JsonException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
+                }
+            });
         }
 
 

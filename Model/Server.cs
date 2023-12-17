@@ -70,7 +70,6 @@ namespace ChatApp.Model
                     case SocketError.AddressAlreadyInUse:
                         OnEventOccurred("ADDRESS_IN_USE");
                         break;
-                    // Handle other error codes as needed
                     default:
                         OnEventOccurred("Error connecting to server!");
                         break;
@@ -94,28 +93,22 @@ namespace ChatApp.Model
 
                 byte[] data = new byte[256];
 
-                // String to store the response ASCII representation.
                 string recievedMessage = String.Empty;
 
                 while (true)
                 {
 
-                    // Read the first batch of the client's data.
                     int bytesRead = stream.Read(data, 0, data.Length);
 
                     if (bytesRead <= 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("dc");
                         break;
                     }
 
                     recievedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
-                    // System.Diagnostics.Debug.WriteLine($"Received from client: {recievedMessage}");
 
-                    // Deserialize the received JSON message
                     Message message = JsonSerializer.Deserialize<Message>(recievedMessage);
 
-                    // Handle the received message
                     OnMessageReceived(message);
                 }
 
@@ -139,37 +132,41 @@ namespace ChatApp.Model
             }
         }
 
-        public void SendMessage(Message message)
+        public async Task SendMessage(Message message)
         {
-            try
+            await Task.Run(() =>
             {
-                if (_client != null && _client.Connected)
+                try
                 {
-                    NetworkStream stream = _client.GetStream();
+                    System.Diagnostics.Debug.WriteLine(_client.Connected);
+                    if (_client != null && _client.Connected)
+                    {
+                        NetworkStream stream = _client.GetStream();
 
-                    string jsonMessage = JsonSerializer.Serialize(message);
+                        string jsonMessage = JsonSerializer.Serialize(message);
 
-                    var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+                        var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
-                    stream.Write(buffer, 0, buffer.Length);
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
+                    }
                 }
-                else
+                catch (IOException ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("No connected clients to send a message to.");
+                    System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
                 }
-            }
-            catch (IOException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Network error sending message: {ex.Message}");
-            }
-            catch (JsonException ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
-            }
+                catch (JsonException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error serializing JSON: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Unexpected error sending message: {ex.Message}");
+                }
+            });
         }
 
         public void DenyClientConnection()

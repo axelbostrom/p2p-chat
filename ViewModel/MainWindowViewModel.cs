@@ -100,7 +100,6 @@ namespace ChatApp.ViewModel
         }
 
 
-        // TODO FIX EVENT HANDLING BETTER
         private void NetworkManager_EventOccurred(object? sender, string e)
         {
             if (e == "SERVER_BOOT_SUCCESS")
@@ -197,24 +196,23 @@ namespace ChatApp.ViewModel
 
         public void onClose(object sender, CancelEventArgs e)
         {
-            Disconnect();
+            DisconnectAsync();
             Environment.Exit(0);
         }
 
-        public void Disconnect()
+        public async Task DisconnectAsync()
         {
-            NetworkManager.SendDisconnect();
+            await NetworkManager.SendDisconnect();
             NetworkManager.Server?.StopServer();
             NetworkManager.Client?.Disconnect();
         }
 
         public void AddMessage()
         {
-            System.Diagnostics.Debug.WriteLine("Add Message " + _message + " for user " + _user.Name);
             MessageType messageType = MessageType.Message;
             Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(msg);
-            if (NetworkManager.Server != null)  _messageHistory.UpdateConversation(msg);
+            if (NetworkManager.Server != null) _messageHistory.UpdateConversation(msg);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -291,7 +289,7 @@ namespace ChatApp.ViewModel
             }
             else
             {
-                Disconnect();
+                DisconnectAsync();
                 IsSendButtonEnabled = false;
                 ChattingWithText = String.Empty;
                 Messages.Clear();
