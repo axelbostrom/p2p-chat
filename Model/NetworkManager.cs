@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -15,6 +16,7 @@ public class NetworkManager : INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<string> EventOccured;
     public event EventHandler<Message> MessageReceived;
+    private bool _isClient = false;
 
     private Message _message;
 
@@ -50,6 +52,7 @@ public class NetworkManager : INotifyPropertyChanged
             _server = new Server(user);
             _server.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _server.MessageReceived += (sender, message) => OnMessageReceived(message);
+            IsClient = false;
             await Task.Run(() => _server.StartListening());
             SendConnectionEstablished();
 
@@ -75,9 +78,10 @@ public class NetworkManager : INotifyPropertyChanged
             _client = new Client(user);
             _client.EventOccured += (sender, errorMessage) => OnEventOccurred(errorMessage);
             _client.MessageReceived += (sender, message) => OnMessageReceived(message);
+            IsClient = true;
             await Task.Run(() => _client.Connect());
             SendConnectionEstablished();
-
+            
             return true;
         }
         catch (ArgumentNullException ex)
@@ -139,6 +143,12 @@ public class NetworkManager : INotifyPropertyChanged
 
         _server?.SendMessage(sendBuzzMessage);
         _client?.SendMessage(sendBuzzMessage);
+    }
+
+    public bool IsClient
+    {
+        get { return _isClient; }
+        set { _isClient = value;  }
     }
 
     public Client Client { get { return _client; } }

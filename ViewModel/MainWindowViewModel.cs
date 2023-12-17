@@ -128,7 +128,7 @@ namespace ChatApp.ViewModel
             _messageHistory = new MessageHistory(Name);
             _messageHistory.UpdateOtherUser(_otherUser);
             LoadChatHistory();
-            if (_networkManager.Server == null)
+            if (_networkManager.IsClient)
             {
                 LoadOtherUserMessages();
             }
@@ -212,7 +212,7 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(msg);
-            if (NetworkManager.Server != null) _messageHistory.UpdateConversation(msg);
+            if (!NetworkManager.IsClient)  _messageHistory.UpdateConversation(msg);
         }
 
         private void NetworkManager_MessageReceived(Message message)
@@ -250,12 +250,12 @@ namespace ChatApp.ViewModel
         private void HandleMessageTypeMessage(Message message)
         {
             Messages.Add(message);
-            if (NetworkManager.Server != null) _messageHistory.UpdateConversation(message);
+            if (!NetworkManager.IsClient) _messageHistory.UpdateConversation(message);
         }
 
         private void HandleMessageTypeConnectionEstablished(Message message)
         {
-            if (NetworkManager.Server != null)
+            if (!NetworkManager.IsClient)
             {
                 UserConnectionText = _otherUser + " wants to connect with you";
                 GridVisibility = Visibility.Visible;
@@ -280,7 +280,7 @@ namespace ChatApp.ViewModel
 
         private void HandleMessageTypeDisconnect(Message message)
         {
-            if (NetworkManager.Server != null)
+            if (!NetworkManager.IsClient)
             {
                 ChattingWithText = _otherUser + " has disconnected!";
                 IsSendButtonEnabled = false;
@@ -455,7 +455,6 @@ namespace ChatApp.ViewModel
                 }
                 else if (_otherUser.Equals(_selectedChat.UserName))
                 {
-                    System.Diagnostics.Debug.WriteLine("jupp");
                     return;
                 }
                 else
@@ -464,6 +463,7 @@ namespace ChatApp.ViewModel
                     if (result == MessageBoxResult.Yes)
                     {
                         NetworkManager.SendDisconnect();
+                        _otherUser = null;
                         LoadMessages();
                     }
                 }
