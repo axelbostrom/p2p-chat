@@ -66,7 +66,7 @@ namespace ChatApp.Model
                 };
                 existingConversations.Add(newConversation);
             }
-
+            
             string updatedJson = JsonSerializer.Serialize(existingConversations,
                 new JsonSerializerOptions { WriteIndented = true });
 
