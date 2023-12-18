@@ -138,7 +138,6 @@ namespace ChatApp.Model
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine(_client.Connected);
                     if (_client != null && _client.Connected)
                     {
                         NetworkStream stream = _client.GetStream();

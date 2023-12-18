@@ -26,7 +26,7 @@
         <TextBox FontFamily="Comic Sans MS" x:Name="MessageTextBox" Canvas.Left="222" Canvas.Top="367" Width="415" Height="55" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Button FontFamily="Comic Sans MS" Content="Send" Canvas.Left="637" Canvas.Top="367" Width="94" Height="55" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SendMessageCommand}" IsEnabled="{Binding IsSendButtonEnabled}" />
         <Button FontFamily="Comic Sans MS" Content="Buzz" Canvas.Left="731" Canvas.Top="367" Width="67" Height="55" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SendBuzzCommand}" IsEnabled="{Binding IsSendButtonEnabled}" Background="#A020F0"/>
-        <Grid Canvas.Left="430" Canvas.Top="42" Visibility="{Binding GridVisibility}">
+        <Grid Canvas.Left="453" Canvas.Top="6" Visibility="{Binding GridVisibility}" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -51,15 +51,19 @@
                        Canvas.Top="80"/>
             </Canvas>
         </Button>
-        <ListBox FontFamily="Comic Sans MS" Height="312" Canvas.Left="20" Canvas.Top="110" Width="186" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding UserName}" FontFamily="Comic Sans MS" FontWeight="Bold" />
-                        <TextBlock Text="{Binding TimeStamp, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" FontFamily="Comic Sans MS" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" FontFamily="Comic Sans MS" Height="312" Canvas.Left="20" Canvas.Top="110" Width="186" Background="White">
+            <ItemsControl ItemsSource="{Binding Chats}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Width="165" Margin="2" Command="{Binding DataContext.SelectChatCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" Background="LightGreen" BorderThickness="1" >
+                            <StackPanel>
+                                <TextBlock Text="{Binding UserName}" FontFamily="Comic Sans MS" FontWeight="Bold" />
+                                <TextBlock Text="{Binding TimeStamp, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" FontFamily="Comic Sans MS" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Canvas>
 </Window>

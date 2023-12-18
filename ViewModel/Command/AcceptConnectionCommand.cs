@@ -25,8 +25,8 @@ namespace ChatApp.ViewModel.Command
             _parent.GridVisibility = Visibility.Hidden;
             _parent.IsSendButtonEnabled = true;
             _parent.ChattingWithText = "You are now chatting with " + _parent._otherUser;
-            _parent.MessageHistory.UpdateOtherUser(_parent._otherUser);
-            _parent.LoadOtherUserMessages();
+            _parent._chatId = _parent.MessageHistory.UpdateOtherUser(_parent._otherUser);
+            _parent.Messages.Clear();
             _parent.NetworkManager.SendConnectionAccepted();
         }
     }

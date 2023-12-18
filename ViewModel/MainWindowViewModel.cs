@@ -25,6 +25,7 @@ namespace ChatApp.ViewModel
         private string _searchText;
         private string _chattingWithText;
         private string _message = string.Empty;
+        public int _chatId;
 
         private ObservableCollection<Message> _messages; // For Ui
         private ObservableCollection<UserHistoryInfo> _chats; // For Ui
@@ -53,6 +54,8 @@ namespace ChatApp.ViewModel
         public ICommand DenyConnectionCommand { get { return new Command.DenyConnectionCommand(this); } }
         public ICommand SendBuzzCommand { get { return new Command.SendBuzzCommand(this); } }
         public ICommand SearchCommand { get { return new Command.SearchCommand(this); } }
+
+        public ICommand SelectChatCommand { get { return new Command.SelectChatCommand(this); } }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
@@ -86,6 +89,7 @@ namespace ChatApp.ViewModel
         {
             public string UserName { get; set; }
             public DateTime TimeStamp { get; set; }
+            public int ChatId { get; set; }
         }
 
         public ObservableCollection<UserHistoryInfo> Chats
@@ -125,12 +129,13 @@ namespace ChatApp.ViewModel
             _mainWindow.Hide();
             _chatWindow = new ChatWindow(this);
             _messageHistory = new MessageHistory(Name);
-            _messageHistory.UpdateOtherUser(_otherUser);
-            LoadChatHistory();
+            _chatId = _messageHistory.UpdateOtherUser(_otherUser);
             if (_networkManager.IsClient)
             {
-                LoadOtherUserMessages();
+                ChattingWithText = "You are now chatting with " + _otherUser;
+                IsSendButtonEnabled = true;
             }
+            LoadChatHistory();
             _chatWindow.Show();
         }
 
@@ -145,50 +150,37 @@ namespace ChatApp.ViewModel
         {
             Chats.Clear();
 
-            Dictionary<string, DateTime> users = _messageHistory.GetChatUserHistory();
+            Dictionary<DateTime, (string, int)> users = _messageHistory.GetChatUserHistory();
 
-            var filteredUsers = users// select all usernames and timestamps
-                .Where(pair => string.IsNullOrEmpty(_searchText) || // where either _searchText is null or empty (basically select ALL usernames/timestamps)
-                               pair.Key.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // or the username contains (ignore upper/lowercase) _searchText
-                .OrderByDescending(pair => pair.Value); // order by descending, i.e. most recent chat first
+            var filteredUsers = users // Select all usernames, timestamps, and chat IDs
+                .Where(pair => string.IsNullOrEmpty(_searchText) ||
+                               pair.Value.Item1.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) // Check against the username part of the tuple
+                .OrderByDescending(pair => pair.Key); // Order by descending timestamp
 
             foreach (var user in filteredUsers)
             {
-                Chats.Add(new UserHistoryInfo { UserName = user.Key, TimeStamp = user.Value });
+                Chats.Add(new UserHistoryInfo
+                {
+                    UserName = user.Value.Item1,
+                    TimeStamp = user.Key,
+                    ChatId = user.Value.Item2
+                });
             }
         }
 
-        private void LoadMessages()
+        public void LoadMessages()
         {
             Messages.Clear();
 
-            string sChat = _selectedChat.UserName;
+            int chatId = _selectedChat.ChatId;
 
-            ChattingWithText = "Your chat with " + sChat;
+            ChattingWithText = "Your chat with " + _selectedChat.UserName + "     " + _selectedChat.TimeStamp;
             IsSendButtonEnabled = false;
 
-            foreach (Message msg in _messageHistory.GetChatHistory(sChat))
+            foreach (Message msg in _messageHistory.GetChatHistory(chatId))
             {
                 Messages.Add(msg);
             }
-        }
-
-        public void LoadOtherUserMessages()
-        {
-            Messages.Clear();
-            if (_otherUser == null)
-            {
-                return;
-            }
-            List<Message> msgs = _messageHistory.GetChatHistory();
-            ChattingWithText = "You are now chatting with " + _otherUser;
-            IsSendButtonEnabled = true;
-            foreach (Message msg in _messageHistory.GetChatHistory())
-            {
-                Messages.Add(msg);
-            }
-
-
         }
 
         public void onClose(object sender, CancelEventArgs e)
@@ -442,27 +434,6 @@ namespace ChatApp.ViewModel
             set
             {
                 _selectedChat = value;
-                OnPropertyChanged(nameof(SelectedChat));
-
-                if (_otherUser == null)
-                {
-                    LoadMessages();
-                }
-                else if (_otherUser.Equals(_selectedChat.UserName))
-                {
-                    return;
-                }
-                else
-                {
-                    MessageBoxResult result = MessageBox.Show("Are you sure you want to disconnect and view the chat?", "Disconnect and view chat", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        NetworkManager.SendDisconnect();
-                        _otherUser = null;
-                        LoadMessages();
-                    }
-                }
-
             }
         }
     }
