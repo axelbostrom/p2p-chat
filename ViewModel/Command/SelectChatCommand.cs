@@ -1,5 +1,4 @@
-﻿using ChatApp.Model;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using static ChatApp.ViewModel.MainWindowViewModel;
@@ -41,7 +40,14 @@ namespace ChatApp.ViewModel.Command
                 MessageBoxResult result = MessageBox.Show("Are you sure you want to disconnect and view the chat?", "Disconnect and view chat", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    _parent.NetworkManager.SendDisconnect();
+                    if (_parent.NetworkManager.IsClient)
+                    {
+                        _parent.DisconnectAsync();
+                    }
+                    else
+                    {
+                        _parent.NetworkManager.SendDisconnect();
+                    }
                     _parent._otherUser = null;
                     _parent.LoadMessages();
                     _parent.LoadChatHistory();

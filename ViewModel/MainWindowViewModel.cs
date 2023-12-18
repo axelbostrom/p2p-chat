@@ -201,7 +201,7 @@ namespace ChatApp.ViewModel
             MessageType messageType = MessageType.Message;
             Message msg = new Message(messageType, _user.Name, DateTime.Now, _message);
             Messages.Add(msg);
-            if (!NetworkManager.IsClient)  _messageHistory.UpdateConversation(msg);
+            if (!NetworkManager.IsClient) _messageHistory.UpdateConversation(msg);
         }
 
         private void NetworkManager_MessageReceived(Message message)
