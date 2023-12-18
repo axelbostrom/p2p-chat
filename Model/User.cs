@@ -5,13 +5,6 @@ namespace ChatApp.Model
 {
     public class User : INotifyPropertyChanged
     {
-
-        public enum UserType
-        {
-            Client,
-            Server
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _name;
         private int _port;

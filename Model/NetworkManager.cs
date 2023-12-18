@@ -7,26 +7,14 @@ using System.Windows;
 
 namespace ChatApp.Model;
 
-public class NetworkManager : INotifyPropertyChanged
+public class NetworkManager
 {
-    private NetworkStream _stream;
     private Client _client;
     private Server _server;
     private User _user;
-    public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<string> EventOccured;
     public event EventHandler<Message> MessageReceived;
     private bool _isClient = false;
-
-    private Message _message;
-
-    private void OnPropertyChanged(string propertyName = null)
-    {
-        if (PropertyChanged != null)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
 
     private void OnEventOccurred(string errorMessage)
     {
@@ -36,12 +24,6 @@ public class NetworkManager : INotifyPropertyChanged
     private void OnMessageReceived(Message message)
     {
         Application.Current.Dispatcher.Invoke(() => MessageReceived?.Invoke(this, message));
-    }
-
-    public Message Message
-    {
-        get { return _message; }
-        set { _message = value; OnPropertyChanged("Message"); }
     }
 
     public async Task<bool> StartServer(User user)

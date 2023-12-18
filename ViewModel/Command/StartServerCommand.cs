@@ -10,11 +10,11 @@ namespace ChatApp.ViewModel.Command
     internal class StartServerCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private MainWindowViewModel parent;
+        private MainWindowViewModel _parent;
 
         public StartServerCommand(MainWindowViewModel parent)
         {
-            this.parent = parent;
+            _parent = parent;
         }
 
         public bool CanExecute(object parameter)
@@ -24,13 +24,13 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object parameter)
         {
-            if (!int.TryParse(parent.Port, out int parsedPort))
+            if (!int.TryParse(_parent.Port, out int parsedPort))
             {
                 MessageBox.Show("Invalid port number!");
                 return;
             }
 
-            if (!IPAddress.TryParse(parent.Ip, out IPAddress parsedIp))
+            if (!IPAddress.TryParse(_parent.Ip, out IPAddress parsedIp))
             {
                 MessageBox.Show("Invalid IP address!");
                 return;
@@ -38,7 +38,7 @@ namespace ChatApp.ViewModel.Command
 
             int port = parsedPort;
             IPAddress ip = parsedIp;
-            string name = parent.Name;
+            string name = _parent.Name;
 
             if (String.IsNullOrEmpty(name))
             {
@@ -47,8 +47,8 @@ namespace ChatApp.ViewModel.Command
             }
 
             var user = new User(name, ip, port);
-            parent.User = user;
-            parent.NetworkManager.StartServer(user);
+            _parent.User = user;
+            _parent.NetworkManager.StartServer(user);
         }
     }
 }

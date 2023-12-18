@@ -9,8 +9,6 @@ using System.Windows;
 
 namespace ChatApp.Model
 {
-
-    // The Server class is responsible for listening for incoming connections and managing client sessions.
     public class Server : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -19,9 +17,6 @@ namespace ChatApp.Model
         public event EventHandler<string> EventOccured;
         public event EventHandler<Message> MessageReceived;
         private TcpClient _client;
-
-        public bool acceptOrDeny;
-        private TaskCompletionSource<bool> _userResponse = new TaskCompletionSource<bool>();
 
         public Server(User user)
         {

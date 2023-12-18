@@ -43,30 +43,6 @@ namespace ChatApp.Model
             return 0; // The lowest is 1
         }
 
-        public List<Message> GetMessages()
-        {
-            string jsonData = File.ReadAllText("history.json");
-
-            List<Conversation> conversations = new List<Conversation>();
-
-            if (!string.IsNullOrWhiteSpace(jsonData))
-            {
-                conversations = JsonSerializer.Deserialize<List<Conversation>>(jsonData);
-            }
-            
-            Conversation targetConversation = conversations
-                .FirstOrDefault(c => c.chatId == _chatId);
-
-            if (targetConversation != null)
-            {
-                return targetConversation.Messages;
-            }
-            
-
-            return new List<Message>(); // Return an empty list if conversation/messages not found
-        }
-
-
         public class Conversation
         {
             public int chatId { get; set; }
